@@ -1,6 +1,6 @@
-﻿using LoungeSaber.FlowCoordinators;
-using LoungeSaber.UI;
+﻿using LoungeSaber.UI;
 using LoungeSaber.UI.BSML;
+using LoungeSaber.UI.FlowCoordinators;
 using Zenject;
 
 namespace LoungeSaber.Installers

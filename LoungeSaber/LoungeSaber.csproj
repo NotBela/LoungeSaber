@@ -111,5 +111,10 @@
     <ItemGroup>
       <None Remove="UI\BSML\LoadingView.bsml" />
       <EmbeddedResource Include="UI\BSML\LoadingView.bsml" />
+      <None Remove="UI\BSML\DivisonSelectorView.bsml" />
+      <EmbeddedResource Include="UI\BSML\DivisonSelectorView.bsml" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Server\MatchRoom\" />
     </ItemGroup>
 </Project>

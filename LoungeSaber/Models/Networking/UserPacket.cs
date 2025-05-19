@@ -5,21 +5,21 @@ using Newtonsoft.Json.Linq;
 
 namespace LoungeSaber.Models.Networking
 {
-    public class UserAction
+    public class UserPacket
     {
         public readonly ActionType Type;
         public readonly JObject JsonData;
     
-        private UserAction(ActionType actionType, JObject data)
+        private UserPacket(ActionType actionType, JObject data)
         {
             Type = actionType;
 
             JsonData = data;
         }
 
-        public static UserAction Parse(string json)
+        public static UserPacket Parse(string json)
         {
-            var deserialized = JsonConvert.DeserializeObject<UserAction>(json);
+            var deserialized = JsonConvert.DeserializeObject<UserPacket>(json);
         
             if (deserialized == null) 
                 throw new Exception("User action could not be deserialized");

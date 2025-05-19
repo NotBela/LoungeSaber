@@ -1,6 +1,6 @@
 ﻿using System;
 using BeatSaberMarkupLanguage.MenuButtons;
-using LoungeSaber.FlowCoordinators;
+using LoungeSaber.UI.FlowCoordinators;
 using Zenject;
 
 namespace LoungeSaber.UI
