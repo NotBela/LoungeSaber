@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using HarmonyLib;
 using LoungeSaber.Configuration;
 using LoungeSaber.Models.Divisions;
 using Newtonsoft.Json;
 using SiraUtil.Logging;
+using UnityEngine;
 
 namespace LoungeSaber.Server.Api
 {
@@ -20,7 +22,7 @@ namespace LoungeSaber.Server.Api
         {
             _siraLog = siraLog;
             
-            _httpClient = new HttpClient()
+            _httpClient = new HttpClient
             {
                 BaseAddress = new Uri($"https://{config.ServerIp}:7198/")
             };

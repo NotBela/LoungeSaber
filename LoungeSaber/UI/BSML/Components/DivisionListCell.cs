@@ -3,6 +3,7 @@ using LoungeSaber.Managers;
 using LoungeSaber.Models.Divisions;
 using TMPro;
 using UnityEngine;
+using Color = UnityEngine.Color;
 
 namespace LoungeSaber.UI.BSML.Components
 {
@@ -20,8 +21,10 @@ namespace LoungeSaber.UI.BSML.Components
             _stateManager = stateManager;
             
             Division = division;
+            
+            Plugin.Log.Info($"{division.DivisionColor.r} {division.DivisionColor.g} {division.DivisionColor.b}");
 
-            _divisionName = division.DivisionName;
+            _divisionName = $"<color={division.DivisionColor.ToHexidecimal()}><b>{division.DivisionName} Division";
             _divisionDescription = "test";
         }
 

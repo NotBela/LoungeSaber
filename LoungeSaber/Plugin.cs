@@ -5,6 +5,7 @@ using IPA.Config.Stores;
 using SiraUtil.Zenject;
 using LoungeSaber.Configuration;
 using LoungeSaber.Installers;
+using ModestTree;
 using IPALogger = IPA.Logging.Logger;
 
 namespace LoungeSaber
@@ -13,11 +14,15 @@ namespace LoungeSaber
     public class Plugin
     {
         internal static Plugin Instance { get; private set; }
+        
+        internal static IPALogger Log { get; private set; }
 
         [Init]
         public void Init(Zenjector zenjector, IPALogger logger, Config config)
         {
             Instance = this;
+
+            Log = logger;
 
             zenjector.UseLogger(logger);
             zenjector.UseMetadataBinder<Plugin>();

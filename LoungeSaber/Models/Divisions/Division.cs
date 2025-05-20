@@ -1,6 +1,7 @@
 ﻿using System;
 using LoungeSaber.Models.Maps;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace LoungeSaber.Models.Divisions
 {
@@ -49,5 +50,10 @@ namespace LoungeSaber.Models.Divisions
         public int b { get; set; }
         
         public UnityEngine.Color ToUnity() => new UnityEngine.Color(r, g, b);
+
+        public string ToHexidecimal() => $"#{FloatNormalizedToHex(r)}{FloatNormalizedToHex(g)}{FloatNormalizedToHex(b)}";
+
+        private string FloatNormalizedToHex(float value) => DecToHex(Mathf.RoundToInt(value));
+        private string DecToHex(int value) => value.ToString("X2");
     }
 }

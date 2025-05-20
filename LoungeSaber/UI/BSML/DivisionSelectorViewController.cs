@@ -8,6 +8,7 @@ using LoungeSaber.Models.Divisions;
 using LoungeSaber.Server.Api;
 using LoungeSaber.UI.BSML.Components;
 using SiraUtil.Logging;
+using TMPro;
 using Zenject;
 
 namespace LoungeSaber.UI.BSML

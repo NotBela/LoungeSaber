@@ -1,13 +1,16 @@
 <bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-    <vertical>
-        <custom-list show-scrollbar="true" visible-cells="3" id="divisionList">
-            <horizontal horizontal-fit="Unconstrained">
+    <vertical vertical-fit="Unconstrained" pref-width="70">
+        <vertical bg="round-rect-panel" vertical-fit="PreferredSize" pad="2" bg-alpha=".75">
+            <text text="Available Divisions" font-size="7" align="Center"/>
+        </vertical>
+        <custom-list show-scrollbar="true" visible-cells="3" id="divisionList" pref-width="70" cell-size="15">
+            <horizontal pref-width="70" bg="round-rect-panel" bg-alpha=".5" pad="1">
                 <vertical>
-                    <text text="~divisionName" align="Left"/>
+                    <text text="~divisionName" align="Left" id="divisionNameText"/>
                     <text text="~divisionDescription" align="Left" color="#CCC"/>
                 </vertical>
-                <horizontal horizontal-fit="PreferredSize" child-align="MiddleRight" child-control-width="false" pref-width="18">
-                    <button on-click="joinButtonOnClick" text="Join" horizontal-fit="PreferredSize" pref-width="5"/>
+                <horizontal horizontal-fit="PreferredSize" child-align="MiddleRight" child-control-width="false" pref-width="50">
+                    <button on-click="joinButtonOnClick" text="Join" horizontal-fit="PreferredSize" pref-width="20" pref-height="10"/>
                 </horizontal>
             </horizontal>
         </custom-list> 
