@@ -19,8 +19,8 @@ namespace LoungeSaber.UI.FlowCoordinators
         
         [Inject] private readonly LoadingViewController _loadingViewController = null;
         [Inject] private readonly DivisionSelectorViewController _divisionSelectorViewController = null;
-
-        protected override async void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+        
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             _stateManager.StateChanged += OnStateChanged;
         }
 
-        private async void OnStateChanged(StateManager.State state)
+        private void OnStateChanged(StateManager.State state)
         {
             try
             {
@@ -59,7 +59,6 @@ namespace LoungeSaber.UI.FlowCoordinators
                         SetViewControllers("LoungeSaber", true, _loadingViewController);
                         break;
                     case StateManager.State.DivisionSelector:
-                        await _loungeSaberApi.FetchDivisions();
                         SetViewControllers("LoungeSaber Divisions", true, _divisionSelectorViewController);
                         break;
                 }

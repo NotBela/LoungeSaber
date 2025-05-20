@@ -12,6 +12,8 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<MenuButtonManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<MenuFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
             Container.BindInterfacesAndSelfTo<LoadingViewController>().FromNewComponentAsViewController().AsSingle();
+            Container.BindInterfacesAndSelfTo<DivisionSelectorViewController>().FromNewComponentAsViewController()
+                .AsSingle();
         }
     }
 }

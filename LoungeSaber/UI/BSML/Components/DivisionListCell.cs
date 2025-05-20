@@ -12,17 +12,17 @@ namespace LoungeSaber.UI.BSML.Components
         
         public Division Division { get; private set; }
         
-        [UIValue("divisionName")] private string divisionName;
-        [UIValue("divisionDescription")] private string divisionDescription;
-        
-        [UIComponent("divisionNameText")] private readonly TextMeshProUGUI _divisionNameText;
+        [UIValue("divisionName")] private string _divisionName;
+        [UIValue("divisionDescription")] private string _divisionDescription;
 
         public DivisionListCell(Division division, StateManager stateManager)
         {
             _stateManager = stateManager;
             
             Division = division;
-            _divisionNameText.color = division.DivisionColor.ToUnity();
+
+            _divisionName = division.DivisionName;
+            _divisionDescription = "test";
         }
 
         [UIAction("joinButtonOnClick")]

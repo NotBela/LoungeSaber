@@ -3,8 +3,8 @@
         <custom-list show-scrollbar="true" visible-cells="3" id="divisionList">
             <horizontal horizontal-fit="Unconstrained">
                 <vertical>
-                    <text text="~divisionName" id="divisionNameText" align="Left"/>
-                    <text text="~divisionDescription" id="divisionDescriptionText" align="Left" color="#CCC"/>
+                    <text text="~divisionName" align="Left"/>
+                    <text text="~divisionDescription" align="Left" color="#CCC"/>
                 </vertical>
                 <horizontal horizontal-fit="PreferredSize" child-align="MiddleRight" child-control-width="false" pref-width="18">
                     <button on-click="joinButtonOnClick" text="Join" horizontal-fit="PreferredSize" pref-width="5"/>
