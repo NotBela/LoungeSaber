@@ -31,7 +31,7 @@ namespace LoungeSaber.UI.BSML.Components
         [UIAction("joinButtonOnClick")]
         private void JoinButtonOnClick()
         {
-            
+            _stateManager.JoinRoom(Division);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace LoungeSaber.Models.Networking
         public JObject Data { get; set; }
         public ActionType Type { get; set; }
 
-        public string Serialize() => JsonConvert.SerializeObject(this);
+        public static ServerPacket Deserialize(string json) => JsonConvert.DeserializeObject<ServerPacket>(json);
 
         public enum ActionType
         {

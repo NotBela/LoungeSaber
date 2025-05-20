@@ -10,22 +10,14 @@ namespace LoungeSaber.Models.Networking
         public readonly ActionType Type;
         public readonly JObject JsonData;
     
-        private UserPacket(ActionType actionType, JObject data)
+        public UserPacket(ActionType actionType, JObject data)
         {
             Type = actionType;
 
             JsonData = data;
         }
 
-        public static UserPacket Parse(string json)
-        {
-            var deserialized = JsonConvert.DeserializeObject<UserPacket>(json);
-        
-            if (deserialized == null) 
-                throw new Exception("User action could not be deserialized");
-        
-            return deserialized;
-        }
+        public string Serialize() => JsonConvert.SerializeObject(this);
     
         public enum ActionType
         {

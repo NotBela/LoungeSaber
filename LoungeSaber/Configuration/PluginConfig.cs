@@ -5,7 +5,7 @@ using IPA.Config.Stores;
 
 namespace LoungeSaber.Configuration
 {
-    internal class PluginConfig
+    public class PluginConfig
     {
         public virtual string ServerIp { get; set; } = "127.0.0.1";
         public virtual int ServerPort { get; set; } = 8008;
