@@ -3,8 +3,10 @@ using HMUI;
 using JetBrains.Annotations;
 using LoungeSaber.Managers;
 using LoungeSaber.Server.Api;
+using LoungeSaber.Server.MatchRoom;
 using LoungeSaber.UI.BSML;
 using SiraUtil.Logging;
+using UnityEngine;
 using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators
@@ -12,15 +14,17 @@ namespace LoungeSaber.UI.FlowCoordinators
     internal class MenuFlowCoordinator : FlowCoordinator, IInitializable, IDisposable
     {
         [Inject] private readonly SiraLog _siraLog = null;
+        
         [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null;
+        [Inject] private readonly MatchRoomFlowCoordinator _matchRoomFlowCoordinator = null;
 
+        [Inject] private readonly LoungeServerInterfacer _loungeServerInterfacer = null;
         [Inject] private readonly StateManager _stateManager = null;
-        [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         
         [Inject] private readonly LoadingViewController _loadingViewController = null;
         [Inject] private readonly DivisionSelectorViewController _divisionSelectorViewController = null;
         
-        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+        protected override async void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             try
             {
@@ -30,8 +34,8 @@ namespace LoungeSaber.UI.FlowCoordinators
                 SetTitle("LoungeSaber");
                 showBackButton = true;
                 ProvideInitialViewControllers(_loadingViewController);
-                
-                _stateManager.SwitchState(StateManager.State.DivisionSelector);
+
+                await _stateManager.RequestDivisionDataRefresh();
             }
             catch (Exception ex)
             {
@@ -46,33 +50,23 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         public void Initialize()
         {
-            _stateManager.StateChanged += OnStateChanged;
+            _matchRoomFlowCoordinator.OnBackButtonPressed += OnMatchRoomBackButtonPressed;
+            _loungeServerInterfacer.OnStartConnect += OnConnectStarted;
+            _stateManager.OnDivisionDataRefreshed += OnDivisionDataRefreshed;
         }
 
-        private void OnStateChanged(StateManager.State state)
-        {
-            try
-            {
-                switch (state)
-                {
-                    case StateManager.State.Loading:
-                        SetViewControllers("LoungeSaber", true, _loadingViewController);
-                        break;
-                    case StateManager.State.DivisionSelector:
-                        SetViewControllers("LoungeSaber Divisions", true, _divisionSelectorViewController);
-                        break;
-                }
-            }
-            catch (Exception e)
-            {
-                _siraLog.Error(e);
-            }
-        }
+        private void OnDivisionDataRefreshed() => SetViewControllers("LoungeSaber Divisions", true, _divisionSelectorViewController);
 
         public void Dispose()
         {
-            _stateManager.StateChanged -= OnStateChanged;
+            _matchRoomFlowCoordinator.OnBackButtonPressed -= OnMatchRoomBackButtonPressed;
+            _loungeServerInterfacer.OnStartConnect -= OnConnectStarted;
+            _stateManager.OnDivisionDataRefreshed -= OnDivisionDataRefreshed;
         }
+
+        private void OnConnectStarted() => PresentFlowCoordinator(_matchRoomFlowCoordinator);
+
+        private void OnMatchRoomBackButtonPressed() => DismissFlowCoordinator(_matchRoomFlowCoordinator);
 
         private void SetViewControllers(string newTitle, bool backButtonVisible, ViewController center,
             [CanBeNull] ViewController left = null, [CanBeNull] ViewController right = null)

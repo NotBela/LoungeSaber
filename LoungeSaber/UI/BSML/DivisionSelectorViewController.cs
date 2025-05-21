@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
@@ -23,20 +24,14 @@ namespace LoungeSaber.UI.BSML
         [UIComponent("divisionList")] 
         private readonly CustomCellListTableData _divisionList = null;
         
-        public void Initialize()
-        {
-            _stateManager.StateChanged += OnStateChanged;
-        }
-
-        private async void OnStateChanged(StateManager.State state)
+        
+        
+        private void SetDivisionListData(Division[] data)
         {
             try
             {
-                if (state != StateManager.State.DivisionSelector) 
-                    return;
-
-                await _loungeSaberApi.FetchDivisions();
-                SetDivisionListData(_loungeSaberApi.Divisions);
+                _divisionList.Data = data.Select(i => new DivisionListCell(i, _stateManager, _siraLog)).ToArray();
+                _divisionList.TableView.ReloadData();
             }
             catch (Exception e)
             {
@@ -44,15 +39,19 @@ namespace LoungeSaber.UI.BSML
             }
         }
 
-        private void SetDivisionListData(Division[] data)
+        public void Initialize()
         {
-            _divisionList.Data = data.Select(i => new DivisionListCell(i, _stateManager)).ToArray();
-            _divisionList.TableView.ReloadData();
+            _stateManager.OnDivisionDataRefreshed += OnDivisionListRefreshed;
+        }
+
+        private void OnDivisionListRefreshed()
+        {
+            SetDivisionListData(_loungeSaberApi.Divisions);
         }
 
         public void Dispose()
         {
-            _stateManager.StateChanged -= OnStateChanged;
+            _stateManager.OnDivisionDataRefreshed -= OnDivisionListRefreshed;
         }
     }
 }

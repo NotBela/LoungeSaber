@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LoungeSaber.Models.Divisions;
+using LoungeSaber.Server.Api;
 using LoungeSaber.Server.MatchRoom;
 using SiraUtil.Logging;
 using Zenject;
@@ -11,32 +12,19 @@ namespace LoungeSaber.Managers
     {
         [Inject] private readonly SiraLog _siraLog = null;
         [Inject] private readonly LoungeServerInterfacer _loungeServerInterfacer = null;
+        [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         
-        public State CurrentState { get; private set; } = State.Loading;
-
-        public event Action<State> StateChanged;
-        
-        public void SwitchState(State state)
-        {
-            CurrentState = state;
-            
-            _siraLog.Info(state.ToString());
-            
-            StateChanged?.Invoke(state);
-        }
+        public event Action OnDivisionDataRefreshed;
 
         public async Task JoinRoom(Division division)
         {
-            SwitchState(State.Loading);
             await _loungeServerInterfacer.ConnectToLoungeServer(division);
         }
-        
-        public enum State
+
+        public async Task RequestDivisionDataRefresh()
         {
-            Loading,
-            DivisionSelector,
-            InMatch,
-            MatchLobby
+            await _loungeSaberApi.FetchDivisions();
+            OnDivisionDataRefreshed?.Invoke();
         }
     }
 }

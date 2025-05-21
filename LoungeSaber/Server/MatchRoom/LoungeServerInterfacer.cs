@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
@@ -38,32 +39,39 @@ namespace LoungeSaber.Server.MatchRoom
         public event Action<Exception> OnExceptionOccured;
 
         public event Action OnDisconnect;
+        public event Action OnStartConnect;
+        public event Action OnConnected;
 
         public void Initialize()
         {
             ServerListenerThread = new Thread(ListenToServer);
 
-            _client = new TcpClient(_config.ServerIp, _config.ServerPort);
+            _client = new TcpClient();
         }
 
         public async Task ConnectToLoungeServer(Division division)
         {
+            OnStartConnect?.Invoke();
+            
             _listenToServer = true;
             ServerListenerThread.Start();
+            await _client.ConnectAsync(IPAddress.Parse(_config.ServerIp), _config.ServerPort);
 
             var userInfo = await BS_Utils.Gameplay.GetUserInfo.GetUserAsync();
             
-            await SendPacketToServer(new UserPacket(UserPacket.ActionType.Join, new JObject
+            await SendPacketToServer(new UserPacket(UserPacket.PacketType.Join, new JObject
             {
                 {"divisionName", division.DivisionName },
                 {"userId", userInfo.platformUserId },
                 {"userName", userInfo.userName }
             }));
+            
+            OnConnected?.Invoke();
         }
 
         public async Task DisconnectFromLoungeServer()
         {
-            await SendPacketToServer(new UserPacket(UserPacket.ActionType.Leave, new JObject()));
+            await SendPacketToServer(new UserPacket(UserPacket.PacketType.Leave, new JObject()));
             _listenToServer = false;
             _client.Close();
             _client = new TcpClient(_config.ServerIp, _config.ServerPort);
@@ -79,12 +87,15 @@ namespace LoungeSaber.Server.MatchRoom
                     if (!_client.Connected) 
                         continue;
 
+                    while (!_client.GetStream().DataAvailable);
+
                     var buffer = new byte[1024];
-                    var bufferLength = _client.GetStream().Read(buffer, 0, buffer.Length);
+                    var bufferLength = _client.Client.Receive(buffer);
 
                     Array.Resize(ref buffer, bufferLength);
 
                     var decodedJson = Encoding.UTF8.GetString(buffer);
+                    
                     var serverAction = ServerPacket.Deserialize(decodedJson);
 
                     switch (serverAction.Type)
@@ -154,8 +165,7 @@ namespace LoungeSaber.Server.MatchRoom
 
         private async Task SendPacketToServer(UserPacket packet)
         {
-            var bytes = Encoding.UTF8.GetBytes(packet.Serialize());
-            await _client.GetStream().WriteAsync(bytes, 0, bytes.Length);
+            await _client.Client.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(packet.Serialize())), SocketFlags.None);
         }
     }
 }

@@ -7,19 +7,20 @@ namespace LoungeSaber.Models.Networking
 {
     public class UserPacket
     {
-        public readonly ActionType Type;
+        [JsonProperty("PacketType")]
+        public readonly PacketType Type;
         public readonly JObject JsonData;
     
-        public UserPacket(ActionType actionType, JObject data)
+        public UserPacket(PacketType packetType, JObject data)
         {
-            Type = actionType;
+            Type = packetType;
 
             JsonData = data;
         }
 
         public string Serialize() => JsonConvert.SerializeObject(this);
     
-        public enum ActionType
+        public enum PacketType
         {
             VoteOnMap,
             PostScore,

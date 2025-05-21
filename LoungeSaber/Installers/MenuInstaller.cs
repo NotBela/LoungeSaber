@@ -14,6 +14,7 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<LoadingViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<DivisionSelectorViewController>().FromNewComponentAsViewController()
                 .AsSingle();
+            Container.BindInterfacesAndSelfTo<MatchRoomFlowCoordinator>().FromNewComponentAsViewController().AsSingle();
         }
     }
 }
