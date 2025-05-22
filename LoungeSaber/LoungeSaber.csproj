@@ -118,8 +118,10 @@
     </ItemGroup>
     <ItemGroup>
       <None Remove="UI\BSML\LoadingView.bsml" />
+      <EmbeddedResource Include="UI\BSML\DivisionSelector\DivisonSelectorView.bsml" />
       <EmbeddedResource Include="UI\BSML\LoadingView.bsml" />
       <None Remove="UI\BSML\DivisonSelectorView.bsml" />
-      <EmbeddedResource Include="UI\BSML\DivisonSelectorView.bsml" />
+      <None Remove="UI\BSML\Match\MatchWaitingRoomView.bsml" />
+      <EmbeddedResource Include="UI\BSML\Match\MatchWaitingRoomView.bsml" />
     </ItemGroup>
 </Project>

@@ -13,6 +13,6 @@
                     <button on-click="joinButtonOnClick" text="Join" horizontal-fit="PreferredSize" pref-width="20" pref-height="10"/>
                 </horizontal>
             </horizontal>
-        </custom-list> 
+        </custom-list>
     </vertical>
 </bg>

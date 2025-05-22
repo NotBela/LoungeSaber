@@ -24,7 +24,8 @@ namespace LoungeSaber.Models.Networking
             MatchEnded,
             StartWarning,
             Results,
-            UpdateConnectedUserCount
+            UpdateConnectedUserCount,
+            Disconnect
         }
     }
 }

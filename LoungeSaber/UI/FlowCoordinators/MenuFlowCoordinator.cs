@@ -2,6 +2,7 @@ using System;
 using HMUI;
 using JetBrains.Annotations;
 using LoungeSaber.Managers;
+using LoungeSaber.Models.Divisions;
 using LoungeSaber.Server.Api;
 using LoungeSaber.Server.MatchRoom;
 using LoungeSaber.UI.BSML;
@@ -19,7 +20,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly MatchRoomFlowCoordinator _matchRoomFlowCoordinator = null;
 
         [Inject] private readonly LoungeServerInterfacer _loungeServerInterfacer = null;
-        [Inject] private readonly StateManager _stateManager = null;
+        [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         
         [Inject] private readonly LoadingViewController _loadingViewController = null;
         [Inject] private readonly DivisionSelectorViewController _divisionSelectorViewController = null;
@@ -33,9 +34,9 @@ namespace LoungeSaber.UI.FlowCoordinators
                 
                 SetTitle("LoungeSaber");
                 showBackButton = true;
-                ProvideInitialViewControllers(_loadingViewController);
-
-                await _stateManager.RequestDivisionDataRefresh();
+                ProvideInitialViewControllers(_divisionSelectorViewController);
+                
+                await _loungeSaberApi.RequestDivisionDataRefresh();
             }
             catch (Exception ex)
             {
@@ -52,7 +53,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         {
             _matchRoomFlowCoordinator.OnBackButtonPressed += OnMatchRoomBackButtonPressed;
             _loungeServerInterfacer.OnStartConnect += OnConnectStarted;
-            _stateManager.OnDivisionDataRefreshed += OnDivisionDataRefreshed;
+            _loungeSaberApi.OnDivisionDataRefreshStarted += OnDivisionDataRefreshed;
         }
 
         private void OnDivisionDataRefreshed() => SetViewControllers("LoungeSaber Divisions", true, _divisionSelectorViewController);
@@ -61,7 +62,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         {
             _matchRoomFlowCoordinator.OnBackButtonPressed -= OnMatchRoomBackButtonPressed;
             _loungeServerInterfacer.OnStartConnect -= OnConnectStarted;
-            _stateManager.OnDivisionDataRefreshed -= OnDivisionDataRefreshed;
+            _loungeSaberApi.OnDivisionDataRefreshStarted -= OnDivisionDataRefreshed;
         }
 
         private void OnConnectStarted() => PresentFlowCoordinator(_matchRoomFlowCoordinator);

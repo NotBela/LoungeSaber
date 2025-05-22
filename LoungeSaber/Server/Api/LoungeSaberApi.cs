@@ -44,5 +44,15 @@ namespace LoungeSaber.Server.Api
                 _siraLog.Error(e);
             }
         }
+        
+        public event Action<Division[]> OnDivisionDataRefreshed;
+        public event Action OnDivisionDataRefreshStarted;
+        
+        public async Task RequestDivisionDataRefresh()
+        {
+            OnDivisionDataRefreshStarted?.Invoke();
+            await FetchDivisions();
+            OnDivisionDataRefreshed?.Invoke(Divisions);
+        }
     }
 }

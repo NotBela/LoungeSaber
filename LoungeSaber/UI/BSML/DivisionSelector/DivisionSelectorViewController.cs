@@ -14,17 +14,14 @@ using Zenject;
 
 namespace LoungeSaber.UI.BSML
 {
-    [ViewDefinition("LoungeSaber.UI.BSML.DivisonSelectorView.bsml")]
+    [ViewDefinition("LoungeSaber.UI.BSML.DivisionSelector.DivisonSelectorView.bsml")]
     public class DivisionSelectorViewController : BSMLAutomaticViewController, IInitializable, IDisposable
     {
         [Inject] private readonly StateManager _stateManager = null;
         [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         [Inject] private readonly SiraLog _siraLog = null;
         
-        [UIComponent("divisionList")] 
-        private readonly CustomCellListTableData _divisionList = null;
-        
-        
+        [UIComponent("divisionList")] private readonly CustomCellListTableData _divisionList = null;
         
         private void SetDivisionListData(Division[] data)
         {
@@ -41,17 +38,17 @@ namespace LoungeSaber.UI.BSML
 
         public void Initialize()
         {
-            _stateManager.OnDivisionDataRefreshed += OnDivisionListRefreshed;
+            _loungeSaberApi.OnDivisionDataRefreshed += OnDivisionListRefreshed;
         }
 
-        private void OnDivisionListRefreshed()
+        private void OnDivisionListRefreshed(Division[] divisions)
         {
-            SetDivisionListData(_loungeSaberApi.Divisions);
+            SetDivisionListData(divisions);
         }
 
         public void Dispose()
         {
-            _stateManager.OnDivisionDataRefreshed -= OnDivisionListRefreshed;
+            _loungeSaberApi.OnDivisionDataRefreshed -= OnDivisionListRefreshed;
         }
     }
 }

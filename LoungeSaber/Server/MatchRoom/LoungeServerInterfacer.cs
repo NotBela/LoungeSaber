@@ -39,6 +39,9 @@ namespace LoungeSaber.Server.MatchRoom
         public event Action<Exception> OnExceptionOccured;
 
         public event Action OnDisconnect;
+
+        public event Action<string> OnDisconnectByServer; 
+        
         public event Action OnStartConnect;
         public event Action OnConnected;
 
@@ -72,6 +75,7 @@ namespace LoungeSaber.Server.MatchRoom
         public async Task DisconnectFromLoungeServer()
         {
             await SendPacketToServer(new UserPacket(UserPacket.PacketType.Leave, new JObject()));
+            
             _listenToServer = false;
             _client.Close();
             _client = new TcpClient(_config.ServerIp, _config.ServerPort);
@@ -95,6 +99,8 @@ namespace LoungeSaber.Server.MatchRoom
                     Array.Resize(ref buffer, bufferLength);
 
                     var decodedJson = Encoding.UTF8.GetString(buffer);
+                    
+                    _siraLog.Info(decodedJson);
                     
                     var serverAction = ServerPacket.Deserialize(decodedJson);
 
@@ -152,6 +158,12 @@ namespace LoungeSaber.Server.MatchRoom
                                 throw new Exception("Could not get user count!");
                             
                             UserCountUpdated?.Invoke(userCount.ToObject<int>());
+                            break;
+                        case ServerPacket.ActionType.Disconnect:
+                            if (!serverAction.Data.TryGetValue("reason", out var disconnectReason))
+                                throw new Exception($"Disconnected by server: {disconnectReason.ToObject<string>()}");
+                            
+                            OnDisconnectByServer?.Invoke(disconnectReason.ToObject<string>());
                             break;
                     }
                 }
