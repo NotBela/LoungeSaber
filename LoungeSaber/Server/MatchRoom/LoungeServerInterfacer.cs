@@ -56,6 +56,7 @@ namespace LoungeSaber.Server.MatchRoom
         {
             OnStartConnect?.Invoke();
             
+            _client = new TcpClient();
             _listenToServer = true;
             ServerListenerThread.Start();
             await _client.ConnectAsync(IPAddress.Parse(_config.ServerIp), _config.ServerPort);
@@ -78,7 +79,6 @@ namespace LoungeSaber.Server.MatchRoom
             
             _listenToServer = false;
             _client.Close();
-            _client = new TcpClient(_config.ServerIp, _config.ServerPort);
             OnDisconnect?.Invoke();
         }
 
@@ -169,6 +169,9 @@ namespace LoungeSaber.Server.MatchRoom
                 }
                 catch (Exception e)
                 {
+                    if (e is ObjectDisposedException)
+                        return;
+                    
                     _siraLog.Error(e);
                     OnExceptionOccured?.Invoke(e);
                 }

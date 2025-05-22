@@ -1,12 +1,10 @@
 using System;
 using HMUI;
 using JetBrains.Annotations;
-using LoungeSaber.Models.Divisions;
 using LoungeSaber.Server.Api;
 using LoungeSaber.Server.MatchRoom;
 using LoungeSaber.UI.BSML;
 using SiraUtil.Logging;
-using UnityEngine;
 using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators
@@ -21,7 +19,6 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly LoungeServerInterfacer _loungeServerInterfacer = null;
         [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         
-        [Inject] private readonly LoadingViewController _loadingViewController = null;
         [Inject] private readonly DivisionSelectorViewController _divisionSelectorViewController = null;
         
         protected override async void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)

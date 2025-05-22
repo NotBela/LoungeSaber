@@ -123,5 +123,7 @@
       <None Remove="UI\BSML\DivisonSelectorView.bsml" />
       <None Remove="UI\BSML\Match\MatchWaitingRoomView.bsml" />
       <EmbeddedResource Include="UI\BSML\Match\MatchWaitingRoomView.bsml" />
+      <None Remove="UI\BSML\Disconnect\DisconnectView.bsml" />
+      <EmbeddedResource Include="UI\BSML\Disconnect\DisconnectView.bsml" />
     </ItemGroup>
 </Project>

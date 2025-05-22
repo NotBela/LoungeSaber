@@ -12,8 +12,8 @@ namespace LoungeSaber.UI.BSML.Match
     public class MatchWaitingRoomViewController : BSMLAutomaticViewController, IDisposable
     {
         [Inject] private readonly LoungeServerInterfacer _loungeServerInterfacer = null;
-        
-        [UIComponent("playerVolumeText")] private readonly TextMeshProUGUI _playerVolumeText = null;
+
+        [UIValue("playerCountText")] private string PlayerCountText { get; set; } = "0 player(s) in room";
 
         [UIAction("#post-parse")]
         void PostParse()
@@ -23,7 +23,7 @@ namespace LoungeSaber.UI.BSML.Match
 
         private void OnUserCountUpdated(int count)
         {
-            _playerVolumeText.text = $"{count} player(s) in room";
+            PlayerCountText = $"{count} player(s) in room";
         }
 
         public void Dispose()
