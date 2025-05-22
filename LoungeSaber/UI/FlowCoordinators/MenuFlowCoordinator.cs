@@ -1,7 +1,6 @@
 using System;
 using HMUI;
 using JetBrains.Annotations;
-using LoungeSaber.Managers;
 using LoungeSaber.Models.Divisions;
 using LoungeSaber.Server.Api;
 using LoungeSaber.Server.MatchRoom;
