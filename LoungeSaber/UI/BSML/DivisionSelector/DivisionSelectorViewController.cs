@@ -6,7 +6,6 @@ using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
 using LoungeSaber.Models.Divisions;
 using LoungeSaber.Server.Api;
-using LoungeSaber.Server.MatchRoom;
 using LoungeSaber.UI.BSML.Components;
 using SiraUtil.Logging;
 using TMPro;
@@ -19,7 +18,6 @@ namespace LoungeSaber.UI.BSML
     {
         [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         [Inject] private readonly SiraLog _siraLog = null;
-        [Inject] private readonly LoungeServerInterfacer _loungeServerInterfacer = null;
         
         [UIComponent("divisionList")] private readonly CustomCellListTableData _divisionList = null;
         
@@ -27,7 +25,7 @@ namespace LoungeSaber.UI.BSML
         {
             try
             {
-                _divisionList.Data = data.Select(i => new DivisionListCell(i, _loungeServerInterfacer, _siraLog)).ToArray();
+                _divisionList.Data = data.Select(i => new DivisionListCell(i, _siraLog)).ToArray();
                 _divisionList.TableView.ReloadData();
             }
             catch (Exception e)

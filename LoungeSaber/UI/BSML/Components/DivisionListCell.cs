@@ -1,7 +1,6 @@
 ﻿using System;
 using BeatSaberMarkupLanguage.Attributes;
 using LoungeSaber.Models.Divisions;
-using LoungeSaber.Server.MatchRoom;
 using SiraUtil.Logging;
 using TMPro;
 using UnityEngine;
@@ -11,7 +10,6 @@ namespace LoungeSaber.UI.BSML.Components
 {
     public class DivisionListCell
     {
-        private readonly LoungeServerInterfacer _loungeServerInterfacer;
         private readonly SiraLog _siraLog;
         
         public Division Division { get; private set; }
@@ -19,9 +17,8 @@ namespace LoungeSaber.UI.BSML.Components
         [UIValue("divisionName")] private string _divisionName;
         [UIValue("divisionDescription")] private string _divisionDescription;
 
-        public DivisionListCell(Division division, LoungeServerInterfacer loungeServerInterfacer, SiraLog siraLog)
+        public DivisionListCell(Division division, SiraLog siraLog)
         {
-            _loungeServerInterfacer = loungeServerInterfacer;
             _siraLog = siraLog;
             
             Division = division;
@@ -35,7 +32,7 @@ namespace LoungeSaber.UI.BSML.Components
         {
             try
             {
-                await _loungeServerInterfacer.ConnectToLoungeServer(Division);
+                // connect to lounge server
             }
             catch (Exception e)
             {

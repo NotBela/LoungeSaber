@@ -2,7 +2,6 @@ using System;
 using HMUI;
 using JetBrains.Annotations;
 using LoungeSaber.Server.Api;
-using LoungeSaber.Server.MatchRoom;
 using LoungeSaber.UI.BSML;
 using SiraUtil.Logging;
 using Zenject;
@@ -14,9 +13,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly SiraLog _siraLog = null;
         
         [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null;
-        [Inject] private readonly MatchRoomFlowCoordinator _matchRoomFlowCoordinator = null;
 
-        [Inject] private readonly LoungeServerInterfacer _loungeServerInterfacer = null;
         [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         
         [Inject] private readonly DivisionSelectorViewController _divisionSelectorViewController = null;
@@ -47,8 +44,6 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         public void Initialize()
         {
-            _matchRoomFlowCoordinator.OnBackButtonPressed += OnMatchRoomBackButtonPressed;
-            _loungeServerInterfacer.OnStartConnect += OnConnectStarted;
             _loungeSaberApi.OnDivisionDataRefreshStarted += OnDivisionDataRefreshed;
         }
 
@@ -56,14 +51,18 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         public void Dispose()
         {
-            _matchRoomFlowCoordinator.OnBackButtonPressed -= OnMatchRoomBackButtonPressed;
-            _loungeServerInterfacer.OnStartConnect -= OnConnectStarted;
             _loungeSaberApi.OnDivisionDataRefreshStarted -= OnDivisionDataRefreshed;
         }
 
-        private void OnConnectStarted() => PresentFlowCoordinator(_matchRoomFlowCoordinator);
+        private void OnConnectStarted()
+        {
+            
+        }
 
-        private void OnMatchRoomBackButtonPressed() => DismissFlowCoordinator(_matchRoomFlowCoordinator);
+        private void OnMatchRoomBackButtonPressed()
+        {
+            
+        }
 
         private void SetViewControllers(string newTitle, bool backButtonVisible, ViewController center,
             [CanBeNull] ViewController left = null, [CanBeNull] ViewController right = null)

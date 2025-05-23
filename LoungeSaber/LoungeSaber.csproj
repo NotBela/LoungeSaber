@@ -126,4 +126,7 @@
       <None Remove="UI\BSML\Disconnect\DisconnectView.bsml" />
       <EmbeddedResource Include="UI\BSML\Disconnect\DisconnectView.bsml" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Server\MatchRoom\" />
+    </ItemGroup>
 </Project>

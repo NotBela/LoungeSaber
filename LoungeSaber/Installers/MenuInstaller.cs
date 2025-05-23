@@ -1,6 +1,5 @@
 ﻿using LoungeSaber.UI;
 using LoungeSaber.UI.BSML;
-using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.FlowCoordinators;
 using Zenject;
 
@@ -14,9 +13,6 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<MenuFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
             Container.BindInterfacesAndSelfTo<LoadingViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<DivisionSelectorViewController>().FromNewComponentAsViewController().AsSingle();
-            Container.BindInterfacesAndSelfTo<MatchRoomFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
-            Container.BindInterfacesAndSelfTo<MatchWaitingRoomViewController>().FromNewComponentAsViewController()
-                .AsSingle();
         }
     }
 }

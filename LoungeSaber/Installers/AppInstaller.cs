@@ -1,6 +1,5 @@
 using LoungeSaber.Configuration;
 using LoungeSaber.Server.Api;
-using LoungeSaber.Server.MatchRoom;
 using Zenject;
 
 namespace LoungeSaber.Installers
@@ -18,8 +17,7 @@ namespace LoungeSaber.Installers
         {
             Container.BindInstance(_config);
 
-            Container.BindInterfacesAndSelfTo<LoungeSaberApi>().AsSingle();
-            Container.BindInterfacesAndSelfTo<LoungeServerInterfacer>().AsSingle();
+            Container.BindInterfacesAndSelfTo<LoungeSaberApi>().AsSingle(); 
         }
     }
 }
