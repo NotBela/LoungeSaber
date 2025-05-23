@@ -28,8 +28,6 @@ namespace LoungeSaber.UI.FlowCoordinators
                 SetTitle("LoungeSaber");
                 showBackButton = true;
                 ProvideInitialViewControllers(_divisionSelectorViewController);
-                
-                await _loungeSaberApi.RequestDivisionDataRefresh();
             }
             catch (Exception ex)
             {

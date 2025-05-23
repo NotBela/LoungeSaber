@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using HarmonyLib;
+using JetBrains.Annotations;
 using LoungeSaber.Configuration;
 using LoungeSaber.Models.Divisions;
 using Newtonsoft.Json;
@@ -15,8 +16,6 @@ namespace LoungeSaber.Server.Api
         private readonly SiraLog _siraLog = null;
         
         private readonly HttpClient _httpClient;
-        
-        public Division[] Divisions { get; private set; }
 
         internal LoungeSaberApi(PluginConfig config, SiraLog siraLog)
         {
@@ -28,7 +27,8 @@ namespace LoungeSaber.Server.Api
             };
         }
 
-        public async Task FetchDivisions()
+        [CanBeNull]
+        public async Task<Division[]> FetchDivisions()
         {
             try
             {
@@ -37,22 +37,17 @@ namespace LoungeSaber.Server.Api
 
                 var json = await response.Content.ReadAsStringAsync();
                 var divisions = JsonConvert.DeserializeObject<Division[]>(json);
-                Divisions = divisions;
+                return divisions;
             }
             catch (Exception e)
             {
                 _siraLog.Error(e);
             }
+
+            return null;
         }
         
         public event Action<Division[]> OnDivisionDataRefreshed;
         public event Action OnDivisionDataRefreshStarted;
-        
-        public async Task RequestDivisionDataRefresh()
-        {
-            OnDivisionDataRefreshStarted?.Invoke();
-            await FetchDivisions();
-            OnDivisionDataRefreshed?.Invoke(Divisions);
-        }
     }
 }

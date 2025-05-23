@@ -14,7 +14,7 @@ using Zenject;
 namespace LoungeSaber.UI.BSML
 {
     [ViewDefinition("LoungeSaber.UI.BSML.DivisionSelector.DivisonSelectorView.bsml")]
-    public class DivisionSelectorViewController : BSMLAutomaticViewController, IInitializable, IDisposable
+    public class DivisionSelectorViewController : BSMLAutomaticViewController
     {
         [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         [Inject] private readonly SiraLog _siraLog = null;
@@ -34,19 +34,22 @@ namespace LoungeSaber.UI.BSML
             }
         }
 
-        public void Initialize()
+        [UIAction("#post-parse")]
+        async void PostParse()
         {
-            _loungeSaberApi.OnDivisionDataRefreshed += OnDivisionListRefreshed;
-        }
-
-        private void OnDivisionListRefreshed(Division[] divisions)
-        {
-            SetDivisionListData(divisions);
-        }
-
-        public void Dispose()
-        {
-            _loungeSaberApi.OnDivisionDataRefreshed -= OnDivisionListRefreshed;
+            try
+            {
+                var divisions = await _loungeSaberApi.FetchDivisions();
+                if (divisions == null) 
+                    return;
+            
+                _divisionList.Data = divisions.Select(i => new DivisionListCell(i, _siraLog)).ToArray();
+                _divisionList.TableView.ReloadData();
+            }
+            catch (Exception e)
+            {
+                _siraLog.Error(e);
+            }
         }
     }
 }
