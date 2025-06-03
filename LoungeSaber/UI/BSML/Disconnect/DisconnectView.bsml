@@ -1,6 +1,0 @@
-<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-    <vertical>
-        <text text="You have been disconnected from the server" align="Center"/>
-        <text text="~disconnectReason" align="Center"/>
-    </vertical>
-</bg>

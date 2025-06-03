@@ -1,5 +1,4 @@
 using LoungeSaber.Configuration;
-using LoungeSaber.Server.Api;
 using Zenject;
 
 namespace LoungeSaber.Installers
@@ -16,8 +15,6 @@ namespace LoungeSaber.Installers
         public override void InstallBindings()
         {
             Container.BindInstance(_config);
-
-            Container.BindInterfacesAndSelfTo<LoungeSaberApi>().AsSingle(); 
         }
     }
 }
