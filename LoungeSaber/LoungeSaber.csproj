@@ -26,12 +26,12 @@
             <HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="BS_Utils">
-            <HintPath>$(BeatSaberDir)\Plugins\BS_Utils.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
         <Reference Include="BeatSaber.ViewSystem">
             <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatSaber.ViewSystem.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="BS_Utils">
+            <HintPath>$(BeatSaberDir)\Plugins\BS_Utils.dll</HintPath>
             <Private>false</Private>
         </Reference>
         <Reference Include="BSML">
@@ -50,9 +50,13 @@
             <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\IPA.Loader.dll</HintPath>
             <Private>False</Private>
         </Reference>
-        <Reference Include="Main">
+        <Reference Include="Main" Publicize="true">
             <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Main.dll</HintPath>
             <Private>False</Private>
+        </Reference>
+        <Reference Include="MenuSystem">
+            <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\MenuSystem.dll</HintPath>
+            <Private>false</Private>
         </Reference>
         <Reference Include="Newtonsoft.Json">
             <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Newtonsoft.Json.dll</HintPath>
@@ -110,6 +114,11 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild">
+          <Version>0.5.0-beta.1</Version>
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
     <ItemGroup>
         <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')"/>
@@ -121,5 +130,8 @@
       <None Remove="UI\BSML\DivisonSelectorView.bsml" />
       <None Remove="UI\BSML\Match\MatchWaitingRoomView.bsml" />
       <None Remove="UI\BSML\Disconnect\DisconnectView.bsml" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="UI\BSML\" />
     </ItemGroup>
 </Project>

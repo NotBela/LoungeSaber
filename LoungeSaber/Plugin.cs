@@ -1,11 +1,9 @@
-﻿using System.Linq;
-using IPA;
+﻿using IPA;
 using IPA.Config;
 using IPA.Config.Stores;
 using SiraUtil.Zenject;
 using LoungeSaber.Configuration;
 using LoungeSaber.Installers;
-using ModestTree;
 using IPALogger = IPA.Logging.Logger;
 
 namespace LoungeSaber
