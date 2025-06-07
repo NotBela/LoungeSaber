@@ -25,7 +25,7 @@ namespace LoungeSaber.Server
 
         public event Action<JoinedQueue> OnJoinedQueuePacketRecieved;
 
-        public async void Connect()
+        public async Task Connect()
         {
             try
             {

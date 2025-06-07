@@ -1,4 +1,5 @@
 ﻿using LoungeSaber.UI;
+using LoungeSaber.UI.BSML;
 using LoungeSaber.UI.FlowCoordinators;
 using Zenject;
 
@@ -9,7 +10,8 @@ namespace LoungeSaber.Installers
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<MenuButtonManager>().AsSingle();
-            Container.BindInterfacesAndSelfTo<QueueMenuFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
+            Container.BindInterfacesAndSelfTo<MatchmakingMenuFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
+            Container.BindInterfacesAndSelfTo<MatchmakingMenuViewController>().FromNewComponentAsViewController().AsSingle();
         }
     }
 }

@@ -1,0 +1,6 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+    <vertical>
+        <primary-button on-click="JoinMatchmakingPoolButtonOnClick" id="JoinMatchmakingPoolButton" text="Find Match" pref-width='34' pref-height='10'/> 
+    </vertical>
+</bg>

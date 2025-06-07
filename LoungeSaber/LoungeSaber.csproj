@@ -132,6 +132,7 @@
       <None Remove="UI\BSML\Disconnect\DisconnectView.bsml" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="UI\BSML\" />
+      <None Remove="UI\BSML\MatchmakingMenuView.bsml" />
+      <EmbeddedResource Include="UI\BSML\MatchmakingMenuView.bsml" />
     </ItemGroup>
 </Project>
