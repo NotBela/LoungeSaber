@@ -12,8 +12,6 @@ namespace LoungeSaber.UI.FlowCoordinators
     public class MatchmakingMenuFlowCoordinator : FlowCoordinator
     {
         [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null;
-        [Inject] private readonly DiContainer _diContainer = null;
-        [Inject] private readonly SiraLog _siraLog = null;
         
         [Inject] private readonly GameplaySetupViewController _gameplaySetupViewController = null;
         [Inject] private readonly MatchmakingMenuViewController _matchmakingMenuViewController = null;
