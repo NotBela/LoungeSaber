@@ -23,9 +23,7 @@ namespace LoungeSaber.Server
 
         private bool _shouldListenToServer = false;
 
-        public event Action<JoinedQueue> OnJoinedQueuePacketRecieved;
-
-        public async Task Connect()
+        public async Task Connect(Action<JoinResponse> onConnectedCallBack)
         {
             try
             {
@@ -34,11 +32,26 @@ namespace LoungeSaber.Server
 
                 var userPlatformData = await BS_Utils.Gameplay.GetUserInfo.GetUserAsync();
                 
-                _listenerThread = new Thread(ListenToServer);
-                _shouldListenToServer = true;
-                _listenerThread.Start();
-                
                 await SendPacket(new JoinRequestPacket(userPlatformData.userName, userPlatformData.platformUserId));
+
+                while (!_client.GetStream().DataAvailable)
+                    await Task.Delay(25);
+                
+                var bytes = new byte[1024];
+                
+                var bytesRead = _client.GetStream().Read(bytes, 0, bytes.Length);
+                Array.Resize(ref bytes, bytesRead);
+                
+                var responsePacket = ServerPacket.Deserialize(Encoding.UTF8.GetString(bytes)) as JoinResponse ?? throw new Exception("Could not deserialize response!");
+
+                onConnectedCallBack.Invoke(responsePacket);
+
+                if (responsePacket.Successful)
+                {
+                    _listenerThread = new Thread(ListenToServer);
+                    _shouldListenToServer = true;
+                    _listenerThread.Start();
+                }
             }
             catch (Exception e)
             {
@@ -71,10 +84,6 @@ namespace LoungeSaber.Server
 
                     switch (packet.PacketType)
                     {
-                        case ServerPacket.ServerPacketTypes.JoinedQueue:
-                            OnJoinedQueuePacketRecieved?.Invoke(packet as JoinedQueue);
-                            _siraLog.Info("joined queue!!");
-                            break;
                         default:
                             throw new Exception("Could not get packet type!");
                     }

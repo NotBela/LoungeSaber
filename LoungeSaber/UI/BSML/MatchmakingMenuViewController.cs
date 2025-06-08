@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
+using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
 using SiraUtil.Logging;
 using UnityEngine.UI;
@@ -25,11 +27,11 @@ namespace LoungeSaber.UI.BSML
         {
             try
             {
+                _matchmakingTimeStopwatch.Stop();
                 _joinMatchmakingPoolButton.interactable = false;
                 _joinMatchmakingPoolButton.SetButtonText("Finding Match (Joining Pool...)");
-                // await _serverListener.Connect();
-                
-                _matchmakingTimeStopwatch.Restart();
+
+                await _serverListener.Connect(OnConnectedCallback);
             }
             catch (Exception e)
             {
@@ -37,11 +39,22 @@ namespace LoungeSaber.UI.BSML
             }
         }
 
+        private void OnConnectedCallback(JoinResponse joinResponse)
+        {
+            if (joinResponse.Successful)
+            {
+                _matchmakingTimeStopwatch.Restart();
+                return;
+            }
+            
+            _siraLog.Warn($"Failed to connect to matchmaking pool: {joinResponse.Message}");
+        }
+
         public void Tick()
         {
             if (!_matchmakingTimeStopwatch.IsRunning) return;
             
-            _joinMatchmakingPoolButton.SetButtonText($"Finding Match ({(_matchmakingTimeStopwatch.Elapsed.Minutes):00}:{(_matchmakingTimeStopwatch.Elapsed.Seconds % 60):00} elapsed)");
+            _joinMatchmakingPoolButton.SetButtonText($"Finding Match ({_matchmakingTimeStopwatch.Elapsed.Minutes:00}:{_matchmakingTimeStopwatch.Elapsed.Seconds % 60:00} elapsed)");
         }
     }
 }

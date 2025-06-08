@@ -22,8 +22,8 @@ namespace LoungeSaber.Models.Packets
 
             switch (userPacketType)
             {
-                case ServerPacketTypes.JoinedQueue:
-                    return JsonConvert.DeserializeObject<JoinedQueue>(json);
+                case ServerPacketTypes.JoinResponse:
+                    return JsonConvert.DeserializeObject<JoinResponse>(json);
                 default:
                     throw new Exception("Could not get packet type!");
             }
@@ -31,7 +31,7 @@ namespace LoungeSaber.Models.Packets
     
         public enum ServerPacketTypes
         {
-            JoinedQueue
+            JoinResponse
         }
     }
 }
