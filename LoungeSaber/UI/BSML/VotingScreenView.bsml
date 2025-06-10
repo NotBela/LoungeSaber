@@ -1,0 +1,18 @@
+<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+    <vertical>
+        <text text="Please vote on a map to play!"/>
+        <custom-list select-cell="OnMapListCellSelected" visible-cells="3" show-scrollbar="false" id="VotingMapList" clickable-cells="true">
+            <vertical>
+                <raw-image id="coverImage"/>
+                <vertical pad="1">
+                    <modifier-container ignore-layout="true" anchor-pos-y="0"/>
+                    <text align="Center" id="songNameText"/>
+                    <text align="Center" id="songAuthorText" color="#CCC"/>
+                    <text align="Center" color="#CCC" id="mapDifficultyText"/>
+                    <text align="Center" color="#CCC" id="mapCategoryText"/>
+                </vertical>
+            </vertical>
+        </custom-list>
+    </vertical>
+</bg>
