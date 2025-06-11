@@ -1,8 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Linq;
 using BeatSaberMarkupLanguage.GameplaySetup;
 using HarmonyLib;
 using HMUI;
+using LoungeSaber.Models.Packets.ServerPackets;
+using LoungeSaber.Server;
 using LoungeSaber.UI.BSML;
+using UnityEngine;
 using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators
@@ -17,7 +22,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             SetupGameplaySetupViewController();
             
             SetTitle("Match Room");
-            showBackButton = false;
+            showBackButton = true;
             ProvideInitialViewControllers(_votingScreenViewController, _gameplaySetupViewController);
         }
         
@@ -37,6 +42,9 @@ namespace LoungeSaber.UI.FlowCoordinators
         
         private void ResetGameplaySetupView() => _gameplaySetupViewController._gameplayModifiersPanelController._gameplayModifierToggles.Do(i => i.gameObject.SetActive(true));
 
-        private void OnGameplaySetupViewActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) => _gameplaySetupViewController._gameplayModifiersPanelController._gameplayModifierToggles.Where(i => i.name != "ProMode").Do(i => i.gameObject.SetActive(false));
+        private void OnGameplaySetupViewActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) => 
+            _gameplaySetupViewController._gameplayModifiersPanelController._gameplayModifierToggles
+            .Where(i => i.name != "ProMode")
+            .Do(i => i.gameObject.SetActive(false));
     }
 }

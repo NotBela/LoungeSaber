@@ -24,5 +24,13 @@ namespace LoungeSaber.Models.Client
             Mmr = mmr;
             Badge = badge;
         }
+
+        public string GetFormattedBadgeName()
+        {
+            if (Badge == null) return Username;
+            
+            var formatted = $"<color={Badge.ColorCode}>{Badge.Name}</color>";
+            return !Badge.Bold ? formatted : $"<b>{formatted}</b>";
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace LoungeSaber.Models.Packets
     public abstract class ServerPacket : Packet
     {
         [JsonProperty("type")]
-        public abstract ServerPacket.ServerPacketTypes PacketType { get; }
+        public abstract ServerPacketTypes PacketType { get; }
     
         public static ServerPacket Deserialize(string json)
         {
@@ -24,6 +24,8 @@ namespace LoungeSaber.Models.Packets
             {
                 case ServerPacketTypes.JoinResponse:
                     return JsonConvert.DeserializeObject<JoinResponse>(json);
+                case ServerPacketTypes.MatchCreated:
+                    return JsonConvert.DeserializeObject<MatchCreatedPacket>(json);
                 default:
                     throw new Exception("Could not get packet type!");
             }
@@ -31,7 +33,8 @@ namespace LoungeSaber.Models.Packets
     
         public enum ServerPacketTypes
         {
-            JoinResponse
+            JoinResponse,
+            MatchCreated
         }
     }
 }

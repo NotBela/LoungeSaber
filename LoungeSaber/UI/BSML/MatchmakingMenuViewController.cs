@@ -7,6 +7,7 @@ using BeatSaberMarkupLanguage.ViewControllers;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
 using SiraUtil.Logging;
+using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
@@ -52,9 +53,14 @@ namespace LoungeSaber.UI.BSML
 
         public void Tick()
         {
-            if (!_matchmakingTimeStopwatch.IsRunning) return;
-            
-            _joinMatchmakingPoolButton.SetButtonText($"Finding Match ({_matchmakingTimeStopwatch.Elapsed.Minutes:00}:{_matchmakingTimeStopwatch.Elapsed.Seconds % 60:00} elapsed)");
+            if (isActiveAndEnabled)
+                UpdateButtonText();
+        }
+
+        private void UpdateButtonText()
+        {
+            if (_matchmakingTimeStopwatch.IsRunning)
+                _joinMatchmakingPoolButton.SetButtonText($"Finding Match ({_matchmakingTimeStopwatch.Elapsed.Minutes:00}:{_matchmakingTimeStopwatch.Elapsed.Seconds % 60:00} elapsed)");
         }
     }
 }

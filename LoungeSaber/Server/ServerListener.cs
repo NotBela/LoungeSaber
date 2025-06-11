@@ -22,6 +22,8 @@ namespace LoungeSaber.Server
         private Thread _listenerThread;
 
         private bool _shouldListenToServer = false;
+        
+        public event Action<MatchCreatedPacket> OnMatchCreated;
 
         public async Task Connect(Action<JoinResponse> onConnectedCallBack)
         {
@@ -41,6 +43,8 @@ namespace LoungeSaber.Server
                 
                 var bytesRead = _client.GetStream().Read(bytes, 0, bytes.Length);
                 Array.Resize(ref bytes, bytesRead);
+                
+                _siraLog.Info(Encoding.UTF8.GetString(bytes));
                 
                 var responsePacket = ServerPacket.Deserialize(Encoding.UTF8.GetString(bytes)) as JoinResponse ?? throw new Exception("Could not deserialize response!");
 
@@ -84,6 +88,9 @@ namespace LoungeSaber.Server
 
                     switch (packet.PacketType)
                     {
+                        case ServerPacket.ServerPacketTypes.MatchCreated:
+                            OnMatchCreated?.Invoke(packet as MatchCreatedPacket);
+                            break;
                         default:
                             throw new Exception("Could not get packet type!");
                     }

@@ -7,12 +7,15 @@
                 <raw-image id="coverImage"/>
                 <vertical pad="1">
                     <modifier-container ignore-layout="true" anchor-pos-y="0"/>
-                    <text align="Center" id="songNameText"/>
-                    <text align="Center" id="songAuthorText" color="#CCC"/>
+                    <text align="Center" text="~songNameText"/>
+                    <text align="Center" text="~songAuthorText" color="#CCC"/>
                     <text align="Center" color="#CCC" id="mapDifficultyText"/>
                     <text align="Center" color="#CCC" id="mapCategoryText"/>
                 </vertical>
             </vertical>
         </custom-list>
+        
+        <text text="Your Opponent:"/>
+        <text id="~opponentText"/>
     </vertical>
 </bg>
