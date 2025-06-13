@@ -1,43 +1,65 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using BeatSaberMarkupLanguage.Attributes;
 using LoungeSaber.Models.Map;
+using SiraUtil.Logging;
+using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace LoungeSaber.UI.BSML.Components
 {
     public class VotingOption
     {
+        private readonly SiraLog _siraLog = null;
+        
         [UIComponent("coverImage")] 
-        private readonly RawImage _coverImage = null;
+        private readonly Image _coverImage = null;
         
         [UIValue("songNameText")]
-        private readonly string _songNameText;
+        private string _songNameText { get; set; }
         
         [UIValue("songAuthorText")]
-        private readonly string _songAuthorText;
-        
-        [UIValue("mapCategoryText")]
-        private readonly string _mapCategoryText;
+        private string _songAuthorText { get; set; }
         
         [UIValue("mapDifficultyText")]
-        private readonly string _mapDifficultyText;
+        private string _mapDifficultyText { get; set; }
 
         public readonly BeatmapLevel ParentBeatmap;
 
-        public VotingOption(BeatmapLevel beatmapLevel, VotingMap.CategoryType categoryType, VotingMap.DifficultyType difficulty)
+        public VotingOption(BeatmapLevel beatmapLevel, VotingMap.CategoryType categoryType, VotingMap.DifficultyType difficulty, SiraLog siraLog)
         {
+            _siraLog = siraLog;
+            
             ParentBeatmap = beatmapLevel;
             
             _songAuthorText = beatmapLevel.songAuthorName;
             _songNameText = beatmapLevel.songName;
-            
-            _mapCategoryText = categoryType.ToString();
-            _mapDifficultyText = difficulty.ToString();
+
+            _mapDifficultyText = $"{difficulty.ToString()} - {categoryType.ToString()}";
         }
 
-        public async Task LoadCoverImageData()
+        [UIAction("#post-parse")]
+        async void PostParse()
         {
-            _coverImage.texture = (await ParentBeatmap.previewMediaData.GetCoverSpriteAsync()).texture;
+            try
+            {
+                Plugin.Log.Info("Loading cover image data");
+            
+                var coverTexture = await ParentBeatmap.previewMediaData.GetCoverSpriteAsync();
+
+                if (coverTexture == null) 
+                    return;
+
+                _coverImage.sprite = coverTexture;
+            }
+            catch (Exception e)
+            {
+                _siraLog.Error(e);
+            }
         }
     }
 }

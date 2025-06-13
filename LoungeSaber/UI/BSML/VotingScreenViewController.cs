@@ -1,28 +1,51 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
+using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.UI.BSML.Components;
+using SiraUtil.Logging;
 using UnityEngine;
+using Zenject;
 
 namespace LoungeSaber.UI.BSML
 {
     [ViewDefinition("LoungeSaber.UI.BSML.VotingScreenView.bsml")]
     public class VotingScreenViewController : BSMLAutomaticViewController
     {
-        [UIValue("opponentText")] private string _opponentText;
+        [Inject] private readonly SiraLog _siraLog = null;
+        
+        [UIValue("opponentText")] private string _opponentText { get; set; }
         
         [UIComponent("VotingMapList")] private readonly CustomCellListTableData _votingMapList = null;
 
         public void PopulateData(MatchCreatedPacket packet)
         {
-            _opponentText = $"{packet.Opponent.GetFormattedBadgeName()} - {packet.Opponent.Mmr} MMR";
+            try
+            {
+                _opponentText = $"{packet.Opponent.GetFormattedBadgeName()} - {packet.Opponent.Mmr} MMR";
 
-            _votingMapList.Data = packet.Maps.Select(i => new VotingOption(i.GetBeatmapLevel(), i.Category, i.Difficulty)).ToList();
-            _votingMapList.TableView.ReloadData();
+                var maps = new List<VotingOption>();
+
+                foreach (var map in packet.Maps)
+                {
+                    var cellData = new VotingOption(map.GetBeatmapLevel(), map.Category, map.Difficulty, _siraLog);
+                    maps.Add(cellData);
+                }
+                _votingMapList.Data = maps;
+                _votingMapList.TableView.ReloadData();
+            
+                NotifyPropertyChanged(null);
+            }
+            catch (Exception e)
+            {
+                _siraLog.Error(e);
+            }
         }
     }
 }
