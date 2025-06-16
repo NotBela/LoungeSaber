@@ -30,14 +30,7 @@ namespace LoungeSaber.UI.BSML
             {
                 _opponentText = $"{packet.Opponent.GetFormattedBadgeName()} - {packet.Opponent.Mmr} MMR";
 
-                var maps = new List<VotingOption>();
-
-                foreach (var map in packet.Maps)
-                {
-                    var cellData = new VotingOption(map.GetBeatmapLevel(), map.Category, map.Difficulty, _siraLog);
-                    maps.Add(cellData);
-                }
-                _votingMapList.Data = maps;
+                _votingMapList.Data = packet.Maps.Select(map => new VotingOption(map.GetBeatmapLevel(), map.Category, map.Difficulty, _siraLog)).ToList();
                 _votingMapList.TableView.ReloadData();
             
                 NotifyPropertyChanged(null);

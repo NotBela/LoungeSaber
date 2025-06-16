@@ -3,18 +3,19 @@
     <vertical>
         <text text="Please vote on a map to play!" align="Center"/>
         <custom-list select-cell="OnMapListCellSelected" visible-cells="3" show-scrollbar="false" id="VotingMapList" clickable-cells="true">
-            <stack>
-                <image id="coverImage"/>
-                <vertical spacing="3">
-                    <modifier-container ignore-layout="true" anchor-pos-y="0"/>
-                    <text align="Center" text="~songNameText" font-size="1.5" color="#CCC"/>
-                    <text align="Center" text="~songAuthorText" color="#CCC" font-size="1.5"/>
-                    <text align="Center" color="#CCC" text="~mapDifficultyText" font-size="1.5"/>
-                </vertical>
-            </stack>
+            <vertical>
+                <stack>
+                    <clickable-image id="coverImage" name="coverImage" preserve-aspect="true"/>
+                    <vertical spacing="3" id="textVertical">
+                        <text align="Center" text="~songNameText"/>
+                        <text align="Center" text="~songAuthorText" color="#CCC" font-size="3"/>
+                        <text align="Center" color="#CCC" text="~mapDifficultyText" font-size="3"/>
+                    </vertical>
+                </stack>
+            </vertical>
         </custom-list>
         
-        <vertical spacing="2">
+        <vertical spacing="0">
             <text text="Your Opponent:" align="Center"/>
             <text text="~opponentText" align="Center" font-size="5"/>
         </vertical>

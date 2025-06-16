@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Tags;
 using LoungeSaber.Models.Map;
 using SiraUtil.Logging;
 using UnityEngine;
@@ -27,6 +28,8 @@ namespace LoungeSaber.UI.BSML.Components
         
         [UIValue("mapDifficultyText")]
         private string _mapDifficultyText { get; set; }
+        
+        [UIComponent("textVertical")] private readonly VerticalLayoutGroup _textVertical = null;
 
         public readonly BeatmapLevel ParentBeatmap;
 
@@ -42,8 +45,8 @@ namespace LoungeSaber.UI.BSML.Components
             _mapDifficultyText = $"{difficulty.ToString()} - {categoryType.ToString()}";
         }
 
-        [UIAction("#post-parse")]
-        async void PostParse()
+        [UIAction("refresh-visuals")]
+        async void RefreshVisuals(bool selected, bool highlighted)
         {
             try
             {
@@ -51,7 +54,7 @@ namespace LoungeSaber.UI.BSML.Components
             
                 var coverTexture = await ParentBeatmap.previewMediaData.GetCoverSpriteAsync();
 
-                if (coverTexture == null) 
+                if (coverTexture is null) 
                     return;
 
                 _coverImage.sprite = coverTexture;
