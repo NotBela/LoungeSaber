@@ -26,6 +26,10 @@ namespace LoungeSaber.Models.Packets
                     return JsonConvert.DeserializeObject<JoinResponse>(json);
                 case ServerPacketTypes.MatchCreated:
                     return JsonConvert.DeserializeObject<MatchCreatedPacket>(json);
+                case ServerPacketTypes.OpponentVoted:
+                    return JsonConvert.DeserializeObject<OpponentVoted>(json);
+                case ServerPacketTypes.MatchStarted:
+                    return JsonConvert.DeserializeObject<MatchStarted>(json);
                 default:
                     throw new Exception("Could not get packet type!");
             }
@@ -34,7 +38,9 @@ namespace LoungeSaber.Models.Packets
         public enum ServerPacketTypes
         {
             JoinResponse,
-            MatchCreated
+            MatchCreated,
+            OpponentVoted,
+            MatchStarted
         }
     }
 }

@@ -1,0 +1,10 @@
+<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+    <vertical>
+        <text text="~temporaryOpponentChoiceText" align="Center"/>
+        
+        <text text="Waiting for a map to be chosen..." align="Center" font-size="6"/>
+
+        <text text="~temporaryPlayerChoiceText" align="Center"/>
+    </vertical>
+</bg>

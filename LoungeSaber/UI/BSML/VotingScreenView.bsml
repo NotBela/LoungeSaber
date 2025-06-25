@@ -5,7 +5,7 @@
         <custom-list select-cell="OnMapListCellSelected" visible-cells="3" show-scrollbar="false" id="VotingMapList" clickable-cells="true">
             <vertical>
                 <stack>
-                    <clickable-image id="coverImage" name="coverImage" preserve-aspect="true"/>
+                    <clickable-image id="coverImage" name="coverImage" preserve-aspect="false"/>
                     <vertical spacing="3" id="textVertical">
                         <text align="Center" text="~songNameText"/>
                         <text align="Center" text="~songAuthorText" color="#CCC" font-size="3"/>

@@ -28,21 +28,23 @@ namespace LoungeSaber.UI.BSML.Components
         
         [UIValue("mapDifficultyText")]
         private string _mapDifficultyText { get; set; }
+
+        public readonly VotingMap Map;
         
-        [UIComponent("textVertical")] private readonly VerticalLayoutGroup _textVertical = null;
+        public BeatmapLevel BeatmapLevel => Map.GetBeatmapLevel() ?? throw new Exception($"BeatmapLevel {Map.Hash} is not installed!");
 
-        public readonly BeatmapLevel ParentBeatmap;
-
-        public VotingOption(BeatmapLevel beatmapLevel, VotingMap.CategoryType categoryType, VotingMap.DifficultyType difficulty, SiraLog siraLog)
+        public VotingOption(VotingMap map, SiraLog siraLog)
         {
             _siraLog = siraLog;
             
-            ParentBeatmap = beatmapLevel;
-            
-            _songAuthorText = beatmapLevel.songAuthorName;
-            _songNameText = beatmapLevel.songName;
+            Map = map;
 
-            _mapDifficultyText = $"{difficulty.ToString()} - {categoryType.ToString()}";
+            var beatmapLevel = Map.GetBeatmapLevel();
+            
+            _songAuthorText = beatmapLevel?.songAuthorName;
+            _songNameText = beatmapLevel?.songName;
+
+            _mapDifficultyText = $"{map.Difficulty.ToString()} - {map.Category.ToString()}";
         }
 
         [UIAction("refresh-visuals")]
@@ -50,9 +52,7 @@ namespace LoungeSaber.UI.BSML.Components
         {
             try
             {
-                Plugin.Log.Info("Loading cover image data");
-            
-                var coverTexture = await ParentBeatmap.previewMediaData.GetCoverSpriteAsync();
+                var coverTexture = await BeatmapLevel.previewMediaData.GetCoverSpriteAsync();
 
                 if (coverTexture is null) 
                     return;
