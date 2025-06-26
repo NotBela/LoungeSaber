@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using LoungeSaber.AffinityPatches;
+using LoungeSaber.AffinityPatches.EnergyPatches;
 using LoungeSaber.Game;
 using Zenject;
 
@@ -13,9 +14,13 @@ namespace LoungeSaber.Installers
                 return;
             
             Container.BindInterfacesAndSelfTo<MatchStartUnpauseController>().AsSingle();
+            
+            // affinity patches
             Container.BindInterfacesAndSelfTo<PausePatch>().AsSingle();
             Container.BindInterfacesAndSelfTo<LevelBarSetupPatch>().AsSingle();
             Container.BindInterfacesAndSelfTo<PauseMenuStartPatch>().AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<EnergyBarInitPatch>().AsSingle();
         }
     }
 }
