@@ -2,13 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BeatSaberMarkupLanguage.GameplaySetup;
 using HarmonyLib;
 using HMUI;
+using LoungeSaber.Game;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML;
+using SiraUtil.Logging;
 using UnityEngine;
 using Zenject;
 
@@ -19,16 +22,47 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly GameplaySetupViewController _gameplaySetupViewController = null;
         [Inject] private readonly VotingScreenViewController _votingScreenViewController = null;
         [Inject] private readonly AwaitingMapDecisionViewController _awaitingMapDecisionViewController = null;
+        [Inject] private readonly WaitingForMatchToStartViewController _waitingForMatchToStartViewController = null;
+        
+        [Inject] private readonly ServerListener _serverListener = null;
+        [Inject] private readonly MatchManager _matchManager = null;
+        
+        [Inject] private readonly SiraLog _siraLog = null;
         
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             SetupGameplaySetupViewController();
             
             SetTitle("Match Room");
-            showBackButton = true;
+            showBackButton = false;
             ProvideInitialViewControllers(_votingScreenViewController, _gameplaySetupViewController);
             
             _votingScreenViewController.MapSelected += OnMapSelected;
+            
+            _serverListener.OnMatchStarting += OnMatchStarting;
+        }
+
+        private async void OnMatchStarting(MatchStarted packet)
+        {
+            try
+            {
+                StartCoroutine(PresentViewControllerSynchronously(_waitingForMatchToStartViewController));
+                _waitingForMatchToStartViewController.PopulateData(packet.MapSelected);
+
+                await Task.Delay(packet.TransitionToGameTime - DateTime.UtcNow);
+                _matchManager.StartMatch(packet.MapSelected, packet.StartingTime, _gameplaySetupViewController.gameplayModifiers.proMode);
+            }
+            catch (Exception e)
+            {
+                _siraLog.Error(e);
+            }
+        }
+
+        private IEnumerator PresentViewControllerSynchronously(ViewController viewController)
+        {
+            yield return new WaitForEndOfFrame();
+            
+            PresentViewController(viewController);
         }
 
         private void OnMapSelected(List<VotingMap> votingMaps, VotingMap selected)
@@ -40,7 +74,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         private void SetupGameplaySetupViewController()
         {
             _gameplaySetupViewController.didActivateEvent += OnGameplaySetupViewActivated;
-            
+             
             _gameplaySetupViewController.Setup(true, true,true, false, PlayerSettingsPanelController.PlayerSettingsPanelLayout.Singleplayer);
         }
         
@@ -50,6 +84,8 @@ namespace LoungeSaber.UI.FlowCoordinators
             
             _gameplaySetupViewController.didActivateEvent -= OnGameplaySetupViewActivated;
             _votingScreenViewController.MapSelected -= OnMapSelected;
+            
+            _serverListener.OnMatchStarting -= OnMatchStarting;
         }
         
         private void ResetGameplaySetupView() => _gameplaySetupViewController._gameplayModifiersPanelController._gameplayModifierToggles.Do(i => i.gameObject.SetActive(true));

@@ -13,7 +13,8 @@ namespace LoungeSaber.Models.Packets
         public enum UserPacketTypes
         {
             JoinRequest,
-            Vote
+            Vote,
+            ScoreSubmission
         }
     }
 }

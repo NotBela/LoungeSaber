@@ -25,7 +25,7 @@ namespace LoungeSaber.Server
         
         public event Action<MatchCreatedPacket> OnMatchCreated;
         public event Action<OpponentVoted> OnOpponentVoted;
-        public event Action<MatchStarted> OnMatchStarted;
+        public event Action<MatchStarted> OnMatchStarting;
 
         public async Task Connect(Action<JoinResponse> onConnectedCallBack)
         {
@@ -97,7 +97,7 @@ namespace LoungeSaber.Server
                             OnOpponentVoted?.Invoke(packet as OpponentVoted);
                             break;
                         case ServerPacket.ServerPacketTypes.MatchStarted:
-                            OnMatchStarted?.Invoke(packet as MatchStarted);
+                            OnMatchStarting?.Invoke(packet as MatchStarted);
                             break;
                         default:
                             throw new Exception("Could not get packet type!");

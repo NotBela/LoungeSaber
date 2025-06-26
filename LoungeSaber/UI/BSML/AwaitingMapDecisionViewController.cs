@@ -17,10 +17,10 @@ namespace LoungeSaber.UI.BSML
         private List<VotingMap> _votingMaps = new List<VotingMap>();
 
         [UIValue("temporaryOpponentChoiceText")]
-        public string TemporaryOpponentChoiceText { get; set; } = "placeholder";
+        public string TemporaryOpponentChoiceText { get; set; } = "Waiting...";
         
         [UIValue("temporaryPlayerChoiceText")]
-        private string TemporaryPlayerChoiceText { get; set; } = "placeholder";
+        private string TemporaryPlayerChoiceText { get; set; } = "";
         
         public void PopulateData(List<VotingMap> votingMaps, VotingMap vote)
         {
