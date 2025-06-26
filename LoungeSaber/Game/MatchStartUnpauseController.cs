@@ -13,7 +13,7 @@ namespace LoungeSaber.Game
 
         public async Task UnpauseLevelAtTime(DateTime unpauseTime)
         {
-            await Task.Delay(unpauseTime - DateTime.UtcNow);
+            await Task.Delay((int) Math.Max(0, (unpauseTime - DateTime.UtcNow).TotalMilliseconds));
             
             _pauseController.HandlePauseMenuManagerDidPressContinueButton();
             StillInStartingPauseMenu = false;

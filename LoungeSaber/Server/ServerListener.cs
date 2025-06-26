@@ -31,7 +31,6 @@ namespace LoungeSaber.Server
         {
             try
             {
-                // TODO: replace this with config values
                 await _client.ConnectAsync(IPAddress.Parse(_config.ServerIp), _config.ServerPort);
 
                 var userPlatformData = await BS_Utils.Gameplay.GetUserInfo.GetUserAsync();

@@ -15,6 +15,7 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<MatchStartUnpauseController>().AsSingle();
             Container.BindInterfacesAndSelfTo<PausePatch>().AsSingle();
             Container.BindInterfacesAndSelfTo<LevelBarSetupPatch>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PauseMenuStartPatch>().AsSingle();
         }
     }
 }
