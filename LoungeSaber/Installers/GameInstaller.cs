@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using LoungeSaber.AffinityPatches;
 using LoungeSaber.AffinityPatches.EnergyPatches;
+using LoungeSaber.AffinityPatches.ScorePatches;
 using LoungeSaber.Game;
 using Zenject;
 
@@ -21,6 +22,9 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<PauseMenuStartPatch>().AsSingle();
             
             Container.BindInterfacesAndSelfTo<EnergyBarInitPatch>().AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<ScoreDisplayPatch>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ImmediateRankDisplayPatch>().AsSingle();
         }
     }
 }
