@@ -8,7 +8,6 @@ namespace LoungeSaber.AffinityPatches.ScorePatches
     public class ScoreDisplayPatch : IAffinity
     {
         [Inject] private readonly ScoreController _scoreController = null;
-        [Inject] private readonly RelativeScoreAndImmediateRankCounter _relativeScoreAndImmediateRankCounter = null;
         
         [AffinityPatch(typeof(ScoreUIController), nameof(ScoreUIController.UpdateScore), argumentTypes: new Type[] {typeof(int)})]
         [AffinityPrefix]

@@ -26,6 +26,10 @@ namespace LoungeSaber.Server
         public event Action<MatchCreatedPacket> OnMatchCreated;
         public event Action<OpponentVoted> OnOpponentVoted;
         public event Action<MatchStarted> OnMatchStarting;
+        
+        public event Action<MatchResults> OnMatchResults;
+        
+        public event Action OnDisconnected;
 
         public async Task Connect(Action<JoinResponse> onConnectedCallBack)
         {
@@ -65,9 +69,16 @@ namespace LoungeSaber.Server
         }
 
         public async Task SendPacket(UserPacket packet)
-        {
+        { 
             var bytes = packet.SerializeToBytes();
             await _client.GetStream().WriteAsync(bytes, 0, bytes.Length);
+        }
+
+        public void Disconnect()
+        {
+            _shouldListenToServer = false;
+            _client.Dispose();
+            OnDisconnected?.Invoke();
         }
 
         private void ListenToServer()
@@ -98,6 +109,9 @@ namespace LoungeSaber.Server
                         case ServerPacket.ServerPacketTypes.MatchStarted:
                             OnMatchStarting?.Invoke(packet as MatchStarted);
                             break;
+                        case ServerPacket.ServerPacketTypes.MatchResults:
+                            OnMatchResults?.Invoke(packet as MatchResults);
+                            break;
                         default:
                             throw new Exception("Could not get packet type!");
                     }
@@ -105,6 +119,7 @@ namespace LoungeSaber.Server
                 catch (Exception e)
                 {
                     _siraLog.Error(e);
+                    Disconnect();
                 }
             }
         }

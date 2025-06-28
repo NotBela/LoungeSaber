@@ -38,10 +38,10 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private void OnMatchCreated(MatchCreatedPacket packet)
         {
-            StartCoroutine(test(packet));
+            StartCoroutine(PresentViewControllerSynchronously(packet));
         }
 
-        IEnumerator test(MatchCreatedPacket packet)
+        IEnumerator PresentViewControllerSynchronously(MatchCreatedPacket packet)
         {
             yield return new WaitForEndOfFrame();
             

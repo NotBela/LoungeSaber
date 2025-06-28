@@ -30,6 +30,8 @@ namespace LoungeSaber.Models.Packets
                     return JsonConvert.DeserializeObject<OpponentVoted>(json);
                 case ServerPacketTypes.MatchStarted:
                     return JsonConvert.DeserializeObject<MatchStarted>(json);
+                case ServerPacketTypes.MatchResults:
+                    return JsonConvert.DeserializeObject<MatchResults>(json);
                 default:
                     throw new Exception("Could not get packet type!");
             }
@@ -40,7 +42,8 @@ namespace LoungeSaber.Models.Packets
             JoinResponse,
             MatchCreated,
             OpponentVoted,
-            MatchStarted
+            MatchStarted,
+            MatchResults
         }
     }
 }

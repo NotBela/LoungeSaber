@@ -9,6 +9,7 @@ using HMUI;
 using LoungeSaber.Game;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;
+using LoungeSaber.Models.Packets.UserPackets;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML;
 using SiraUtil.Logging;
@@ -23,12 +24,13 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly VotingScreenViewController _votingScreenViewController = null;
         [Inject] private readonly AwaitingMapDecisionViewController _awaitingMapDecisionViewController = null;
         [Inject] private readonly WaitingForMatchToStartViewController _waitingForMatchToStartViewController = null;
+        [Inject] private readonly AwaitMatchEndViewController _awaitMatchEndViewController = null;
         
         [Inject] private readonly ServerListener _serverListener = null;
         [Inject] private readonly MatchManager _matchManager = null;
         
         [Inject] private readonly SiraLog _siraLog = null;
-        
+         
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             SetupGameplaySetupViewController();
@@ -38,15 +40,25 @@ namespace LoungeSaber.UI.FlowCoordinators
             ProvideInitialViewControllers(_votingScreenViewController, _gameplaySetupViewController);
             
             _votingScreenViewController.MapSelected += OnMapSelected;
-            
             _serverListener.OnMatchStarting += OnMatchStarting;
+            _matchManager.OnLevelCompleted += OnLevelCompleted;
+        }
+
+        private void OnLevelCompleted(LevelCompletionResults levelCompletionResults, StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupData)
+        {
+            Task.Run(async () =>
+            {
+                await _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(standardLevelScenesTransitionSetupData.transformedBeatmapData),
+                    levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
+            });
+            PresentViewControllerSynchronously(_awaitMatchEndViewController, true);
         }
 
         private async void OnMatchStarting(MatchStarted packet)
         {
             try
             {
-                StartCoroutine(PresentViewControllerSynchronously(_waitingForMatchToStartViewController));
+                PresentViewControllerSynchronously(_waitingForMatchToStartViewController);
                 _waitingForMatchToStartViewController.PopulateData(packet.MapSelected);
 
                 await Task.Delay(packet.TransitionToGameTime - DateTime.UtcNow);
@@ -57,12 +69,14 @@ namespace LoungeSaber.UI.FlowCoordinators
                 _siraLog.Error(e);
             }
         }
+        
+        private void PresentViewControllerSynchronously(ViewController viewController, bool immediately = false) => StartCoroutine(PresentViewControllerSynchronouslyCoroutine(viewController, immediately));
 
-        private IEnumerator PresentViewControllerSynchronously(ViewController viewController)
+        private IEnumerator PresentViewControllerSynchronouslyCoroutine(ViewController viewController, bool immediately)
         {
             yield return new WaitForEndOfFrame();
             
-            PresentViewController(viewController);
+            PresentViewController(viewController, immediately: immediately);
         }
 
         private void OnMapSelected(List<VotingMap> votingMaps, VotingMap selected)
@@ -84,8 +98,8 @@ namespace LoungeSaber.UI.FlowCoordinators
             
             _gameplaySetupViewController.didActivateEvent -= OnGameplaySetupViewActivated;
             _votingScreenViewController.MapSelected -= OnMapSelected;
-            
             _serverListener.OnMatchStarting -= OnMatchStarting;
+            _matchManager.OnLevelCompleted -= OnLevelCompleted;
         }
         
         private void ResetGameplaySetupView() => _gameplaySetupViewController._gameplayModifiersPanelController._gameplayModifierToggles.Do(i => i.gameObject.SetActive(true));

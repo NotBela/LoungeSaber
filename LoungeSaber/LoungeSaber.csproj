@@ -160,5 +160,8 @@
       <EmbeddedResource Include="UI\BSML\AwaitingMapDecisionView.bsml" />
       <None Remove="UI\BSML\WaitingForMatchToStartView.bsml" />
       <EmbeddedResource Include="UI\BSML\WaitingForMatchToStartView.bsml" />
+      <None Remove="UI\BSML\AwaitMatchEndView.bsml" />
+      <EmbeddedResource Include="UI\BSML\AwaitMatchEndView.bsml" />
+      <None Remove="UI\BSML\UnhandledExceptionView.bsml" />
     </ItemGroup>
 </Project>

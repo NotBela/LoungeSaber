@@ -3,18 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LoungeSaber.Models.Map;
+using LoungeSaber.Server;
 using SiraUtil.Logging;
+using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace LoungeSaber.Game
 {
-    public class MatchManager
+    public class MatchManager : IInitializable, IDisposable
     {
         [Inject] private readonly MenuTransitionsHelper _menuTransitionsHelper = null;
         [Inject] private readonly PlayerDataModel _playerDataModel = null;
         [Inject] private readonly SiraLog _siraLog = null;
         
+        [Inject] private readonly ServerListener _serverListener = null;
+        
         public bool InMatch { get; private set; } = false;
+
+        public event Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> OnLevelCompleted; 
 
         public void StartMatch(VotingMap level, DateTime unpauseTime, bool proMode)
         {
@@ -61,13 +67,19 @@ namespace LoungeSaber.Game
                 true,
                 null,
                 // TODO: fix restart button being visible
-                (diContainer) => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
-                null,
+                diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
+                AfterSceneSwitchCallback,
                 null
                 );
         }
-        
-        async void AfterSceneSwitchToGameplayCallback(DiContainer diContainer, DateTime unpauseTime)
+
+        private void AfterSceneSwitchCallback(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSo, LevelCompletionResults levelCompletionResults)
+        {
+            InMatch = false;
+            OnLevelCompleted?.Invoke(levelCompletionResults, standardLevelScenesTransitionSetupDataSo);
+        }
+
+        private async void AfterSceneSwitchToGameplayCallback(DiContainer diContainer, DateTime unpauseTime)
         {
             try
             {
@@ -79,6 +91,24 @@ namespace LoungeSaber.Game
             {
                 _siraLog.Error(e);
             }
+        }
+
+        public void Initialize()
+        {
+            _serverListener.OnDisconnected += OnDisconnect;
+        }
+
+        private void OnDisconnect()
+        {
+            if (InMatch && SceneManager.GetActiveScene().name == "GameCore")
+            {
+                _menuTransitionsHelper.StopStandardLevel();
+            }
+        }
+
+        public void Dispose()
+        {
+            _serverListener.OnDisconnected -= OnDisconnect;
         }
     }
 }
