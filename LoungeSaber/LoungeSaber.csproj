@@ -163,5 +163,7 @@
       <None Remove="UI\BSML\AwaitMatchEndView.bsml" />
       <EmbeddedResource Include="UI\BSML\AwaitMatchEndView.bsml" />
       <None Remove="UI\BSML\UnhandledExceptionView.bsml" />
+      <None Remove="UI\BSML\MatchResultsView.bsml" />
+      <EmbeddedResource Include="UI\BSML\MatchResultsView.bsml" />
     </ItemGroup>
 </Project>

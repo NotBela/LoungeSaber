@@ -25,6 +25,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly AwaitingMapDecisionViewController _awaitingMapDecisionViewController = null;
         [Inject] private readonly WaitingForMatchToStartViewController _waitingForMatchToStartViewController = null;
         [Inject] private readonly AwaitMatchEndViewController _awaitMatchEndViewController = null;
+        [Inject] private readonly MatchResultsViewController _matchResultsViewController = null;
         
         [Inject] private readonly ServerListener _serverListener = null;
         [Inject] private readonly MatchManager _matchManager = null;
@@ -42,6 +43,13 @@ namespace LoungeSaber.UI.FlowCoordinators
             _votingScreenViewController.MapSelected += OnMapSelected;
             _serverListener.OnMatchStarting += OnMatchStarting;
             _matchManager.OnLevelCompleted += OnLevelCompleted;
+            _serverListener.OnMatchResults += OnMatchResultsReceived;
+        }
+
+        private void OnMatchResultsReceived(MatchResults results)
+        {
+            PresentViewControllerSynchronously(_matchResultsViewController);
+            _matchResultsViewController.PopulateData(results);
         }
 
         private void OnLevelCompleted(LevelCompletionResults levelCompletionResults, StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupData)
@@ -100,6 +108,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             _votingScreenViewController.MapSelected -= OnMapSelected;
             _serverListener.OnMatchStarting -= OnMatchStarting;
             _matchManager.OnLevelCompleted -= OnLevelCompleted;
+            _serverListener.OnMatchResults -= OnMatchResultsReceived;
         }
         
         private void ResetGameplaySetupView() => _gameplaySetupViewController._gameplayModifiersPanelController._gameplayModifierToggles.Do(i => i.gameObject.SetActive(true));

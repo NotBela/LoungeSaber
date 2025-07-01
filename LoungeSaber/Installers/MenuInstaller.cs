@@ -18,6 +18,8 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<WaitingForMatchToStartViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<AwaitMatchEndViewController>().FromNewComponentAsViewController()
                 .AsSingle();
+            Container.BindInterfacesAndSelfTo<MatchResultsViewController>().FromNewComponentAsViewController()
+                .AsSingle();
         }
     }
 }

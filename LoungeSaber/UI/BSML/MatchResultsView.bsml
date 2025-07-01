@@ -1,0 +1,8 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+    <vertical>
+        <vertical bg="title-gradient" background-color="~titleBgColor" horizontal-fit="Unconstrained" vertical-fit="PreferredSize" preferred-height="13" pref-width="75" pad-top="2">
+            <text text="~titleText" font-size="15" all-uppercase="true" align="Center" italics="true"/>
+        </vertical>
+    </vertical>
+</bg>
