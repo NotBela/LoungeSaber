@@ -9,6 +9,9 @@ namespace LoungeSaber.Models.Packets.ServerPackets
     
         [JsonProperty("opponentScore")]
         public readonly ScoreSubmissionPacket OpponentScore;
+        
+        [JsonProperty("yourScore")]
+        public readonly ScoreSubmissionPacket YourScore;
 
         [JsonProperty("winner")]
         public readonly MatchWinner Winner;
@@ -17,7 +20,7 @@ namespace LoungeSaber.Models.Packets.ServerPackets
         public readonly int MMRChange;
 
         [JsonConstructor]
-        public MatchResults(ScoreSubmissionPacket opponentScore, MatchWinner winner, int mmrChange)
+        public MatchResults(ScoreSubmissionPacket opponentScore, ScoreSubmissionPacket yourScore, MatchWinner winner, int mmrChange)
         {
             OpponentScore = opponentScore;
             Winner = winner;
