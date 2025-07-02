@@ -2,9 +2,9 @@
 using BeatSaberMarkupLanguage.ViewControllers;
 using LoungeSaber.Models.Map;
 
-namespace LoungeSaber.UI.BSML
+namespace LoungeSaber.UI.BSML.Match
 {
-    [ViewDefinition("LoungeSaber.UI.BSML.WaitingForMatchToStartView.bsml")]
+    [ViewDefinition("LoungeSaber.UI.BSML.Match.WaitingForMatchToStartView.bsml")]
     public class WaitingForMatchToStartViewController : BSMLAutomaticViewController
     {
         [UIValue("tempSongDisplayText")] private string _tempSongDisplayText { get; set; } = "";

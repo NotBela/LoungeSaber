@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
@@ -13,12 +11,11 @@ using LoungeSaber.Models.Packets.UserPackets;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Components;
 using SiraUtil.Logging;
-using UnityEngine;
 using Zenject;
 
-namespace LoungeSaber.UI.BSML
+namespace LoungeSaber.UI.BSML.Match
 {
-    [ViewDefinition("LoungeSaber.UI.BSML.VotingScreenView.bsml")]
+    [ViewDefinition("LoungeSaber.UI.BSML.Match.VotingScreenView.bsml")]
     public class VotingScreenViewController : BSMLAutomaticViewController
     {
         [Inject] private readonly SiraLog _siraLog = null;
@@ -35,7 +32,7 @@ namespace LoungeSaber.UI.BSML
         {
             try
             {
-                _opponentText = $"{packet.Opponent.GetFormattedBadgeName()} - {packet.Opponent.Mmr} MMR";
+                _opponentText = $"{packet.Opponent.GetFormattedUserName()} - {packet.Opponent.Mmr} MMR";
 
                 _options = packet.Maps.ToList();
 

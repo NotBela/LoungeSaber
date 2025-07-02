@@ -1,9 +1,9 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 
-namespace LoungeSaber.UI.BSML
+namespace LoungeSaber.UI.BSML.Match
 {
-    [ViewDefinition("LoungeSaber.UI.BSML.AwaitMatchEndView.bsml")]
+    [ViewDefinition("LoungeSaber.UI.BSML.Match.AwaitMatchEndView.bsml")]
     public class AwaitMatchEndViewController : BSMLAutomaticViewController
     {
         

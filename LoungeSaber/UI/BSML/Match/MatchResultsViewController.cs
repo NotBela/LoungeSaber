@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Drawing;
 using System.Globalization;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
-using JetBrains.Annotations;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Packets.UserPackets;
-using Color = UnityEngine.Color;
 
-namespace LoungeSaber.UI.BSML
+namespace LoungeSaber.UI.BSML.Match
 {
-    [ViewDefinition("LoungeSaber.UI.BSML.MatchResultsView.bsml")]
+    [ViewDefinition("LoungeSaber.UI.BSML.Match.MatchResultsView.bsml")]
     public class MatchResultsViewController : BSMLAutomaticViewController
     {
         public event Action ContinueButtonPressed;
@@ -31,8 +28,8 @@ namespace LoungeSaber.UI.BSML
             TitleText = results.Winner == MatchResults.MatchWinner.You ? "You Win!" : "You Lose!";
             TitleBgColor = results.Winner == MatchResults.MatchWinner.You ? "#0000FF" : "#FF0000";
 
-            ClientNameText = results.NewClientUserInfo.GetFormattedBadgeName();
-            OpponentNameText = results.NewOpponentUserInfo.GetFormattedBadgeName();
+            ClientNameText = results.NewClientUserInfo.GetFormattedUserName();
+            OpponentNameText = results.NewOpponentUserInfo.GetFormattedUserName();
 
             ClientScoreText = FormatScore(results.YourScore);
             OpponentScoreText = FormatScore(results.OpponentScore);

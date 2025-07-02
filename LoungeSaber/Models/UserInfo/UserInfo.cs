@@ -25,7 +25,7 @@ namespace LoungeSaber.Models.UserInfo
             Badge = badge;
         }
 
-        public string GetFormattedBadgeName()
+        public string GetFormattedUserName()
         {
             if (Badge == null) return Username;
             

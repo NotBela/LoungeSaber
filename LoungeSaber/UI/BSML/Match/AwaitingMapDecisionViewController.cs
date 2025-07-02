@@ -7,9 +7,9 @@ using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
 using Zenject;
 
-namespace LoungeSaber.UI.BSML
+namespace LoungeSaber.UI.BSML.Match
 {
-    [ViewDefinition("LoungeSaber.UI.BSML.AwaitingMapDecisionView.bsml")]
+    [ViewDefinition("LoungeSaber.UI.BSML.Match.AwaitingMapDecisionView.bsml")]
     public class AwaitingMapDecisionViewController : BSMLAutomaticViewController, IInitializable, IDisposable
     {
         [Inject] private readonly ServerListener _serverListener = null;
