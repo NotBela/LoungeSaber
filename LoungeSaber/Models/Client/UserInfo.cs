@@ -29,7 +29,7 @@ namespace LoungeSaber.Models.Client
         {
             if (Badge == null) return Username;
             
-            var formatted = $"<color={Badge.ColorCode}>{Badge.Name}</color>";
+            var formatted = $"<color={Badge.ColorCode}>{Username}</color>";
             return !Badge.Bold ? formatted : $"<b>{formatted}</b>";
         }
     }

@@ -1,8 +1,26 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
     <vertical>
-        <vertical bg="title-gradient" background-color="~titleBgColor" horizontal-fit="Unconstrained" vertical-fit="PreferredSize" preferred-height="13" pref-width="75" pad-top="2">
-            <text text="~titleText" font-size="15" all-uppercase="true" align="Center" italics="true"/>
+        <vertical bg="title-gradient" background-color="~titleBgColor" horizontal-fit="Unconstrained" vertical-fit="PreferredSize" preferred-height="12" pref-width="75" pad-top="2">
+            <text text="~titleText" font-size="12" all-uppercase="true" align="Center" italics="true"/>
         </vertical>
+        
+        <horizontal child-align="MiddleCenter">
+            <vertical min-width="50">
+                <text text="~clientNameText" align="Left" font-size="7"/>
+                <text text="~clientScoreText" align="Left" font-size="7"/>
+                <text text="~newClientMmrText" align="Left" font-size="7"/>
+            </vertical>
+            <vertical horizontal-fit="Unconstrained" min-width="10">
+                <text text="vs." align="Center" italics="true" font-size="7"/>
+            </vertical>
+            <vertical min-width="50">
+                <text text="~opponentNameText" align="Right" font-size="7"/>
+                <text text="~opponentScoreText" align="Right" font-size="7"/>
+                <text text="~newOpponentMmrText" align="Right" font-size="7"/>
+            </vertical>
+        </horizontal>
+        
+        <primary-button text="Continue" on-click="continueButtonClicked" pref-width='34' pref-height='10'/>
     </vertical>
 </bg>

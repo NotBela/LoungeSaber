@@ -59,7 +59,7 @@ namespace LoungeSaber.UI.FlowCoordinators
                 await _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(standardLevelScenesTransitionSetupData.transformedBeatmapData),
                     levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
             });
-            PresentViewControllerSynchronously(_awaitMatchEndViewController, true);
+            PresentViewControllerSynchronously(_awaitMatchEndViewController);
         }
 
         private async void OnMatchStarting(MatchStarted packet)
@@ -78,18 +78,18 @@ namespace LoungeSaber.UI.FlowCoordinators
             }
         }
         
-        private void PresentViewControllerSynchronously(ViewController viewController, bool immediately = false) => StartCoroutine(PresentViewControllerSynchronouslyCoroutine(viewController, immediately));
+        private void PresentViewControllerSynchronously(ViewController viewController) => StartCoroutine(PresentViewControllerSynchronouslyCoroutine(viewController));
 
-        private IEnumerator PresentViewControllerSynchronouslyCoroutine(ViewController viewController, bool immediately)
+        private IEnumerator PresentViewControllerSynchronouslyCoroutine(ViewController viewController)
         {
             yield return new WaitForEndOfFrame();
             
-            PresentViewController(viewController, immediately: immediately);
+            ReplaceTopViewController(viewController);
         }
 
         private void OnMapSelected(List<VotingMap> votingMaps, VotingMap selected)
         {
-            PresentViewController(_awaitingMapDecisionViewController);
+            ReplaceTopViewController(_awaitingMapDecisionViewController);
             _awaitingMapDecisionViewController.PopulateData(votingMaps, selected);
         }
 

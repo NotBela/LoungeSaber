@@ -23,7 +23,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly ServerListener _serverListener = null;
         [Inject] private readonly MatchmakingMenuViewController _matchmakingMenuViewController = null;
         
-
+        [Inject] private readonly MatchResultsViewController _matchResultsViewController = null;
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             showBackButton = true;
@@ -31,9 +31,12 @@ namespace LoungeSaber.UI.FlowCoordinators
             SetTitle("LoungeSaber");
         }
 
+        private void OnContinueButtonPressed() => DismissFlowCoordinator(_matchFlowCoordinator);
+
         public void Initialize()
         {
             _serverListener.OnMatchCreated += OnMatchCreated;
+            _matchResultsViewController.ContinueButtonPressed += OnContinueButtonPressed;
         }
 
         private void OnMatchCreated(MatchCreatedPacket packet)
@@ -52,6 +55,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         public void Dispose()
         {
             _serverListener.OnMatchCreated -= OnMatchCreated;
+            _matchResultsViewController.ContinueButtonPressed -= OnContinueButtonPressed;
         }
 
         protected override void BackButtonWasPressed(ViewController _)
