@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Diagnostics;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.Attributes;
@@ -7,13 +6,12 @@ using BeatSaberMarkupLanguage.ViewControllers;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
 using SiraUtil.Logging;
-using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace LoungeSaber.UI.BSML
+namespace LoungeSaber.UI.BSML.Menu
 {
-    [ViewDefinition("LoungeSaber.UI.BSML.MatchmakingMenuView.bsml")]
+    [ViewDefinition("LoungeSaber.UI.BSML.Menu.MatchmakingMenuView.bsml")]
     public class MatchmakingMenuViewController : BSMLAutomaticViewController, ITickable
     {
         [Inject] private readonly ServerListener _serverListener = null;
