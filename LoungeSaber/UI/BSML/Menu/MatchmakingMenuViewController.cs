@@ -21,6 +21,13 @@ namespace LoungeSaber.UI.BSML.Menu
         
         [UIComponent("JoinMatchmakingPoolButton")] private readonly Button _joinMatchmakingPoolButton = null;
 
+        protected override void DidDeactivate(bool firstActivation, bool addedToHierarchy)
+        {
+            _matchmakingTimeStopwatch.Stop();
+            _joinMatchmakingPoolButton.interactable = true;
+            _joinMatchmakingPoolButton.SetButtonText("Find Match");
+        }
+        
         [UIAction("JoinMatchmakingPoolButtonOnClick")]
         private async void OnJoinMatchmakingPoolButtonOnClick()
         {
