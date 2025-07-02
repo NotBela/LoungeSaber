@@ -11,10 +11,10 @@ namespace LoungeSaber.Models.Packets.ServerPackets
         public readonly VotingMap[] Maps;
     
         [JsonProperty("opponent")]
-        public readonly Client.UserInfo Opponent;
+        public readonly UserInfo.UserInfo Opponent;
 
         [JsonConstructor]
-        public MatchCreatedPacket(VotingMap[] maps, Client.UserInfo opponent)
+        public MatchCreatedPacket(VotingMap[] maps, UserInfo.UserInfo opponent)
         {
             Maps = maps;
             Opponent = opponent;

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace LoungeSaber.Models.Client
+namespace LoungeSaber.Models.UserInfo
 {
     public class Badge
     {

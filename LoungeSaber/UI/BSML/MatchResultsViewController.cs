@@ -43,7 +43,7 @@ namespace LoungeSaber.UI.BSML
             NotifyPropertyChanged(null);
         }
 
-        private string FormatMmrChange(int change, Models.Client.UserInfo info, bool won) => $"{info.Mmr} ({(!won ? "<color=#90EE90>+" : "<color=#FF7F7F>-")}{change}</color>)";
+        private string FormatMmrChange(int change, Models.UserInfo.UserInfo info, bool won) => $"{info.Mmr} ({(!won ? "<color=#90EE90>+" : "<color=#FF7F7F>-")}{change}</color>)";
 
         private string FormatScore(ScoreSubmissionPacket scoreSubmission) => 
             $"{(scoreSubmission.Score / scoreSubmission.MaxScore * 100).ToString("F2", CultureInfo.InvariantCulture)}% " +

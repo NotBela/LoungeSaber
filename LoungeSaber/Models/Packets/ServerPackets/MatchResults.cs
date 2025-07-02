@@ -20,13 +20,13 @@ namespace LoungeSaber.Models.Packets.ServerPackets
         public readonly int MMRChange;
 
         [JsonProperty("newOpponentUserInfo")] 
-        public readonly Client.UserInfo NewOpponentUserInfo;
+        public readonly UserInfo.UserInfo NewOpponentUserInfo;
         
         [JsonProperty("newClientUserInfo")]
-        public readonly Client.UserInfo NewClientUserInfo;
+        public readonly UserInfo.UserInfo NewClientUserInfo;
 
         [JsonConstructor]
-        public MatchResults(ScoreSubmissionPacket opponentScore, ScoreSubmissionPacket yourScore, MatchWinner winner, int mmrChange, Client.UserInfo newOpponentUserInfo, Client.UserInfo newClientUserInfo)
+        public MatchResults(ScoreSubmissionPacket opponentScore, ScoreSubmissionPacket yourScore, MatchWinner winner, int mmrChange, UserInfo.UserInfo newOpponentUserInfo, UserInfo.UserInfo newClientUserInfo)
         {
             OpponentScore = opponentScore;
             YourScore = yourScore;
