@@ -1,4 +1,5 @@
 ﻿using System;
+using LoungeSaber_Server.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Packets.ServerPackets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -32,6 +33,8 @@ namespace LoungeSaber.Models.Packets
                     return JsonConvert.DeserializeObject<MatchStarted>(json);
                 case ServerPacketTypes.MatchResults:
                     return JsonConvert.DeserializeObject<MatchResults>(json);
+                case ServerPacketTypes.PrematureMatchEnd:
+                    return JsonConvert.DeserializeObject<PrematureMatchEnd>(json);
                 default:
                     throw new Exception("Could not get packet type!");
             }
@@ -43,7 +46,8 @@ namespace LoungeSaber.Models.Packets
             MatchCreated,
             OpponentVoted,
             MatchStarted,
-            MatchResults
+            MatchResults,
+            PrematureMatchEnd
         }
     }
 }

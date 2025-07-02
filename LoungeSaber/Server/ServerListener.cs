@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using LoungeSaber_Server.Models.Packets.ServerPackets;
 using LoungeSaber.Configuration;
 using LoungeSaber.Models.Packets;
 using LoungeSaber.Models.Packets.ServerPackets;
@@ -18,7 +19,7 @@ namespace LoungeSaber.Server
         [Inject] private readonly PluginConfig _config = null;
         [Inject] private readonly SiraLog _siraLog = null;
 
-        private readonly TcpClient _client = new TcpClient();
+        private TcpClient _client = new TcpClient();
         private Thread _listenerThread;
 
         private bool _shouldListenToServer = false;
@@ -26,15 +27,16 @@ namespace LoungeSaber.Server
         public event Action<MatchCreatedPacket> OnMatchCreated;
         public event Action<OpponentVoted> OnOpponentVoted;
         public event Action<MatchStarted> OnMatchStarting;
-        
         public event Action<MatchResults> OnMatchResults;
         
         public event Action OnDisconnected;
+        public event Action<PrematureMatchEnd> OnPrematureMatchEnd;
 
         public async Task Connect(Action<JoinResponse> onConnectedCallBack)
         {
             try
             {
+                _client = new TcpClient();
                 await _client.ConnectAsync(IPAddress.Parse(_config.ServerIp), _config.ServerPort);
 
                 var userPlatformData = await BS_Utils.Gameplay.GetUserInfo.GetUserAsync();
@@ -77,8 +79,7 @@ namespace LoungeSaber.Server
         public void Disconnect()
         {
             _shouldListenToServer = false;
-            _client.Dispose();
-            OnDisconnected?.Invoke();
+            _client.Close();
         }
 
         private void ListenToServer()
@@ -111,6 +112,11 @@ namespace LoungeSaber.Server
                             break;
                         case ServerPacket.ServerPacketTypes.MatchResults:
                             OnMatchResults?.Invoke(packet as MatchResults);
+                            Disconnect();
+                            break;
+                        case ServerPacket.ServerPacketTypes.PrematureMatchEnd:
+                            OnPrematureMatchEnd?.Invoke(packet as PrematureMatchEnd);
+                            Disconnect();
                             break;
                         default:
                             throw new Exception("Could not get packet type!");
@@ -120,6 +126,7 @@ namespace LoungeSaber.Server
                 {
                     _siraLog.Error(e);
                     Disconnect();
+                    OnDisconnected?.Invoke();
                 }
             }
         }
