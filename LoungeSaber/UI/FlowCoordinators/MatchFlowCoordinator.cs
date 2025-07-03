@@ -77,7 +77,12 @@ namespace LoungeSaber.UI.FlowCoordinators
             }
         }
         
-        private void PresentViewControllerSynchronously(ViewController viewController, bool immediate = false) => StartCoroutine(PresentViewControllerSynchronouslyCoroutine(viewController, immediate));
+        private void PresentViewControllerSynchronously(ViewController viewController, bool immediate = false)
+        {
+            while (isInTransition);
+            
+            StartCoroutine(PresentViewControllerSynchronouslyCoroutine(viewController, immediate));
+        }
 
         private IEnumerator PresentViewControllerSynchronouslyCoroutine(ViewController viewController, bool immediate)
         {
