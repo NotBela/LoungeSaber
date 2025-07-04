@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using BeatSaberMarkupLanguage.Attributes;
+﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;

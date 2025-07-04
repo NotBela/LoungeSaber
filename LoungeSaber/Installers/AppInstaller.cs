@@ -20,6 +20,7 @@ namespace LoungeSaber.Installers
 
             Container.BindInterfacesAndSelfTo<ServerListener>().AsSingle();
             Container.BindInterfacesAndSelfTo<MatchManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<LoungeSaberApi>().AsSingle();
         }
     }
 }

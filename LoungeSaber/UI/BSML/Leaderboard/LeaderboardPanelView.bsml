@@ -1,0 +1,12 @@
+<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+    <horizontal pref-width="91" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" spacing="4" bg="panel-top-gradient" bg-color="~bgColor" pad="2">
+        <vertical active="~showRankingScreen">
+            <text text="~globalRankingText" font-size="3.5" overflow-mode="Ellipsis" italics="true" align="Left"/>
+            <text text="~divisionText" font-size="3.5" overflow-mode="Ellipsis" italics="true" align="Left"/>
+        </vertical>
+        <vertical active="~showLoadingScreen">
+            <loading preserve-aspect="true"/>
+        </vertical>
+    </horizontal>
+</bg>

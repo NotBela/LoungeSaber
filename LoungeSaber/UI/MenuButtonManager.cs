@@ -1,5 +1,4 @@
-﻿using System;
-using BeatSaberMarkupLanguage.MenuButtons;
+﻿using BeatSaberMarkupLanguage.MenuButtons;
 using LoungeSaber.Configuration;
 using LoungeSaber.Server;
 using LoungeSaber.UI.FlowCoordinators;

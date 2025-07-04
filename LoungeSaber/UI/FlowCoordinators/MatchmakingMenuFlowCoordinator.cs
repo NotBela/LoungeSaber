@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections;
+using System.Threading.Tasks;
+using BeatSaberMarkupLanguage.FloatingScreen;
 using HMUI;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
+using LoungeSaber.UI.BSML.Leaderboard;
 using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.BSML.Menu;
+using SiraUtil.Logging;
 using Zenject;
 using UnityEngine;
 
@@ -20,10 +24,13 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly MatchmakingMenuViewController _matchmakingMenuViewController = null;
         
         [Inject] private readonly MatchResultsViewController _matchResultsViewController = null;
+        
+        [Inject] private readonly LoungeSaberLeaderboardViewController _leaderboardViewController = null;
+        
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             showBackButton = true;
-            ProvideInitialViewControllers(_matchmakingMenuViewController);
+            ProvideInitialViewControllers(_matchmakingMenuViewController, rightScreenViewController: _leaderboardViewController);
             SetTitle("LoungeSaber");
         }
 
@@ -35,10 +42,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             _matchResultsViewController.ContinueButtonPressed += OnContinueButtonPressed;
         }
 
-        private void OnMatchCreated(MatchCreatedPacket packet)
-        {
-            StartCoroutine(PresentViewControllerSynchronously(packet));
-        }
+        private void OnMatchCreated(MatchCreatedPacket packet) => StartCoroutine(PresentViewControllerSynchronously(packet));
 
         IEnumerator PresentViewControllerSynchronously(MatchCreatedPacket packet)
         {

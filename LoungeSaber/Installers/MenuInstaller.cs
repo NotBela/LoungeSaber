@@ -1,5 +1,6 @@
 ﻿using LoungeSaber.UI;
 using LoungeSaber.UI.BSML;
+using LoungeSaber.UI.BSML.Leaderboard;
 using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.BSML.Menu;
 using LoungeSaber.UI.FlowCoordinators;
@@ -22,6 +23,9 @@ namespace LoungeSaber.Installers
                 .AsSingle();
             Container.BindInterfacesAndSelfTo<MatchResultsViewController>().FromNewComponentAsViewController()
                 .AsSingle();
+            Container.BindInterfacesAndSelfTo<LeaderboardPanelViewController>().FromNewComponentAsViewController()
+                .AsSingle();
+            Container.BindInterfacesAndSelfTo<UI.BSML.Leaderboard.LoungeSaberLeaderboardViewController>().FromNewComponentAsViewController().AsSingle();
         }
     }
 }
