@@ -16,15 +16,22 @@ namespace LoungeSaber.Models.UserInfo
     
         [JsonProperty("badge")] [CanBeNull] public Badge Badge { get; private set; }
     
+        [JsonProperty("rank")]
+        public long Rank { get; private set; }
+    
+        [JsonProperty("discordId")] [CanBeNull] public string DiscordId { get; private set; }
+    
         [JsonConstructor]
-        public UserInfo(string username, string userId, int mmr, [CanBeNull] Badge badge)
+        public UserInfo(string username, string userId, int mmr, [CanBeNull] Badge badge, long rank, [CanBeNull] string discordId)
         {
             Username = username;
             UserId = userId;
             Mmr = mmr;
             Badge = badge;
+            Rank = rank;
+            DiscordId = discordId;
         }
-
+        
         public string GetFormattedUserName()
         {
             if (Badge == null) return Username;
