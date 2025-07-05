@@ -1,6 +1,7 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using LoungeSaber.Server;
+using SiraUtil.Logging;
 using Zenject;
 
 namespace LoungeSaber.UI.BSML.Leaderboard
@@ -9,6 +10,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
     public class LeaderboardPanelViewController : BSMLAutomaticViewController
     {
         [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
+        [Inject] private readonly SiraLog _siraLog = null;
         
         private bool _isLoading = false;
         
