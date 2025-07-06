@@ -82,10 +82,6 @@ namespace LoungeSaber.UI.BSML.Leaderboard
             _floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(100f, 25f), false, Vector2.zero, Quaternion.identity);
             _floatingScreen.SetRootViewController(this, AnimationType.In);
             _floatingScreen.name = "LoungeSaberFloatingScreen";
-            
-            _floatingScreen.transform.SetParent(, false);
-            _floatingScreen.transform.localPosition = new Vector3(3f, 50f);
-            _floatingScreen.transform.localScale = Vector3.one;
         }
 
         public void Initialize()

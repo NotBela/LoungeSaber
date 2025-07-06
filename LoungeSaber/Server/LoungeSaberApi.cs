@@ -25,5 +25,14 @@ namespace LoungeSaber.Server
 
             return response.StatusCode == HttpStatusCode.NotFound ? null : JsonConvert.DeserializeObject<Models.UserInfo.UserInfo>(await response.Content.ReadAsStringAsync());
         }
+
+        public async Task<Models.UserInfo.UserInfo[]> GetLeaderboardRange(int start, int range)
+        {
+            var response = await _client.GetAsync($"/api/leaderboard/range?start={start}&range={range}");
+            
+            Plugin.Log.Info(await response.Content.ReadAsStringAsync());
+            
+            return JsonConvert.DeserializeObject<Models.UserInfo.UserInfo[]>(await response.Content.ReadAsStringAsync());
+        }
     }
 }

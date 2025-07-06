@@ -1,6 +1,21 @@
 <bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
     <vertical>
-        <text text="hi"/>
+        <vertical bg="title-gradient" bg-color="#444444" horizontal-fit="MinSize" vertical-fit="MinSize" min-height="7.5" pad-top="3" pad-bottom="2" min-width="100">
+            <text text="Leaderboard" italics="true" all-uppercase="true" font-size="6.5" align="Center"/>
+        </vertical>
+
+        <horizontal>
+            <vertical vertical-fit="MinSize" min-height="20" horizontal-fit="MinSize" min-width="5" bg="round-rect-panel">
+
+            </vertical>
+            <custom-list align-to-center="false" clickable-cells="false" cell-size="5" show-scrollbar="false" visible-cells="10" id="leaderboardList">
+                <horizontal>
+                    <text text="~rankText" align="Left"/>
+                    <text text="~playerNameText" align="Left"/>
+                    <text text="~mmrText" align="Right"/>
+                </horizontal>
+            </custom-list>
+        </horizontal>
     </vertical>
 </bg>
