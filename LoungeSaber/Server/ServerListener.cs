@@ -31,6 +31,8 @@ namespace LoungeSaber.Server
         
         public event Action OnDisconnected;
         public event Action<PrematureMatchEnd> OnPrematureMatchEnd;
+        
+        [Inject] private readonly IPlatformUserModel _platformUserModel = null;
 
         public async Task Connect(Action<JoinResponse> onConnectedCallBack)
         {
@@ -39,7 +41,7 @@ namespace LoungeSaber.Server
                 _client = new TcpClient();
                 await _client.ConnectAsync(IPAddress.Parse(_config.ServerIp), _config.ServerPort);
 
-                var userPlatformData = await BS_Utils.Gameplay.GetUserInfo.GetUserAsync();
+                var userPlatformData = await _platformUserModel.GetUserInfo(CancellationToken.None);
                 
                 await SendPacket(new JoinRequestPacket(userPlatformData.userName, userPlatformData.platformUserId));
 

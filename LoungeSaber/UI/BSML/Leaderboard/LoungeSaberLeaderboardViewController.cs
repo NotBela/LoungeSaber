@@ -21,6 +21,8 @@ namespace LoungeSaber.UI.BSML.Leaderboard
         
         [Inject] private readonly PlayerDataModel _playerDataModel = null;
         
+        [Inject] private readonly IPlatformUserModel _platformUserModel = null;
+        
         private bool _isLoaded = false;
 
         [UIValue("is-loaded")]
@@ -44,8 +46,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
         private void Awake()
         {
             _cellData.Add(new IconSegmentedControl.DataItem(_platformLeaderboardViewController.GetField<Sprite, PlatformLeaderboardViewController>("_globalLeaderboardIcon"), Localization.Get("BUTTON_HIGHSCORES_GLOBAL")));
-            _cellData.Add(new IconSegmentedControl.DataItem(_platformLeaderboardViewController.GetField<Sprite, PlatformLeaderboardViewController>("_aroundPlayerLeaderboardIcon"), Localization.Get("BUTTON_HIGHSCORES_AROUND_YOU")));
-            _cellData.Add(new IconSegmentedControl.DataItem(_platformLeaderboardViewController.GetField<Sprite, PlatformLeaderboardViewController>("_friendsLeaderboardIcon"), Localization.Get("BUTTON_HIGHSCORES_FRIENDS")));
+            _cellData.Add(new IconSegmentedControl.DataItem(_platformLeaderboardViewController.GetField<Sprite, PlatformLeaderboardViewController>("_aroundPlayerLeaderboardIcon"), Localization.Get("BUTTON_HIGHSCORES_AROUND_YOU"))); 
             IsLoaded = false;
         }
 
@@ -102,11 +103,10 @@ namespace LoungeSaber.UI.BSML.Leaderboard
         
         private int pageNumber = 0;
 
-        public enum LeaderboardStates
+        private enum LeaderboardStates
         {
             Global,
             Self,
-            Friends
         }
 
         private LeaderboardStates CurrentState { get; set; } = LeaderboardStates.Global;
@@ -121,9 +121,6 @@ namespace LoungeSaber.UI.BSML.Leaderboard
                     break;
                 case 1:
                     SetLeaderboardState(LeaderboardStates.Self);
-                    break;
-                case 2:
-                    SetLeaderboardState(LeaderboardStates.Friends);
                     break;
             }
         }
@@ -146,17 +143,55 @@ namespace LoungeSaber.UI.BSML.Leaderboard
                     case LeaderboardStates.Global:
                         UpEnabled = false;
                         DownEnabled = true;
-                        var topOfLeaderboard = await _loungeSaberApi.GetLeaderboardRange(0, 10);
+                        var topOfLeaderboard = await _loungeSaberApi.GetLeaderboardRange(1, 10);
                         SetLeaderboardData(topOfLeaderboard);
                         break;
                     case LeaderboardStates.Self:
                         UpEnabled = false;
                         DownEnabled = false;
-                        var ownId = (await BS_Utils.Gameplay.GetUserInfo.GetUserAsync()).platformUserId;
+                        var ownId = (await _platformUserModel.GetUserInfo(CancellationToken.None)).platformUserId;
                         var aroundUser = await _loungeSaberApi.GetAroundUser(ownId);
                         SetLeaderboardData(aroundUser);
                         break;
                 }
+            }
+            catch (Exception e)
+            {
+                _siraLog.Error(e);
+            }
+        }
+
+        [UIAction("up-clicked")]
+        private async void OnUpClicked()
+        {
+            try
+            {
+                IsLoaded = false;
+                pageNumber--;
+            
+                var leaderboardData = await _loungeSaberApi.GetLeaderboardRange(pageNumber * 10, 10);
+                SetLeaderboardData(leaderboardData);
+                if (pageNumber == 0) 
+                    UpEnabled = false;
+            }
+            catch (Exception e)
+            {
+                _siraLog.Error(e);
+            }
+        }
+
+        [UIAction("down-clicked")]
+        private async void DownClicked()
+        {
+            try
+            {
+                IsLoaded = false;
+                pageNumber++;
+            
+                var leaderboardData = await _loungeSaberApi.GetLeaderboardRange(pageNumber * 10, 10);
+                SetLeaderboardData(leaderboardData);
+                if (leaderboardData.Length < 10)
+                    DownEnabled = false;
             }
             catch (Exception e)
             {

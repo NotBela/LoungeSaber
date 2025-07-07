@@ -15,6 +15,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
         [Inject] private readonly SiraLog _siraLog = null;
         
         [Inject] private readonly LoungeSaberLeaderboardViewController _loungeSaberLeaderboardViewController = null;
+        [Inject] private readonly IPlatformUserModel _platformUserModel = null;
         
         private bool _isLoading = false;
         
@@ -43,7 +44,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
         {
             IsLoading = true;
             
-            var userId = (await BS_Utils.Gameplay.GetUserInfo.GetUserAsync()).platformUserId;
+            var userId = (await _platformUserModel.GetUserInfo(CancellationToken.None)).platformUserId;
             
             var userData = await _loungeSaberApi.GetUserInfo(userId);
 
