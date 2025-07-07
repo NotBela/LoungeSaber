@@ -36,6 +36,10 @@
             <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatSaber.ViewSystem.dll</HintPath>
             <Private>false</Private>
         </Reference>
+        <Reference Include="BGLib.Polyglot">
+            <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BGLib.Polyglot.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
         <Reference Include="BS_Utils">
             <HintPath>$(BeatSaberDir)\Plugins\BS_Utils.dll</HintPath>
             <Private>false</Private>
@@ -82,6 +86,10 @@
         </Reference>
         <Reference Include="PlatformUserModel">
             <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\PlatformUserModel.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="SegmentedControl">
+            <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\SegmentedControl.dll</HintPath>
             <Private>false</Private>
         </Reference>
         <Reference Include="SiraUtil">

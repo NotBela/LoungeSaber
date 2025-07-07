@@ -30,9 +30,14 @@ namespace LoungeSaber.Server
         {
             var response = await _client.GetAsync($"/api/leaderboard/range?start={start}&range={range}");
             
-            Plugin.Log.Info(await response.Content.ReadAsStringAsync());
-            
             return JsonConvert.DeserializeObject<Models.UserInfo.UserInfo[]>(await response.Content.ReadAsStringAsync());
+        }
+
+        [ItemCanBeNull]
+        public async Task<Models.UserInfo.UserInfo[]> GetAroundUser(string id)
+        {
+            var response = await _client.GetAsync($"/api/leaderboard/aroundUser/{id}");
+            return response.StatusCode == HttpStatusCode.NotFound ? null : JsonConvert.DeserializeObject<Models.UserInfo.UserInfo[]>(await response.Content.ReadAsStringAsync());
         }
     }
 }
