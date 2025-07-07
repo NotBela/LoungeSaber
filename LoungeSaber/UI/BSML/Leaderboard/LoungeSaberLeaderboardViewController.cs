@@ -60,9 +60,6 @@ namespace LoungeSaber.UI.BSML.Leaderboard
 
                 var topOfLeaderboard = await _loungeSaberApi.GetLeaderboardRange(0, 10);
                 SetLeaderboardData(topOfLeaderboard);
-                
-                var ownId = _playerDataModel.playerData.playerId;
-                _siraLog.Error(ownId);
             }
             catch (Exception e)
             {
@@ -155,9 +152,9 @@ namespace LoungeSaber.UI.BSML.Leaderboard
                     case LeaderboardStates.Self:
                         UpEnabled = false;
                         DownEnabled = false;
-                        var ownId = _playerDataModel.playerData.playerId;
-                        _siraLog.Info(ownId);
+                        var ownId = (await BS_Utils.Gameplay.GetUserInfo.GetUserAsync()).platformUserId;
                         var aroundUser = await _loungeSaberApi.GetAroundUser(ownId);
+                        SetLeaderboardData(aroundUser);
                         break;
                 }
             }
