@@ -2,6 +2,7 @@
 using System.Net.Http;
 using JetBrains.Annotations;
 using LoungeSaber.Configuration;
+using LoungeSaber.Models.Server;
 using Newtonsoft.Json;
 using Zenject;
 
@@ -38,6 +39,19 @@ namespace LoungeSaber.Server
         {
             var response = await _client.GetAsync($"/api/leaderboard/aroundUser/{id}");
             return response.StatusCode == HttpStatusCode.NotFound ? null : JsonConvert.DeserializeObject<Models.UserInfo.UserInfo[]>(await response.Content.ReadAsStringAsync());
+        }
+
+        [ItemCanBeNull]
+        public async Task<ServerStatus> GetServerStatus()
+        {
+            var response = await _client.GetAsync("/api/server/status");
+            return response.StatusCode == HttpStatusCode.NotFound ? null : JsonConvert.DeserializeObject<ServerStatus>(await response.Content.ReadAsStringAsync());
+        }
+
+        public async Task<string[]> GetMapHashes()
+        {
+            var response = await _client.GetAsync("/api/maps/hashes");
+            return JsonConvert.DeserializeObject<string[]>(await response.Content.ReadAsStringAsync());
         }
     }
 }
