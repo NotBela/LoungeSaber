@@ -9,7 +9,7 @@ namespace LoungeSaber.UI
     public class MenuButtonManager : IInitializable, IDisposable
     {
         [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null;
-        [Inject] private readonly MatchmakingMenuFlowCoordinator _matchmakingFlowCoordinator = null;
+        [Inject] private readonly ServerCheckingFlowCoordinator _serverCheckingFlowCoordinator = null;
         
         private readonly MenuButton _menuButton;
         
@@ -18,7 +18,7 @@ namespace LoungeSaber.UI
             _menuButton = new MenuButton("LoungeSaber", OnClick);
         }
 
-        private void OnClick() => _mainFlowCoordinator.PresentFlowCoordinator(_matchmakingFlowCoordinator);
+        private void OnClick() => _mainFlowCoordinator.PresentFlowCoordinator(_serverCheckingFlowCoordinator);
 
         public void Initialize() => MenuButtons.Instance.RegisterButton(_menuButton);
 

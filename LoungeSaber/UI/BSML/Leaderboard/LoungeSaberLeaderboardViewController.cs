@@ -19,8 +19,6 @@ namespace LoungeSaber.UI.BSML.Leaderboard
         [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         [Inject] private readonly SiraLog _siraLog = null;
         
-        [Inject] private readonly PlayerDataModel _playerDataModel = null;
-        
         [Inject] private readonly IPlatformUserModel _platformUserModel = null;
         
         private bool _isLoaded = false;

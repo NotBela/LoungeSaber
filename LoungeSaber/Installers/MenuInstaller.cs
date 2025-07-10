@@ -1,4 +1,5 @@
-﻿using LoungeSaber.UI;
+﻿using LoungeSaber.Game;
+using LoungeSaber.UI;
 using LoungeSaber.UI.BSML;
 using LoungeSaber.UI.BSML.Leaderboard;
 using LoungeSaber.UI.BSML.Match;
@@ -29,6 +30,9 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<CantConnectToServerViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<CheckingServerStatusViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<MissingMapsViewController>().FromNewComponentAsViewController().AsSingle();
+            Container.BindInterfacesAndSelfTo<ServerCheckingFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<MapDownloader>().AsSingle();
         }
     }
 }

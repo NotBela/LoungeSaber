@@ -1,14 +1,21 @@
 ﻿using System.Collections;
 using HMUI;
+using SiraUtil.Logging;
 using UnityEngine;
+using Zenject;
 
 namespace LoungeSaber.UI;
 
 // exists to stop the game from crashing when presenting a new screen while doing async stuff
 public abstract class SynchronousFlowCoordinator : FlowCoordinator
 {
-    protected void ReplaceViewControllersSynchronously(ViewController viewController, bool immediately = false)
+    [Inject] private readonly SiraLog _siraLog = null;
+    
+    protected void ReplaceViewControllerSynchronously(ViewController viewController, bool immediately = false)
     {
+        if (!isActivated) 
+            return;
+        
         while (isInTransition);
             
         StartCoroutine(PresentViewControllerSynchronouslyCoroutine(viewController, immediately: immediately));

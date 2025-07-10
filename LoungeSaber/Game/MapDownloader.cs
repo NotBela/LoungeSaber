@@ -12,7 +12,7 @@ public class MapDownloader
     
     private readonly BeatSaver _beatSaver = new("LoungeSaber", Version.Parse(IPA.Loader.PluginManager.GetPlugin("LoungeSaber").HVersion.ToString()));
     
-    public event Action<int> OnMapDownloaded;
+    public event Action<int, int> OnMapDownloaded;
 
     public async Task DownloadMaps(string[] mapHashes)
     {
@@ -33,7 +33,7 @@ public class MapDownloader
             zippedBeatmap.ExtractToDirectory(Path.Combine(UnityGame.InstallPath, "Beat Saber_Data", "CustomLevels", $"{map.Name} ({map.ID})"));
             
             mapsDownloaded++;
-            OnMapDownloaded?.Invoke(mapsDownloaded);
+            OnMapDownloaded?.Invoke(mapsDownloaded, mapHashes.Length);
         }
     }
 }

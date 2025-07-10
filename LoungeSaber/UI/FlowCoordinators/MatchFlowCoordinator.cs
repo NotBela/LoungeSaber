@@ -47,7 +47,7 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private void OnMatchResultsReceived(MatchResults results)
         {
-            ReplaceViewControllersSynchronously(_matchResultsViewController);
+            ReplaceViewControllerSynchronously(_matchResultsViewController);
             _matchResultsViewController.PopulateData(results);
         }
 
@@ -58,14 +58,14 @@ namespace LoungeSaber.UI.FlowCoordinators
                 await _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(standardLevelScenesTransitionSetupData.transformedBeatmapData),
                     levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
             });
-            ReplaceViewControllersSynchronously(_awaitMatchEndViewController, immediately: true);
+            ReplaceViewControllerSynchronously(_awaitMatchEndViewController, immediately: true);
         }
 
         private async void OnMatchStarting(MatchStarted packet)
         {
             try
             {
-                ReplaceViewControllersSynchronously(_waitingForMatchToStartViewController);
+                ReplaceViewControllerSynchronously(_waitingForMatchToStartViewController);
                 _waitingForMatchToStartViewController.PopulateData(packet.MapSelected);
 
                 await Task.Delay(packet.TransitionToGameTime - DateTime.UtcNow);
