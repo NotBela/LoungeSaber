@@ -17,7 +17,7 @@ using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators
 {
-    public class MatchFlowCoordinator : FlowCoordinator
+    public class MatchFlowCoordinator : SynchronousFlowCoordinator
     {
         [Inject] private readonly GameplaySetupViewController _gameplaySetupViewController = null;
         [Inject] private readonly VotingScreenViewController _votingScreenViewController = null;
@@ -47,7 +47,7 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private void OnMatchResultsReceived(MatchResults results)
         {
-            PresentViewControllerSynchronously(_matchResultsViewController);
+            ReplaceViewControllersSynchronously(_matchResultsViewController);
             _matchResultsViewController.PopulateData(results);
         }
 
@@ -58,14 +58,14 @@ namespace LoungeSaber.UI.FlowCoordinators
                 await _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(standardLevelScenesTransitionSetupData.transformedBeatmapData),
                     levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
             });
-            PresentViewControllerSynchronously(_awaitMatchEndViewController, true);
+            ReplaceViewControllersSynchronously(_awaitMatchEndViewController, immediately: true);
         }
 
         private async void OnMatchStarting(MatchStarted packet)
         {
             try
             {
-                PresentViewControllerSynchronously(_waitingForMatchToStartViewController);
+                ReplaceViewControllersSynchronously(_waitingForMatchToStartViewController);
                 _waitingForMatchToStartViewController.PopulateData(packet.MapSelected);
 
                 await Task.Delay(packet.TransitionToGameTime - DateTime.UtcNow);
@@ -75,20 +75,6 @@ namespace LoungeSaber.UI.FlowCoordinators
             {
                 _siraLog.Error(e);
             }
-        }
-        
-        private void PresentViewControllerSynchronously(ViewController viewController, bool immediate = false)
-        {
-            while (isInTransition);
-            
-            StartCoroutine(PresentViewControllerSynchronouslyCoroutine(viewController, immediate));
-        }
-
-        private IEnumerator PresentViewControllerSynchronouslyCoroutine(ViewController viewController, bool immediate)
-        {
-            yield return new WaitForEndOfFrame();
-            
-            ReplaceTopViewController(viewController, animationType: immediate ? ViewController.AnimationType.None : ViewController.AnimationType.In);
         }
 
         private void OnMapSelected(List<VotingMap> votingMaps, VotingMap selected)

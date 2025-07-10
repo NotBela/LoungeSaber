@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Threading.Tasks;
-using BeatSaberMarkupLanguage.FloatingScreen;
+﻿using System.Collections;
 using HarmonyLib;
 using HMUI;
 using IPA.Utilities;
-using JetBrains.Annotations;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Server;
 using LoungeSaber.Server;
@@ -19,7 +15,7 @@ using UnityEngine;
 
 namespace LoungeSaber.UI.FlowCoordinators
 {
-    public class MatchmakingMenuFlowCoordinator : FlowCoordinator, IInitializable, IDisposable
+    public class MatchmakingMenuFlowCoordinator : SynchronousFlowCoordinator, IInitializable, IDisposable
     {
         [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         
@@ -67,7 +63,7 @@ namespace LoungeSaber.UI.FlowCoordinators
 
             if (serverResponse == null)
             {
-                PresentViewControllerSynchronously(_cantConnectToServerViewController);
+                ReplaceViewControllersSynchronously(_cantConnectToServerViewController);
                 _cantConnectToServerViewController.SetReasonText("InvalidServerResponse");
                 return;
             }
@@ -76,7 +72,7 @@ namespace LoungeSaber.UI.FlowCoordinators
 
             if (!serverResponse.AllowedModVersions.Contains(IPA.Loader.PluginManager.GetPluginFromId("LoungeSaber").HVersion.ToString()))
             {
-                PresentViewControllerSynchronously(_cantConnectToServerViewController);
+                ReplaceViewControllersSynchronously(_cantConnectToServerViewController);
                 _cantConnectToServerViewController.SetReasonText("OutdatedPluginVersion");
                 return;
             }
@@ -85,14 +81,14 @@ namespace LoungeSaber.UI.FlowCoordinators
 
             if (!serverResponse.AllowedGameVersions.Contains(UnityGame.GameVersion.ToString()))
             {
-                PresentViewControllerSynchronously(_cantConnectToServerViewController);
+                ReplaceViewControllersSynchronously(_cantConnectToServerViewController);
                 _cantConnectToServerViewController.SetReasonText("OutdatedGameVersion");
                 return;
             }
 
             if (serverResponse.State != ServerStatus.ServerState.Online)
             {
-                PresentViewControllerSynchronously(_cantConnectToServerViewController);
+                ReplaceViewControllersSynchronously(_cantConnectToServerViewController);
                 _cantConnectToServerViewController.SetReasonText("ServerInMaintenance");
                 return;
             }
@@ -104,7 +100,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             
             if (missingMapHashes.Length > 0)
             {
-                PresentViewControllerSynchronously(_missingMapsViewController);
+                ReplaceViewControllersSynchronously(_missingMapsViewController);
                 _missingMapsViewController.SetMissingMapCount(missingMapHashes.Length);
                 _missingMapsViewController.UserChoseToDownloadMaps += OnUserChoseToDownloadMaps;
                 
@@ -115,13 +111,13 @@ namespace LoungeSaber.UI.FlowCoordinators
 
                     if (choice)
                     {
-                        PresentViewControllerSynchronously(_checkingServerStatusViewController);
+                        ReplaceViewControllersSynchronously(_checkingServerStatusViewController);
                         _checkingServerStatusViewController.SetControllerState(CheckingServerStatusViewController.ControllerState.CheckingMaps);
                         // TODO: download maps
 
                         while (Loader.AreSongsLoading);
                         
-                        PresentViewControllerSynchronously(_matchmakingMenuViewController, _leaderboardViewController);
+                        ReplaceViewControllersSynchronously(_matchmakingMenuViewController, _leaderboardViewController);
                     }
                     else
                         BackButtonWasPressed(null);
@@ -137,36 +133,6 @@ namespace LoungeSaber.UI.FlowCoordinators
             _votingScreenViewController.PopulateData(packet);
         }
 
-        private void PresentFlowCoordinatorSynchronously(FlowCoordinator flowCoordinator)
-        {
-            StartCoroutine(PresentFlowCoordinatorSynchronouslyCoroutine());
-            return;
-            
-            IEnumerator PresentFlowCoordinatorSynchronouslyCoroutine()
-            {
-                yield return new WaitForEndOfFrame();
-                
-                PresentFlowCoordinator(flowCoordinator);
-            }
-        }
-
-        private void PresentViewControllerSynchronously(ViewController viewController, [CanBeNull] ViewController leftViewController = null, [CanBeNull] ViewController rightViewController = null)
-        {
-            while (isInTransition);
-            
-            StartCoroutine(PresentViewControllerSynchronouslyCoroutine());
-            return;
-            
-            IEnumerator PresentViewControllerSynchronouslyCoroutine()
-            {
-                yield return new WaitForEndOfFrame();
-                
-                ReplaceTopViewController(viewController);
-                SetLeftScreenViewController(leftViewController, ViewController.AnimationType.In);
-                SetRightScreenViewController(rightViewController, ViewController.AnimationType.In);
-            }
-        }
-
         public void Dispose()
         {
             _serverListener.OnMatchCreated -= OnMatchCreated;
@@ -179,9 +145,6 @@ namespace LoungeSaber.UI.FlowCoordinators
             _matchResultsViewController.ContinueButtonPressed += OnContinueButtonPressed;
         }
 
-        protected override void BackButtonWasPressed(ViewController _)
-        {
-            _mainFlowCoordinator.DismissFlowCoordinator(this);
-        }
+        protected override void BackButtonWasPressed(ViewController _) => _mainFlowCoordinator.DismissFlowCoordinator(this);
     }
 }  
