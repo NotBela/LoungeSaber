@@ -15,6 +15,9 @@ public abstract class SynchronousFlowCoordinator : FlowCoordinator
     {
         if (!isActivated) 
             return;
+
+        if (topViewController == viewController)
+            return;
         
         while (isInTransition);
             

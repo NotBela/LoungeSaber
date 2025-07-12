@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using HMUI;
 using IPA.Utilities;
+using LoungeSaber.Configuration;
 using LoungeSaber.Game;
 using LoungeSaber.Models.Server;
 using LoungeSaber.Server;
@@ -25,6 +26,8 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
     [Inject] private readonly MapDownloader _mapDownloader = null;
     
     [Inject] private readonly SiraLog _siraLog = null;
+    
+    [Inject] private readonly PluginConfig _config = null;
 
     protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
@@ -86,6 +89,12 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
             return;
         }
 
+        if (_config.DownloadMapsAutomatically)
+        {
+            await DownloadMaps(missingMapHashes);
+            return;
+        }
+
         ReplaceViewControllerSynchronously(_missingMapsViewController);
         _missingMapsViewController.SetMissingMapCount(missingMapHashes.Length);
 
@@ -100,7 +109,7 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
             {
                 Task.Run(async Task () =>
                 {
-                    await OnUserChoseToDownloadMaps(missingMapHashes);
+                    await DownloadMaps(missingMapHashes);
                 });
                 
                 return;
@@ -110,7 +119,7 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
         }
     }
     
-    private async Task OnUserChoseToDownloadMaps(string[] missingMapHashes)
+    private async Task DownloadMaps(string[] missingMapHashes)
     {
         try
         {

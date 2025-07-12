@@ -59,7 +59,7 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         protected override void BackButtonWasPressed(ViewController _)
         {
-            // todo: look into replacing servercheckingflowcoordinator in flow coordinator hierarchy
+            
         }
     }
 }  
