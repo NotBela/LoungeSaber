@@ -123,10 +123,8 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
     {
         try
         {
-            await Task.Delay(1000);
             ReplaceViewControllerSynchronously(_checkingServerStatusViewController);
-            _checkingServerStatusViewController.SetControllerState(CheckingServerStatusViewController.ControllerState
-                .CheckingMaps);
+            _checkingServerStatusViewController.SetControllerState(CheckingServerStatusViewController.ControllerState.DownloadingMaps);
 
             await _mapDownloader.DownloadMaps(missingMapHashes);
             
