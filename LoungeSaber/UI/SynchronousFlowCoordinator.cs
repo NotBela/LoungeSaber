@@ -8,9 +8,7 @@ namespace LoungeSaber.UI;
 
 // exists to stop the game from crashing when presenting a new screen while doing async stuff
 public abstract class SynchronousFlowCoordinator : FlowCoordinator
-{
-    [Inject] private readonly SiraLog _siraLog = null;
-    
+{   
     protected void ReplaceViewControllerSynchronously(ViewController viewController, bool immediately = false)
     {
         if (!isActivated) 
@@ -31,17 +29,17 @@ public abstract class SynchronousFlowCoordinator : FlowCoordinator
         ReplaceTopViewController(viewController, animationType: immediately ? ViewController.AnimationType.None : ViewController.AnimationType.In);
     }
 
-    protected void PresentFlowCoordinatorSynchronously(FlowCoordinator flowCoordinator, bool immediately = false)
+    protected void PresentFlowCoordinatorSynchronously(FlowCoordinator flowCoordinator)
     {
         while (isInTransition);
         
-        StartCoroutine(PresentFlowCoordinatorCoroutine(flowCoordinator, immediately));
+        StartCoroutine(PresentFlowCoordinatorCoroutine(flowCoordinator));
     }
 
-    private IEnumerator PresentFlowCoordinatorCoroutine(FlowCoordinator flowCoordinator, bool immediately)
+    private IEnumerator PresentFlowCoordinatorCoroutine(FlowCoordinator flowCoordinator)
     {
         yield return new WaitForEndOfFrame();
         
-        PresentFlowCoordinator(flowCoordinator, immediately: immediately);
+        PresentFlowCoordinator(flowCoordinator);
     }
 }

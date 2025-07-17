@@ -12,6 +12,8 @@ using LoungeSaber.Models.Packets.UserPackets;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Match;
 using SiraUtil.Logging;
+using SongCore;
+using SongCore.OverrideClasses;
 using UnityEngine;
 using Zenject;
 
@@ -30,6 +32,8 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly MatchManager _matchManager = null;
         
         [Inject] private readonly SiraLog _siraLog = null;
+        
+        [Inject] private readonly StandardLevelDetailViewController _standardLevelDetailViewController = null;
          
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
@@ -38,6 +42,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             SetTitle("Match Room");
             showBackButton = false;
             ProvideInitialViewControllers(_votingScreenViewController, _gameplaySetupViewController);
+            // _standardLevelDetailViewController.SetData(Loader.GetLevelByHash("319503F83B147A7F864CC2301F4AE01AD754CCB6"), true, "Vote", BeatmapDifficultyMask.ExpertPlus, new BeatmapCharacteristicSO[]{});
             
             _votingScreenViewController.MapSelected += OnMapSelected;
             _serverListener.OnMatchStarting += OnMatchStarting;

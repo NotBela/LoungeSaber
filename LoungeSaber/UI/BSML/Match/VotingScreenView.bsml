@@ -1,23 +1,12 @@
 <bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
     <vertical>
-        <text text="Please vote on a map to play!" align="Center"/>
-        <custom-list select-cell="OnMapListCellSelected" visible-cells="3" show-scrollbar="false" id="VotingMapList" clickable-cells="true">
-            <vertical>
-                <stack>
-                    <clickable-image id="coverImage" name="coverImage" preserve-aspect="false"/>
-                    <vertical spacing="3" id="textVertical">
-                        <text align="Center" text="~songNameText"/>
-                        <text align="Center" text="~songAuthorText" color="#CCC" font-size="3"/>
-                        <text align="Center" color="#CCC" text="~mapDifficultyText" font-size="3"/>
-                    </vertical>
-                </stack>
-            </vertical>
-        </custom-list>
+        <text text="Please vote on a map to play!" align="Center" italics="true"/>
+        <list id="mapList" visible-cells="3"/>
         
         <vertical spacing="0">
-            <text text="Your Opponent:" align="Center"/>
-            <text text="~opponentText" align="Center" font-size="5"/>
+            <text text="Your Opponent:" align="Center" italics="true"/>
+            <text text="~opponentText" align="Center" font-size="5" italics="true"/>
         </vertical>
     </vertical>
 </bg>

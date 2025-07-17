@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using BeatSaberMarkupLanguage.Components;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using SongCore;
 

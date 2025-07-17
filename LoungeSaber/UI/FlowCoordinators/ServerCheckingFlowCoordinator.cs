@@ -37,12 +37,18 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
         ProvideInitialViewControllers(_checkingServerStatusViewController);
         _checkingServerStatusViewController.SetControllerState(CheckingServerStatusViewController.ControllerState
             .CheckingServer);
+        
+        _cantConnectToServerViewController.OnContinueButtonPressed += OnContinueButtonPressed;
 
         Task.Run(async Task () =>
         {
             await StartServerCheckingExecutionFlow();
         });
     }
+    
+    protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) => _cantConnectToServerViewController.OnContinueButtonPressed -= OnContinueButtonPressed;
+    
+    private void OnContinueButtonPressed() => _mainFlowCoordinator.DismissFlowCoordinator(this);
 
     private async Task StartServerCheckingExecutionFlow()
     {
@@ -141,7 +147,7 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
             _siraLog.Error(ex);
             showBackButton = true;
             ReplaceViewControllerSynchronously(_cantConnectToServerViewController);
-            _cantConnectToServerViewController.SetReasonText("MapDownloadException");
+            _cantConnectToServerViewController.SetReasonText("Unhandled exception downloading beatmap, please check your logs for more details!");
         }
     }
 }
