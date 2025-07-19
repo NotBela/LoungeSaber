@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BeatSaberMarkupLanguage;
 using HarmonyLib;
 using HMUI;
 using LoungeSaber.Game;
@@ -41,13 +42,29 @@ namespace LoungeSaber.UI.FlowCoordinators
             
             SetTitle("Match Room");
             showBackButton = false;
-            ProvideInitialViewControllers(_votingScreenViewController, _gameplaySetupViewController);
-            // _standardLevelDetailViewController.SetData(Loader.GetLevelByHash("319503F83B147A7F864CC2301F4AE01AD754CCB6"), true, "Vote", BeatmapDifficultyMask.ExpertPlus, new BeatmapCharacteristicSO[]{});
             
-            _votingScreenViewController.MapSelected += OnMapSelected;
+            ProvideInitialViewControllers(_votingScreenViewController, _gameplaySetupViewController);
+
+            _votingScreenViewController.MapSelected += OnVotingMapSelected;
             _serverListener.OnMatchStarting += OnMatchStarting;
             _matchManager.OnLevelCompleted += OnLevelCompleted;
             _serverListener.OnMatchResults += OnMatchResultsReceived;
+        }
+        // todo: figure out how to make a navigation controller out of the voting screen
+        private void OnVotingMapSelected(VotingMap votingMap, List<VotingMap> votingMaps)
+        {
+            var difficultyMask = votingMap.Difficulty switch
+            {
+                VotingMap.DifficultyType.Easy => BeatmapDifficultyMask.Easy,
+                VotingMap.DifficultyType.Normal => BeatmapDifficultyMask.Normal,
+                VotingMap.DifficultyType.Hard => BeatmapDifficultyMask.Hard,
+                VotingMap.DifficultyType.Expert => BeatmapDifficultyMask.Expert,
+                VotingMap.DifficultyType.ExpertPlus => BeatmapDifficultyMask.ExpertPlus,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            
+            _standardLevelDetailViewController.SetData(votingMap.GetBeatmapLevel(), true, "Vote", difficultyMask,
+                new BeatmapCharacteristicSO[]{});
         }
 
         private void OnMatchResultsReceived(MatchResults results)
@@ -82,7 +99,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             }
         }
 
-        private void OnMapSelected(List<VotingMap> votingMaps, VotingMap selected)
+        private void OnMapVotedFor(List<VotingMap> votingMaps, VotingMap selected)
         {
             ReplaceTopViewController(_awaitingMapDecisionViewController);
             _awaitingMapDecisionViewController.PopulateData(votingMaps, selected);
@@ -100,7 +117,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             ResetGameplaySetupView();
             
             _gameplaySetupViewController.didActivateEvent -= OnGameplaySetupViewActivated;
-            _votingScreenViewController.MapSelected -= OnMapSelected;
+            _votingScreenViewController.MapSelected -= OnVotingMapSelected;
             _serverListener.OnMatchStarting -= OnMatchStarting;
             _matchManager.OnLevelCompleted -= OnLevelCompleted;
             _serverListener.OnMatchResults -= OnMatchResultsReceived;

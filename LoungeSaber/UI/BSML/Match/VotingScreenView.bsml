@@ -2,7 +2,7 @@
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
     <vertical>
         <text text="Please vote on a map to play!" align="Center" italics="true"/>
-        <list id="mapList" visible-cells="3"/>
+        <list id="mapList" visible-cells="3" list-style="Simple"/>
         
         <vertical spacing="0">
             <text text="Your Opponent:" align="Center" italics="true"/>
