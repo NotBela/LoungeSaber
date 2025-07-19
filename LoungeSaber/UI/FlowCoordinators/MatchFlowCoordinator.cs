@@ -67,6 +67,22 @@ namespace LoungeSaber.UI.FlowCoordinators
                 new BeatmapCharacteristicSO[]{});
         }
 
+        private void OnVotingMapSelected(VotingMap votingMap)
+        {
+            var difficultyMask = votingMap.Difficulty switch
+            {
+                VotingMap.DifficultyType.Easy => BeatmapDifficultyMask.Easy,
+                VotingMap.DifficultyType.Normal => BeatmapDifficultyMask.Normal,
+                VotingMap.DifficultyType.Hard => BeatmapDifficultyMask.Hard,
+                VotingMap.DifficultyType.Expert => BeatmapDifficultyMask.Expert,
+                VotingMap.DifficultyType.ExpertPlus => BeatmapDifficultyMask.ExpertPlus,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            _standardLevelDetailViewController.SetData(votingMap.GetBeatmapLevel(), true, "Vote", difficultyMask,
+                new BeatmapCharacteristicSO[]{});
+            
+        }
+
         private void OnMatchResultsReceived(MatchResults results)
         {
             ReplaceViewControllerSynchronously(_matchResultsViewController);
