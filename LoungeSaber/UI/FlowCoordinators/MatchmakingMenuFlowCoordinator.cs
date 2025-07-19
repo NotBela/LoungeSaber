@@ -39,20 +39,17 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private void OnContinueButtonPressed() => DismissFlowCoordinator(_matchFlowCoordinator);
 
-        private async void OnMatchCreated(MatchCreatedPacket packet)
+        private void OnMatchCreated(MatchCreatedPacket packet)
         {
             try
             {
+                _votingScreenViewController.didActivateEvent += OnActivated;
+                
                 PresentFlowCoordinatorSynchronously(_matchFlowCoordinator);
 
-                while (!_votingScreenViewController.IsSafeToPopulate)
-                    await Task.Delay(25);
-
-                StartCoroutine(PopulateDataCoroutine());
-                
-                IEnumerator PopulateDataCoroutine()
+                void OnActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
                 {
-                    yield return new WaitForEndOfFrame();
+                    _votingScreenViewController.didActivateEvent -= OnActivated;
                     
                     _votingScreenViewController.PopulateData(packet);
                 }
