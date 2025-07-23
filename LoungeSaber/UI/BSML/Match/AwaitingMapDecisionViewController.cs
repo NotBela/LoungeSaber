@@ -22,7 +22,7 @@ namespace LoungeSaber.UI.BSML.Match
         [UIValue("temporaryPlayerChoiceText")]
         private string TemporaryPlayerChoiceText { get; set; } = "";
         
-        public void PopulateData(List<VotingMap> votingMaps, VotingMap vote)
+        public void PopulateData(VotingMap vote, List<VotingMap> votingMaps)
         {
             _votingMaps = votingMaps;
             TemporaryPlayerChoiceText = vote.GetBeatmapLevel()?.songName;

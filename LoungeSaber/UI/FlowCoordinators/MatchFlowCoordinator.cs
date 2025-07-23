@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BeatSaberMarkupLanguage;
-using HarmonyLib;
+﻿using BeatSaberMarkupLanguage;
 using HMUI;
 using LoungeSaber.Game;
 using LoungeSaber.Models.Map;
@@ -12,17 +6,14 @@ using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Packets.UserPackets;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Match;
+using LoungeSaber.UI.ViewManagers;
 using SiraUtil.Logging;
-using SongCore;
-using SongCore.OverrideClasses;
-using UnityEngine;
 using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators
 {
     public class MatchFlowCoordinator : SynchronousFlowCoordinator
     {
-        [Inject] private readonly GameplaySetupViewController _gameplaySetupViewController = null;
         [Inject] private readonly VotingScreenViewController _votingScreenViewController = null;
         [Inject] private readonly AwaitingMapDecisionViewController _awaitingMapDecisionViewController = null;
         [Inject] private readonly WaitingForMatchToStartViewController _waitingForMatchToStartViewController = null;
@@ -34,53 +25,37 @@ namespace LoungeSaber.UI.FlowCoordinators
         
         [Inject] private readonly SiraLog _siraLog = null;
         
-        [Inject] private readonly StandardLevelDetailViewController _standardLevelDetailViewController = null;
+        [Inject] private readonly StandardLevelDetailViewManager _standardLevelDetailViewManager = null;
+        [Inject] private readonly GameplaySetupViewManager _gameplaySetupViewManager = null;
+
+        private NavigationController _votingScreenNavigationController;
          
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            SetupGameplaySetupViewController();
+            ViewManager.Active = true;
             
             SetTitle("Match Room");
             showBackButton = false;
             
-            ProvideInitialViewControllers(_votingScreenViewController, _gameplaySetupViewController);
+            _votingScreenNavigationController = BeatSaberUI.CreateViewController<NavigationController>();
+            
+            ProvideInitialViewControllers(_votingScreenNavigationController, _gameplaySetupViewManager.ManagedController);
+            _votingScreenNavigationController.PushViewController(_votingScreenViewController, null);
 
             _votingScreenViewController.MapSelected += OnVotingMapSelected;
             _serverListener.OnMatchStarting += OnMatchStarting;
             _matchManager.OnLevelCompleted += OnLevelCompleted;
             _serverListener.OnMatchResults += OnMatchResultsReceived;
-        }
-        // todo: figure out how to make a navigation controller out of the voting screen
-        private void OnVotingMapSelected(VotingMap votingMap, List<VotingMap> votingMaps)
-        {
-            var difficultyMask = votingMap.Difficulty switch
-            {
-                VotingMap.DifficultyType.Easy => BeatmapDifficultyMask.Easy,
-                VotingMap.DifficultyType.Normal => BeatmapDifficultyMask.Normal,
-                VotingMap.DifficultyType.Hard => BeatmapDifficultyMask.Hard,
-                VotingMap.DifficultyType.Expert => BeatmapDifficultyMask.Expert,
-                VotingMap.DifficultyType.ExpertPlus => BeatmapDifficultyMask.ExpertPlus,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            
-            _standardLevelDetailViewController.SetData(votingMap.GetBeatmapLevel(), true, "Vote", difficultyMask,
-                new BeatmapCharacteristicSO[]{});
+            _standardLevelDetailViewManager.OnMapVoteButtonPressed += OnMapVotedFor;
         }
 
-        private void OnVotingMapSelected(VotingMap votingMap)
+        private void OnVotingMapSelected(VotingMap votingMap, List<VotingMap> votingMaps)
         {
-            var difficultyMask = votingMap.Difficulty switch
-            {
-                VotingMap.DifficultyType.Easy => BeatmapDifficultyMask.Easy,
-                VotingMap.DifficultyType.Normal => BeatmapDifficultyMask.Normal,
-                VotingMap.DifficultyType.Hard => BeatmapDifficultyMask.Hard,
-                VotingMap.DifficultyType.Expert => BeatmapDifficultyMask.Expert,
-                VotingMap.DifficultyType.ExpertPlus => BeatmapDifficultyMask.ExpertPlus,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            _standardLevelDetailViewController.SetData(votingMap.GetBeatmapLevel(), true, "Vote", difficultyMask,
-                new BeatmapCharacteristicSO[]{});
+            // todo: fix voting screen view controller being wide
+            if (!_standardLevelDetailViewManager.ManagedController.isActivated)
+                _votingScreenNavigationController.PushViewController(_standardLevelDetailViewManager.ManagedController, () => {});
             
+            _standardLevelDetailViewManager.SetData(votingMap, votingMaps);
         }
 
         private void OnMatchResultsReceived(MatchResults results)
@@ -107,7 +82,7 @@ namespace LoungeSaber.UI.FlowCoordinators
                 _waitingForMatchToStartViewController.PopulateData(packet.MapSelected);
 
                 await Task.Delay(packet.TransitionToGameTime - DateTime.UtcNow);
-                _matchManager.StartMatch(packet.MapSelected, packet.StartingTime, _gameplaySetupViewController.gameplayModifiers.proMode);
+                _matchManager.StartMatch(packet.MapSelected, packet.StartingTime, _gameplaySetupViewManager.ManagedController.gameplayModifiers.proMode);
             }
             catch (Exception e)
             {
@@ -115,35 +90,29 @@ namespace LoungeSaber.UI.FlowCoordinators
             }
         }
 
-        private void OnMapVotedFor(List<VotingMap> votingMaps, VotingMap selected)
+        private async void OnMapVotedFor(VotingMap votingMap, List<VotingMap> votingMaps)
         {
-            ReplaceTopViewController(_awaitingMapDecisionViewController);
-            _awaitingMapDecisionViewController.PopulateData(votingMaps, selected);
-        }
+            try
+            {
+                ReplaceTopViewController(_awaitingMapDecisionViewController);
+                _awaitingMapDecisionViewController.PopulateData(votingMap, votingMaps);
 
-        private void SetupGameplaySetupViewController()
-        {
-            _gameplaySetupViewController.didActivateEvent += OnGameplaySetupViewActivated;
-             
-            _gameplaySetupViewController.Setup(true, true,true, false, PlayerSettingsPanelController.PlayerSettingsPanelLayout.Singleplayer);
+                await _serverListener.SendPacket(new VotePacket(votingMaps.IndexOf(votingMap)));
+            }
+            catch (Exception e)
+            {
+                _siraLog.Error(e);
+            }
         }
         
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
         {
-            ResetGameplaySetupView();
-            
-            _gameplaySetupViewController.didActivateEvent -= OnGameplaySetupViewActivated;
+            ViewManager.Active = false;
+
             _votingScreenViewController.MapSelected -= OnVotingMapSelected;
             _serverListener.OnMatchStarting -= OnMatchStarting;
             _matchManager.OnLevelCompleted -= OnLevelCompleted;
             _serverListener.OnMatchResults -= OnMatchResultsReceived;
         }
-        
-        private void ResetGameplaySetupView() => _gameplaySetupViewController._gameplayModifiersPanelController._gameplayModifierToggles.Do(i => i.gameObject.SetActive(true));
-
-        private void OnGameplaySetupViewActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) => 
-            _gameplaySetupViewController._gameplayModifiersPanelController._gameplayModifierToggles
-            .Where(i => i.name != "ProMode")
-            .Do(i => i.gameObject.SetActive(false));
     }
 }

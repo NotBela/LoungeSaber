@@ -5,6 +5,7 @@ using LoungeSaber.UI.BSML.Leaderboard;
 using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.BSML.Menu;
 using LoungeSaber.UI.FlowCoordinators;
+using LoungeSaber.UI.ViewManagers;
 using Zenject;
 
 namespace LoungeSaber.Installers
@@ -31,6 +32,9 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<CheckingServerStatusViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<MissingMapsViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<ServerCheckingFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<GameplaySetupViewManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<StandardLevelDetailViewManager>().AsSingle();
             
             Container.BindInterfacesAndSelfTo<MapDownloader>().AsSingle();
         }
