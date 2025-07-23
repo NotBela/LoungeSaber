@@ -82,7 +82,7 @@ namespace LoungeSaber.UI.FlowCoordinators
                 _waitingForMatchToStartViewController.PopulateData(packet.MapSelected);
 
                 await Task.Delay(packet.TransitionToGameTime - DateTime.UtcNow);
-                _matchManager.StartMatch(packet.MapSelected, packet.StartingTime, _gameplaySetupViewManager.ManagedController.gameplayModifiers.proMode);
+                _matchManager.StartMatch(packet.MapSelected, packet.StartingTime, _gameplaySetupViewManager.ProMode);
             }
             catch (Exception e)
             {

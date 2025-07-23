@@ -19,7 +19,7 @@ namespace LoungeSaber.Server
         [Inject] private readonly PluginConfig _config = null;
         [Inject] private readonly SiraLog _siraLog = null;
 
-        private TcpClient _client = new TcpClient();
+        private TcpClient _client = new();
         private Thread _listenerThread;
 
         private bool _shouldListenToServer = false;

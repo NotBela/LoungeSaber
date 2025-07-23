@@ -1,49 +1,28 @@
 ﻿using HarmonyLib;
+using HMUI;
 using Zenject;
 
 namespace LoungeSaber.UI.ViewManagers;
 
-public class GameplaySetupViewManager : IInitializable, IDisposable
+public class GameplaySetupViewManager : ViewManager
 {
-    [field: Inject]
-    public GameplaySetupViewController ManagedController { get; } = null;
+    [Inject] private readonly GameplaySetupViewController _gameplaySetupViewController = null;
+    
+    public override ViewController ManagedController => _gameplaySetupViewController;
 
-    private void SetupView()
+    public bool ProMode => _gameplaySetupViewController.gameplayModifiers.proMode;
+
+    protected override void SetupManagedController()
     {
-        ManagedController.Setup(true, true,true, false, PlayerSettingsPanelController.PlayerSettingsPanelLayout.Singleplayer);
+        _gameplaySetupViewController.Setup(true, true,true, false, PlayerSettingsPanelController.PlayerSettingsPanelLayout.Singleplayer);
         
-        ManagedController._gameplayModifiersPanelController._gameplayModifierToggles
+        _gameplaySetupViewController._gameplayModifiersPanelController._gameplayModifierToggles
             .Where(i => i.name != "ProMode")
             .Do(i => i.gameObject.SetActive(false));
     }
 
-    private void ResetView()
+    protected override void ResetManagedController()
     {
-        ManagedController._gameplayModifiersPanelController._gameplayModifierToggles.Do(i => i.gameObject.SetActive(true));
-    }
-
-    public void Initialize()
-    {
-        ManagedController.didActivateEvent += OnActivated;
-        ManagedController.didDeactivateEvent += OnDeactivated;
-    }
-
-    private void OnDeactivated(bool removedFromHierarchy, bool screenSystemDisabling)
-    {
-        ResetView();
-    }
-
-    private void OnActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
-    {
-        if (!ViewManager.Active)
-            return;
-        
-        SetupView();
-    }
-
-    public void Dispose()
-    {
-        ManagedController.didActivateEvent -= OnActivated;
-        ManagedController.didDeactivateEvent -= OnDeactivated;
+        _gameplaySetupViewController._gameplayModifiersPanelController._gameplayModifierToggles.Do(i => i.gameObject.SetActive(true));
     }
 }

@@ -33,8 +33,8 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<MissingMapsViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<ServerCheckingFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
 
-            Container.BindInterfacesAndSelfTo<GameplaySetupViewManager>().AsSingle();
-            Container.BindInterfacesAndSelfTo<StandardLevelDetailViewManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameplaySetupViewManager>().FromNewComponentOnNewGameObject().AsSingle();
+            Container.BindInterfacesAndSelfTo<StandardLevelDetailViewManager>().FromNewComponentOnNewGameObject().AsSingle();
             
             Container.BindInterfacesAndSelfTo<MapDownloader>().AsSingle();
         }
