@@ -96,7 +96,7 @@
             <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\PlatformUserModel.dll</HintPath>
             <Private>false</Private>
         </Reference>
-        <Reference Include="SegmentedControl">
+        <Reference Include="SegmentedControl" Publicize="True">
             <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\SegmentedControl.dll</HintPath>
             <Private>false</Private>
         </Reference>

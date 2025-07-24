@@ -1,4 +1,5 @@
-﻿using LoungeSaber.Game;
+﻿using LoungeSaber.AffinityPatches.MenuPatches;
+using LoungeSaber.Game;
 using LoungeSaber.UI;
 using LoungeSaber.UI.BSML;
 using LoungeSaber.UI.BSML.Leaderboard;
@@ -35,6 +36,8 @@ namespace LoungeSaber.Installers
 
             Container.BindInterfacesAndSelfTo<GameplaySetupViewManager>().FromNewComponentOnNewGameObject().AsSingle();
             Container.BindInterfacesAndSelfTo<StandardLevelDetailViewManager>().FromNewComponentOnNewGameObject().AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<BeatmapDifficultySegmentedControlPatch>().AsSingle();
             
             Container.BindInterfacesAndSelfTo<MapDownloader>().AsSingle();
         }
