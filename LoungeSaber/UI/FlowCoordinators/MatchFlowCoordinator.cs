@@ -115,6 +115,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             _serverListener.OnMatchStarting -= OnMatchStarting;
             _matchManager.OnLevelCompleted -= OnLevelCompleted;
             _serverListener.OnMatchResults -= OnMatchResultsReceived;
+            _standardLevelDetailViewManager.OnMapVoteButtonPressed -= OnMapVotedFor;
         }
     }
 }
