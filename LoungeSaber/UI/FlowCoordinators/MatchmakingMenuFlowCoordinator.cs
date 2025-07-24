@@ -74,7 +74,7 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         protected override void BackButtonWasPressed(ViewController _)
         {
-            
+            _mainFlowCoordinator.GetType().GetMethod("DismissChildFlowCoordinatorsRecursively", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(_mainFlowCoordinator, new object[] {false});
         }
     }
 }  

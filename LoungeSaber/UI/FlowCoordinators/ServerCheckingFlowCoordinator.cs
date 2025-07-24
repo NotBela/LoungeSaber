@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System.Reflection;
+using HarmonyLib;
 using HMUI;
 using IPA.Utilities;
 using LoungeSaber.Configuration;

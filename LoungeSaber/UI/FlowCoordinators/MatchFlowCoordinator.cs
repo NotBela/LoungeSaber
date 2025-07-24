@@ -94,6 +94,8 @@ namespace LoungeSaber.UI.FlowCoordinators
         {
             try
             {
+                _votingScreenNavigationController.PopViewControllers(1, () => {}, true);
+                
                 ReplaceTopViewController(_awaitingMapDecisionViewController);
                 _awaitingMapDecisionViewController.PopulateData(votingMap, votingMaps);
 
