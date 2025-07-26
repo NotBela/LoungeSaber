@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Server;
+using LoungeSaber.UI.ViewManagers;
 using SiraUtil.Logging;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -51,7 +52,7 @@ namespace LoungeSaber.Game
                     break;
             }
 
-            _menuTransitionsHelper.StartStandardLevel(
+            /*_menuTransitionsHelper.StartStandardLevel(
                 "Solo",
                 beatmapLevel.GetBeatmapKeys().First(i => i.beatmapCharacteristic.serializedName == "Standard" && i.difficulty == difficulty),
                 beatmapLevel,
@@ -63,20 +64,39 @@ namespace LoungeSaber.Game
                 null,
                 EnvironmentsListModel.CreateFromAddressables(),
                 "Menu",
+                true,
+                diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
+                AfterSceneSwitchCallback,
+                null
+                );*/
+            
+            _menuTransitionsHelper.StartStandardLevel(
+                "Solo", 
+                beatmapLevel.GetBeatmapKeys().First(i => i.beatmapCharacteristic.serializedName == "Standard" && i.difficulty == difficulty),
+                beatmapLevel,
+                _playerDataModel.playerData.overrideEnvironmentSettings,
+                _playerDataModel.playerData.colorSchemesSettings.overrideDefaultColors ? _playerDataModel.playerData.colorSchemesSettings.GetSelectedColorScheme() : null,
+                true,
+                beatmapLevel.GetColorScheme(beatmapLevel.GetCharacteristics().First(i => i.serializedName == "Standard"), level.GetBaseGameDifficultyType()),
+                new GameplayModifiers(GameplayModifiers.EnergyType.Bar, true, false, false, GameplayModifiers.EnabledObstacleType.All, false, false, false, false, GameplayModifiers.SongSpeed.Normal, false, false, proMode, false, false),
+                _playerDataModel.playerData.playerSpecificSettings,
+                null,
+                EnvironmentsListModel.CreateFromAddressables(),
+                "Menu",
                 false,
                 true,
                 null,
-                // TODO: fix restart button being visible
                 diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
-                AfterSceneSwitchCallback,
+                AfterSceneSwitchFromGameplayCallback,
                 null
                 );
         }
 
-        private void AfterSceneSwitchCallback(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSo, LevelCompletionResults levelCompletionResults)
+        private void AfterSceneSwitchFromGameplayCallback(StandardLevelScenesTransitionSetupDataSO levelScenesTransitionSetupDataSo, LevelCompletionResults completionResults)
         {
             InMatch = false;
-            OnLevelCompleted?.Invoke(levelCompletionResults, standardLevelScenesTransitionSetupDataSo);
+            
+            OnLevelCompleted?.Invoke(completionResults, levelScenesTransitionSetupDataSo);
         }
 
         private async void AfterSceneSwitchToGameplayCallback(DiContainer diContainer, DateTime unpauseTime)

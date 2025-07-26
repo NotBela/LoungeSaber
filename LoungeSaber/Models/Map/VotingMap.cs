@@ -26,14 +26,24 @@ namespace LoungeSaber.Models.Map
 
         [CanBeNull] public BeatmapLevel GetBeatmapLevel() => Loader.GetLevelByHash(Hash);
 
-        public BeatmapDifficultyMask GetBaseGameDifficultyType() => Difficulty switch
+        public BeatmapDifficulty GetBaseGameDifficultyType() => Difficulty switch
         {
-            DifficultyType.Easy => BeatmapDifficultyMask.Easy,
-            DifficultyType.Normal => BeatmapDifficultyMask.Normal,
-            DifficultyType.Hard => BeatmapDifficultyMask.Hard,
-            DifficultyType.Expert => BeatmapDifficultyMask.Expert,
-            DifficultyType.ExpertPlus => BeatmapDifficultyMask.ExpertPlus,
+            DifficultyType.Easy => BeatmapDifficulty.Easy,
+            DifficultyType.Normal => BeatmapDifficulty.Normal,
+            DifficultyType.Hard => BeatmapDifficulty.Hard,
+            DifficultyType.Expert => BeatmapDifficulty.Expert,
+            DifficultyType.ExpertPlus => BeatmapDifficulty.ExpertPlus,
             _ => throw new ArgumentOutOfRangeException()
+        };
+
+        public BeatmapDifficultyMask GetBaseGameDifficultyTypeMask() => GetBaseGameDifficultyType() switch
+        {
+            BeatmapDifficulty.Easy => BeatmapDifficultyMask.Easy,
+            BeatmapDifficulty.Normal => BeatmapDifficultyMask.Normal,
+            BeatmapDifficulty.Hard => BeatmapDifficultyMask.Hard,
+            BeatmapDifficulty.Expert => BeatmapDifficultyMask.Expert,
+            BeatmapDifficulty.ExpertPlus => BeatmapDifficultyMask.ExpertPlus,
+            _ => BeatmapDifficultyMask.All
         };
 
         public enum CategoryType
