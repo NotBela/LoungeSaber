@@ -35,26 +35,6 @@ namespace LoungeSaber.Models.Map
             DifficultyType.ExpertPlus => BeatmapDifficulty.ExpertPlus,
             _ => throw new ArgumentOutOfRangeException()
         };
-        
-        public BeatmapDifficultyMask GetBaseGameDifficultyTypeMask() => GetBaseGameDifficultyType() switch
-        {
-            BeatmapDifficulty.Easy => BeatmapDifficultyMask.Easy,
-            BeatmapDifficulty.Normal => BeatmapDifficultyMask.Normal,
-            BeatmapDifficulty.Hard => BeatmapDifficultyMask.Hard,
-            BeatmapDifficulty.Expert => BeatmapDifficultyMask.Expert,
-            BeatmapDifficulty.ExpertPlus => BeatmapDifficultyMask.ExpertPlus,
-            _ => BeatmapDifficultyMask.All
-        };
-
-        public BeatmapDifficultyMask GetBaseGameDifficultyTypeMask() => GetBaseGameDifficultyType() switch
-        {
-            BeatmapDifficulty.Easy => BeatmapDifficultyMask.Easy,
-            BeatmapDifficulty.Normal => BeatmapDifficultyMask.Normal,
-            BeatmapDifficulty.Hard => BeatmapDifficultyMask.Hard,
-            BeatmapDifficulty.Expert => BeatmapDifficultyMask.Expert,
-            BeatmapDifficulty.ExpertPlus => BeatmapDifficultyMask.ExpertPlus,
-            _ => BeatmapDifficultyMask.All
-        };
 
         public BeatmapDifficultyMask GetBaseGameDifficultyTypeMask() => GetBaseGameDifficultyType() switch
         {
