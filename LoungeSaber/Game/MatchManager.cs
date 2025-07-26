@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Server;
-using LoungeSaber.UI.BSML.PauseMenu;
+using LoungeSaber.UI.ViewManagers;
 using SiraUtil.Logging;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -22,12 +21,8 @@ namespace LoungeSaber.Game
         
         public bool InMatch { get; private set; } = false;
 
-        [CanBeNull] public Models.UserInfo.UserInfo Opponent { get; private set; }
+        public event Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> OnLevelCompleted; 
 
-        public event Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> OnLevelCompleted;
-
-        public void SetOpponent(Models.UserInfo.UserInfo opponent) => Opponent = opponent;
-        
         public void StartMatch(VotingMap level, DateTime unpauseTime, bool proMode)
         {
             if (InMatch) 
@@ -36,7 +31,26 @@ namespace LoungeSaber.Game
             InMatch = true;
             
             var beatmapLevel = level.GetBeatmapLevel() ?? throw new Exception("Could not get beatmap level!");
-            var difficulty = level.GetBaseGameDifficultyType();
+            BeatmapDifficulty difficulty;
+            
+            switch (level.Difficulty)
+            {
+                case VotingMap.DifficultyType.Easy:
+                    difficulty = BeatmapDifficulty.Easy;
+                    break;
+                case VotingMap.DifficultyType.Normal:
+                    difficulty = BeatmapDifficulty.Normal;
+                    break;
+                case VotingMap.DifficultyType.Hard:
+                    difficulty = BeatmapDifficulty.Hard;
+                    break;
+                case VotingMap.DifficultyType.Expert:
+                    difficulty = BeatmapDifficulty.Expert;
+                    break;
+                default:
+                    difficulty = BeatmapDifficulty.ExpertPlus;
+                    break;
+            }
 
             /*_menuTransitionsHelper.StartStandardLevel(
                 "Solo",
@@ -72,25 +86,23 @@ namespace LoungeSaber.Game
                 false,
                 true,
                 null,
-                // TODO: fix restart button being visible
                 diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
-                AfterSceneSwitchCallback,
+                AfterSceneSwitchFromGameplayCallback,
                 null
                 );
         }
 
-        private void AfterSceneSwitchCallback(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSo, LevelCompletionResults levelCompletionResults)
+        private void AfterSceneSwitchFromGameplayCallback(StandardLevelScenesTransitionSetupDataSO levelScenesTransitionSetupDataSo, LevelCompletionResults completionResults)
         {
             InMatch = false;
-            OnLevelCompleted?.Invoke(levelCompletionResults, standardLevelScenesTransitionSetupDataSo);
+            
+            OnLevelCompleted?.Invoke(completionResults, levelScenesTransitionSetupDataSo);
         }
 
         private async void AfterSceneSwitchToGameplayCallback(DiContainer diContainer, DateTime unpauseTime)
         {
             try
             {
-                diContainer.Resolve<PauseMenuViewController>().SetMatchStartingTime(unpauseTime);
-                
                 var startingMenuController = diContainer.TryResolve<MatchStartUnpauseController>() ?? throw new Exception("Could not resolve StartingPauseMenuController");
 
                 await startingMenuController.UnpauseLevelAtTime(unpauseTime);
