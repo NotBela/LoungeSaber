@@ -24,7 +24,7 @@ public class StandardLevelDetailViewManager : ViewManager
             votingMap.GetBeatmapLevel(), 
             true, 
             "Vote", 
-            votingMap.GetBaseGameDifficultyType(), 
+            votingMap.GetBaseGameDifficultyTypeMask(), 
             votingMap.GetBeatmapLevel()?.beatmapBasicData.Keys
                 .Select(i => i.characteristic)
                 .Where(i => i.serializedName != "Standard")

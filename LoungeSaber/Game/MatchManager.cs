@@ -30,26 +30,7 @@ namespace LoungeSaber.Game
             InMatch = true;
             
             var beatmapLevel = level.GetBeatmapLevel() ?? throw new Exception("Could not get beatmap level!");
-            BeatmapDifficulty difficulty;
-            
-            switch (level.Difficulty)
-            {
-                case VotingMap.DifficultyType.Easy:
-                    difficulty = BeatmapDifficulty.Easy;
-                    break;
-                case VotingMap.DifficultyType.Normal:
-                    difficulty = BeatmapDifficulty.Normal;
-                    break;
-                case VotingMap.DifficultyType.Hard:
-                    difficulty = BeatmapDifficulty.Hard;
-                    break;
-                case VotingMap.DifficultyType.Expert:
-                    difficulty = BeatmapDifficulty.Expert;
-                    break;
-                default:
-                    difficulty = BeatmapDifficulty.ExpertPlus;
-                    break;
-            }
+            var difficulty = level.GetBaseGameDifficultyType();
 
             _menuTransitionsHelper.StartStandardLevel(
                 "Solo",
