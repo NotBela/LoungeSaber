@@ -14,11 +14,11 @@ namespace LoungeSaber.Game
 {
     public class MatchManager : IInitializable, IDisposable
     {
-        [Inject] private readonly MenuTransitionsHelper _menuTransitionsHelper = null!;
-        [Inject] private readonly PlayerDataModel _playerDataModel = null!;
-        [Inject] private readonly SiraLog _siraLog = null!;
+        [Inject] private readonly MenuTransitionsHelper _menuTransitionsHelper = null;
+        [Inject] private readonly PlayerDataModel _playerDataModel = null;
+        [Inject] private readonly SiraLog _siraLog = null;
         
-        [Inject] private readonly ServerListener _serverListener = null!;
+        [Inject] private readonly ServerListener _serverListener = null;
         
         public bool InMatch { get; private set; } = false;
 
@@ -38,7 +38,7 @@ namespace LoungeSaber.Game
             var beatmapLevel = level.GetBeatmapLevel() ?? throw new Exception("Could not get beatmap level!");
             var difficulty = level.GetBaseGameDifficultyType();
 
-            _menuTransitionsHelper.StartStandardLevel(
+            /*_menuTransitionsHelper.StartStandardLevel(
                 "Solo",
                 beatmapLevel.GetBeatmapKeys().First(i => i.beatmapCharacteristic.serializedName == "Standard" && i.difficulty == difficulty),
                 beatmapLevel,
@@ -48,12 +48,31 @@ namespace LoungeSaber.Game
                 new GameplayModifiers(GameplayModifiers.EnergyType.Bar, true, false, false, GameplayModifiers.EnabledObstacleType.All, false, false, false, false, GameplayModifiers.SongSpeed.Normal, false, false, proMode, false, false),
                 _playerDataModel.playerData.playerSpecificSettings,
                 null,
-                //TODO: fix this sometimes causing an exception because of creating from addressables
+                EnvironmentsListModel.CreateFromAddressables(),
+                "Menu",
+                true,
+                diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
+                AfterSceneSwitchCallback,
+                null
+                );*/
+            
+            _menuTransitionsHelper.StartStandardLevel(
+                "Solo", 
+                beatmapLevel.GetBeatmapKeys().First(i => i.beatmapCharacteristic.serializedName == "Standard" && i.difficulty == difficulty),
+                beatmapLevel,
+                _playerDataModel.playerData.overrideEnvironmentSettings,
+                _playerDataModel.playerData.colorSchemesSettings.overrideDefaultColors ? _playerDataModel.playerData.colorSchemesSettings.GetSelectedColorScheme() : null,
+                true,
+                beatmapLevel.GetColorScheme(beatmapLevel.GetCharacteristics().First(i => i.serializedName == "Standard"), level.GetBaseGameDifficultyType()),
+                new GameplayModifiers(GameplayModifiers.EnergyType.Bar, true, false, false, GameplayModifiers.EnabledObstacleType.All, false, false, false, false, GameplayModifiers.SongSpeed.Normal, false, false, proMode, false, false),
+                _playerDataModel.playerData.playerSpecificSettings,
+                null,
                 EnvironmentsListModel.CreateFromAddressables(),
                 "Menu",
                 false,
                 true,
                 null,
+                // TODO: fix restart button being visible
                 diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
                 AfterSceneSwitchCallback,
                 null
