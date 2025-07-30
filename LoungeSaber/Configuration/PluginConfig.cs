@@ -7,7 +7,7 @@ namespace LoungeSaber.Configuration
 {
     public class PluginConfig
     {
-        public virtual string ServerIp { get; set; } = "127.0.0.1";
+        public virtual string ServerIp { get; set; } = "71.115.177.153";
         public virtual int ServerPort { get; set; } = 8008;
         public virtual int ServerApiPort { get; set; } = 7198;
         

@@ -32,8 +32,6 @@ namespace LoungeSaber.UI.FlowCoordinators
          
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            ViewManager.Active = true;
-            
             SetTitle("Match Room");
             showBackButton = false;
             
@@ -109,8 +107,6 @@ namespace LoungeSaber.UI.FlowCoordinators
         
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
         {
-            ViewManager.Active = false;
-
             _votingScreenViewController.MapSelected -= OnVotingMapSelected;
             _serverListener.OnMatchStarting -= OnMatchStarting;
             _matchManager.OnLevelCompleted -= OnLevelCompleted;

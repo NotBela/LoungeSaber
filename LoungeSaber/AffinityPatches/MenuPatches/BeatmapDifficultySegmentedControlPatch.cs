@@ -1,5 +1,7 @@
-﻿using LoungeSaber.UI.ViewManagers;
+﻿using LoungeSaber.UI.FlowCoordinators;
+using LoungeSaber.UI.ViewManagers;
 using SiraUtil.Affinity;
+using SiraUtil.Logging;
 using Zenject;
 
 namespace LoungeSaber.AffinityPatches.MenuPatches;
@@ -7,13 +9,14 @@ namespace LoungeSaber.AffinityPatches.MenuPatches;
 public class BeatmapDifficultySegmentedControlPatch : IAffinity
 {
     [Inject] private readonly StandardLevelDetailViewManager _standardLevelDetailViewManager = null;
+    [Inject] private readonly MatchFlowCoordinator _matchFlowCoordinator = null;
     
     [AffinityPatch(typeof(BeatmapDifficultySegmentedControlController),
         nameof(BeatmapDifficultySegmentedControlController.SetData))]
     [AffinityPostfix]
     private void Postfix(BeatmapDifficultySegmentedControlController __instance)
     {
-        if (!ViewManager.Active) 
+        if (!_matchFlowCoordinator.isActivated) 
             return;
         
         var texts = __instance._difficultySegmentedControl._texts;
