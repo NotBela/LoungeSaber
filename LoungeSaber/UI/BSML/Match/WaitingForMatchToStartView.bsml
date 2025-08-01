@@ -2,5 +2,7 @@
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
     <vertical>
         <text text="~tempSongDisplayText" align="Center" font-size="5"/>
+        
+        <text text="~tempMatchStartTimer" align="Midline" font-size="5"/>
     </vertical>
 </bg>
