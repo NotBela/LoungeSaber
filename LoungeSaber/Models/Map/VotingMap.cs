@@ -46,6 +46,9 @@ namespace LoungeSaber.Models.Map
             _ => BeatmapDifficultyMask.All
         };
 
+        public BeatmapKey GetBeatmapKey() => GetBeatmapLevel()?.GetBeatmapKeys().First(i =>
+            i.beatmapCharacteristic.serializedName == "Standard" && i.difficulty == GetBaseGameDifficultyType()) ?? throw new Exception("Could not find beatmap key!");
+
         public enum CategoryType
         {
             Acc,
