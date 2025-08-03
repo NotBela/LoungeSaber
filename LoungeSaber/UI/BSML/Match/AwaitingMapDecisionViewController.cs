@@ -25,8 +25,11 @@ namespace LoungeSaber.UI.BSML.Match
         [UIValue("temporaryPlayerChoiceText")]
         private string TemporaryPlayerChoiceText { get; set; } = "";
 
-        private LevelBar _ownVoteLevelBar;
-        private LevelBar _opponentVoteLevelBar;
+        [UIComponent("ownLevelBar")] private readonly LevelBar _ownVoteLevelBar = null;
+        [UIComponent("opponentLevelBar")] private LevelBar _opponentVoteLevelBar;
+
+        [UIObject("opponentVoteContainer")] private readonly GameObject _opponentVoteContainer = null;
+        [UIObject("ownVoteContainer")] private readonly GameObject _ownVoteContainer = null;
         
         public void PopulateData(VotingMap vote, List<VotingMap> votingMaps)
         {
@@ -39,10 +42,10 @@ namespace LoungeSaber.UI.BSML.Match
             NotifyPropertyChanged(null);
         }
 
-        private void Awake()
+        [UIAction("#post-parse")]
+        private void PostParse()
         {
-            _ownVoteLevelBar = CreateLevelBar(new Vector3(0, -10, 0));
-            _opponentVoteLevelBar = CreateLevelBar(new Vector3(0, 10, 0));
+            
         }
 
         private void OnOpponentVoted(OpponentVoted opponentVoted)
@@ -52,12 +55,10 @@ namespace LoungeSaber.UI.BSML.Match
             _opponentVoteLevelBar.Setup(_votingMaps[opponentVoted.VoteIndex].GetBeatmapKey());
         }
 
-        private LevelBar CreateLevelBar(Vector3 position)
+        private LevelBar CreateLevelBar(GameObject parent)
         {
-            var levelBar = Instantiate(_standardLevelDetailViewController._standardLevelDetailView._levelBar, transform, false);
+            var levelBar = Instantiate(_standardLevelDetailViewController._standardLevelDetailView._levelBar, gameObject.transform, false);
             levelBar.gameObject.SetActive(true);
-            levelBar.transform.localPosition = position;
-            // levelBar.transform.localScale = new Vector3(0.5f, .5f, levelBar.transform.localScale.z);
             
             levelBar._showDifficultyAndCharacteristic = true;
             
