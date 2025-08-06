@@ -1,4 +1,5 @@
 ﻿using BeatSaberMarkupLanguage.Tags;
+using HMUI;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -11,14 +12,17 @@ public class LevelBarTag : BSMLTag
     {
         var containerObject = new GameObject("LevelBar", typeof(LayoutElement));
 
-        var containerTransform = (RectTransform)containerObject.transform;
+        var containerTransform = (RectTransform) containerObject.transform;
         containerTransform.SetParent(parent, false);
         containerTransform.anchorMin = Vector2.zero;
-        containerTransform.anchorMax = Vector2.one;
+        containerTransform.anchorMax = Vector2.zero;
         containerTransform.sizeDelta = Vector2.zero;
         containerTransform.anchoredPosition = Vector2.zero;
 
-        Object.Instantiate(DiContainer.Resolve<StandardLevelDetailViewController>()._standardLevelDetailView._levelBar, containerTransform, false);
+        var levelBar = containerObject.AddComponent<CustomLevelBar>();
+        levelBar.Init(parent);
+        levelBar.LevelBar._showDifficultyAndCharacteristic = true;
+        
         return containerObject;
     }
 

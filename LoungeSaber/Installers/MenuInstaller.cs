@@ -1,4 +1,5 @@
 ﻿using BeatSaberMarkupLanguage.Tags;
+using BeatSaberMarkupLanguage.TypeHandlers;
 using LoungeSaber.AffinityPatches.MenuPatches;
 using LoungeSaber.Game;
 using LoungeSaber.UI;
@@ -44,6 +45,7 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<MapDownloader>().AsSingle();
 
             Container.Bind<BSMLTag>().To<LevelBarTag>().AsSingle();
+            Container.Bind<TypeHandler<CustomLevelBar>>().To<LevelBarHandler>().AsSingle();
         }
     }
 }
