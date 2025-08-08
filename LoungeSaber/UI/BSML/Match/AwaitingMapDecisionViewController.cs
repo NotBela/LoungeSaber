@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
+using LoungeSaber.UI.BSML.Components;
 using SiraUtil.Logging;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,32 +17,35 @@ namespace LoungeSaber.UI.BSML.Match
     {
         [Inject] private readonly ServerListener _serverListener = null;
         
-        private List<VotingMap> _votingMaps = new();
+        private List<VotingMap> _votingMaps = [];
 
-        [UIValue("ownVoteHash")] private string OwnVoteHash { get; set; } = "";
-        [UIValue("ownVoteDifficulty")] private string OwnVoteDifficulty { get; set; } = "yeah";
-
-        [UIValue("opponentVoteHash")] private string OpponentVoteHash { get; set; } = "";
-        [UIValue("opponentVoteDifficulty")] private string OpponentVoteDifficulty { get; set; }
+        private CustomLevelBar _ownLevelBar;
+        private CustomLevelBar _opponentLevelBar;
+        
+        [UIAction("#post-parse")]
+        private void PostParse()
+        {
+            var allLevelBars = Resources.FindObjectsOfTypeAll<CustomLevelBar>();
+            
+            _opponentLevelBar =
+                allLevelBars.First(i => i.name == "OpponentVoteBar");
+            _ownLevelBar = allLevelBars.First(i => i.name == "OwnVoteBar");
+        }
         
         public void PopulateData(VotingMap vote, List<VotingMap> votingMaps)
         {
-            _votingMaps = votingMaps;
-
-            OwnVoteHash = vote.Hash;
-            OwnVoteDifficulty = vote.GetBaseGameDifficultyType().Name();
+            _opponentLevelBar.SetWaiting();
             
-            NotifyPropertyChanged(null);
+            _votingMaps = votingMaps;
+            
+            _ownLevelBar.Setup(vote);
         }
 
         private void OnOpponentVoted(OpponentVoted opponentVoted)
         {
             while (_votingMaps.Count == 0);
-
-            OpponentVoteHash = _votingMaps[opponentVoted.VoteIndex].Hash;
-            OpponentVoteDifficulty = _votingMaps[opponentVoted.VoteIndex].GetBaseGameDifficultyType().Name();
             
-            NotifyPropertyChanged(null);
+            _opponentLevelBar.Setup(_votingMaps[opponentVoted.VoteIndex]);
         }
 
         public void Dispose()

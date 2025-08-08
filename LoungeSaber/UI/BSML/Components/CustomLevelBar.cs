@@ -1,4 +1,5 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
+using LoungeSaber.Models.Map;
 using UnityEngine;
 using Object = System.Object;
 
@@ -15,14 +16,25 @@ public class CustomLevelBar : MonoBehaviour
         LevelBar._characteristicIconImageView.gameObject.SetActive(true);
     }
 
-    public void SetupBeatmap(BeatmapLevel beatmapLevel)
+    public void SetWaiting()
     {
-        LevelBar.Setup(beatmapLevel.GetBeatmapKeys().First(i => i.beatmapCharacteristic.serializedName == "Standard"));
-        LevelBar._difficultyText.text = "";
+        SetLevelDetailObjectsActive(false);
+        LevelBar._songNameText.text = "Waiting...";
     }
 
-    public void SetDifficultyText(string text)
+    private void SetLevelDetailObjectsActive(bool active)
     {
-        LevelBar._difficultyText.text = text;
+        LevelBar._difficultyText.gameObject.SetActive(active);
+        LevelBar._songArtworkImageView.gameObject.SetActive(active);
+        LevelBar._authorNameText.gameObject.SetActive(active);
+        LevelBar._characteristicIconImageView.gameObject.SetActive(active);
+    }
+
+    public void Setup(VotingMap map)
+    {
+        SetLevelDetailObjectsActive(true);
+        
+        // cannot use BeatmapKey overload because it is broken ??
+        LevelBar.Setup(map.GetBeatmapLevel(), map.GetBaseGameDifficultyType(), map.GetBeatmapLevel()?.GetCharacteristics().First(i => i.serializedName == "Standard"));
     }
 }

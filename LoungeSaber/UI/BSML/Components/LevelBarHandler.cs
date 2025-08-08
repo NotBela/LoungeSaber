@@ -8,25 +8,20 @@ namespace LoungeSaber.UI.BSML.Components;
 [ComponentHandler(typeof(LevelBar))]
 public class LevelBarHandler : TypeHandler<CustomLevelBar>
 {
-
-    public override Dictionary<string, Action<CustomLevelBar, string>> Setters => new()
+    public override void HandleType(BSMLParser.ComponentTypeWithData componentType, BSMLParserParams parserParams)
     {
-        { "beatmapHash", (component, value) =>
-            {
-                if (value == "")
-                {
-                    return;
-                }
-                
-                component.SetupBeatmap(Loader.GetLevelByHash(value));
-            }
-        },
-        { "difficulty", (component, value) => component.SetDifficultyText(value)}
-    };
+        var levelBar = componentType.Component as CustomLevelBar;
+
+        if (!componentType.Data.TryGetValue("name", out var name))
+            throw new Exception("Level bar name never declared!");
+
+        levelBar!.name = name;
+    }
+
+    public override Dictionary<string, Action<CustomLevelBar, string>> Setters => new();
 
     public override Dictionary<string, string[]> Props => new()
     {
-        { "beatmapHash", ["beatmap-hash"] },
-        { "difficulty", ["difficulty"] }
+        { "name", ["name"] }
     };
 }

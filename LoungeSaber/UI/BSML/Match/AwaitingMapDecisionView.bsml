@@ -2,13 +2,13 @@
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
     <vertical>
         <vertical child-control-height="false" spacing="2" preferred-width="80" vertical-fit="PreferredSize" child-align="MiddleCenter">
-            <level-bar beatmap-hash="~opponentVoteHash" difficulty="~opponentVoteDifficulty"/>
+            <level-bar name="OpponentVoteBar"/>
         </vertical>
         
         <text text="Waiting for a map to be chosen..." align="Center" font-size="6"/>
 
         <vertical child-control-height="false" spacing="2" preferred-width="80" vertical-fit="PreferredSize" child-align="MiddleCenter">
-            <level-bar beatmap-hash="~ownVoteHash" difficulty="yeah"/>
+            <level-bar name="OwnVoteBar"/>
         </vertical>
     </vertical>
 </bg>
