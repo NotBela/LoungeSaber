@@ -17,8 +17,6 @@ namespace LoungeSaber.UI.BSML.Match
     {
         [UIValue("matchStartTimer")] private string MatchStartTimer { get; set; } = "";
 
-        [Inject] private readonly SiraLog _siraLog = null;
-
         private CustomLevelBar _customLevelBar = null;
          
         private DateTime _startTime;
