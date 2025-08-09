@@ -1,13 +1,10 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
-using JetBrains.Annotations;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Components;
-using SiraUtil.Logging;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 namespace LoungeSaber.UI.BSML.Match

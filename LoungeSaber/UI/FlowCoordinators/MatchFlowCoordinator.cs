@@ -77,8 +77,8 @@ namespace LoungeSaber.UI.FlowCoordinators
             try
             {
                 ReplaceViewControllerSynchronously(_waitingForMatchToStartViewController);
-                _waitingForMatchToStartViewController.PopulateData(packet.MapSelected, packet.TransitionToGameTime);
-
+                await _waitingForMatchToStartViewController.PopulateData(packet.MapSelected, packet.TransitionToGameTime);
+                
                 await Task.Delay(packet.TransitionToGameTime - DateTime.UtcNow);
                 _matchManager.StartMatch(packet.MapSelected, packet.StartingTime, _gameplaySetupViewManager.ProMode);
             }

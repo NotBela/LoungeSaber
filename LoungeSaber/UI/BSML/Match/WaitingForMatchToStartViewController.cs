@@ -1,7 +1,13 @@
 ﻿using System.Globalization;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
+using BeatSaverSharp.Models;
+using HarmonyLib;
 using LoungeSaber.Models.Map;
+using LoungeSaber.UI.BSML.Components;
+using SiraUtil.Logging;
+using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace LoungeSaber.UI.BSML.Match
@@ -9,18 +15,29 @@ namespace LoungeSaber.UI.BSML.Match
     [ViewDefinition("LoungeSaber.UI.BSML.Match.WaitingForMatchToStartView.bsml")]
     public class WaitingForMatchToStartViewController : BSMLAutomaticViewController, ITickable
     {
-        [UIValue("tempSongDisplayText")] private string _tempSongDisplayText { get; set; } = "";
-        
-        [UIValue("tempMatchStartTimer")] private string _tempMatchStartTimer { get; set; } = "";
-        
-        private DateTime _startTime = DateTime.UtcNow;
-        
-        public void PopulateData(VotingMap votingMap, DateTime startTime)
+        [UIValue("matchStartTimer")] private string MatchStartTimer { get; set; } = "";
+
+        [Inject] private readonly SiraLog _siraLog = null;
+
+        private CustomLevelBar _customLevelBar = null;
+         
+        private DateTime _startTime;
+
+        [UIAction("#post-parse")]
+        private void PostParse()
         {
-            _tempSongDisplayText = votingMap.GetBeatmapLevel()?.songName;
+            _customLevelBar ??= Resources.FindObjectsOfTypeAll<CustomLevelBar>()
+                .First(i => i.name == "WaitingForMatchStartLevelBar");
+        }
+        
+        public async Task PopulateData(VotingMap votingMap, DateTime startTime)
+        {
+            while (_customLevelBar is null)
+                await Task.Delay(25);
+            
             _startTime = startTime;
             
-            NotifyPropertyChanged(null);
+            _customLevelBar?.Setup(votingMap);
         }
 
         public void Tick()
@@ -28,9 +45,9 @@ namespace LoungeSaber.UI.BSML.Match
             if (!isActivated)
                 return;
             
-            _tempMatchStartTimer = $"Starting in {((int) (_startTime - DateTime.UtcNow).TotalSeconds).ToString(CultureInfo.InvariantCulture)}...";
+            MatchStartTimer = $"Starting in {((int) (_startTime - DateTime.UtcNow).TotalSeconds).ToString(CultureInfo.InvariantCulture)}...";
             
-            NotifyPropertyChanged(nameof(_tempMatchStartTimer));
+            NotifyPropertyChanged(nameof(MatchStartTimer));
         }
     }
 }

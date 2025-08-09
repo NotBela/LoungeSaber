@@ -1,8 +1,10 @@
 <bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
     <vertical>
-        <text text="~tempSongDisplayText" align="Center" font-size="5"/>
+        <vertical child-control-height="false" spacing="2" preferred-width="80" vertical-fit="PreferredSize" child-align="MiddleCenter">
+            <level-bar name="WaitingForMatchStartLevelBar"/>
+        </vertical>
         
-        <text text="~tempMatchStartTimer" align="Midline" font-size="5"/>
+        <text text="~matchStartTimer" align="Midline" font-size="5" italics="true"/>
     </vertical>
 </bg>
