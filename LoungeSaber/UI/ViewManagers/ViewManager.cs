@@ -1,4 +1,5 @@
-﻿using HMUI;
+﻿using BeatSaberMarkupLanguage;
+using HMUI;
 using LoungeSaber.UI.FlowCoordinators;
 using UnityEngine;
 using Zenject;
@@ -9,7 +10,8 @@ public abstract class ViewManager : MonoBehaviour, IInitializable, IDisposable
 {
     public abstract ViewController ManagedController { get; }
     
-    public static bool Active { get; set; } = false;
+    [Inject] private readonly MatchFlowCoordinator _matchFlowCoordinator = null;
+    [Inject] private readonly MatchmakingMenuFlowCoordinator _matchmakingMenuFlowCoordinator = null;
 
     public void Initialize()
     {
@@ -25,14 +27,16 @@ public abstract class ViewManager : MonoBehaviour, IInitializable, IDisposable
 
     private void OnManagedControllerActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
-        if (!Active) 
+        if (!_matchFlowCoordinator.isActivated && !_matchFlowCoordinator.isActivated)
             return;
         
-        SetupManagedController();
+        FlowCoordinator activeFlowCoordinator = _matchFlowCoordinator.isActivated ? _matchFlowCoordinator : _matchmakingMenuFlowCoordinator;
+        
+        SetupManagedController(activeFlowCoordinator);
     }
 
     private void OnManagedControllerDeactivated(bool removedFromHierarchy, bool screenSystemDisabling) => ResetManagedController();
     
-    protected virtual void SetupManagedController(){}
+    protected virtual void SetupManagedController(FlowCoordinator parentFlowCoordinator){}
     protected virtual void ResetManagedController(){}
 }

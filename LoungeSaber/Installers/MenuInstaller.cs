@@ -1,7 +1,10 @@
-﻿using LoungeSaber.AffinityPatches.MenuPatches;
+﻿using BeatSaberMarkupLanguage.Tags;
+using BeatSaberMarkupLanguage.TypeHandlers;
+using LoungeSaber.AffinityPatches.MenuPatches;
 using LoungeSaber.Game;
 using LoungeSaber.UI;
 using LoungeSaber.UI.BSML;
+using LoungeSaber.UI.BSML.Components;
 using LoungeSaber.UI.BSML.Leaderboard;
 using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.BSML.Menu;
@@ -40,6 +43,9 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<BeatmapDifficultySegmentedControlPatch>().AsSingle();
             
             Container.BindInterfacesAndSelfTo<MapDownloader>().AsSingle();
+
+            Container.Bind<BSMLTag>().To<LevelBarTag>().AsSingle();
+            Container.Bind<TypeHandler<CustomLevelBar>>().To<LevelBarHandler>().AsSingle();
         }
     }
 }

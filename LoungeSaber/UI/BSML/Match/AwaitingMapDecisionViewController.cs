@@ -1,10 +1,10 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
-using JetBrains.Annotations;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
-using SiraUtil.Logging;
+using LoungeSaber.UI.BSML.Components;
+using UnityEngine;
 using Zenject;
 
 namespace LoungeSaber.UI.BSML.Match
@@ -14,36 +14,35 @@ namespace LoungeSaber.UI.BSML.Match
     {
         [Inject] private readonly ServerListener _serverListener = null;
         
-        private List<VotingMap> _votingMaps = new();
+        private List<VotingMap> _votingMaps = [];
 
-        [UIValue("temporaryOpponentChoiceText")]
-        public string TemporaryOpponentChoiceText { get; set; } = "Waiting...";
+        private CustomLevelBar _ownLevelBar;
+        private CustomLevelBar _opponentLevelBar;
         
-        [UIValue("temporaryPlayerChoiceText")]
-        private string TemporaryPlayerChoiceText { get; set; } = "";
+        [UIAction("#post-parse")]
+        private void PostParse()
+        {
+            var allLevelBars = Resources.FindObjectsOfTypeAll<CustomLevelBar>();
+            
+            _opponentLevelBar =
+                allLevelBars.First(i => i.name == "OpponentVoteBar");
+            _ownLevelBar = allLevelBars.First(i => i.name == "OwnVoteBar");
+        }
         
         public void PopulateData(VotingMap vote, List<VotingMap> votingMaps)
         {
+            _opponentLevelBar.SetWaiting();
+            
             _votingMaps = votingMaps;
-            TemporaryPlayerChoiceText = vote.GetBeatmapLevel()?.songName;
             
-            NotifyPropertyChanged(null);
-        }
-
-        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
-        {
-            base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
-            
-            TemporaryOpponentChoiceText = TemporaryOpponentChoiceText;
+            _ownLevelBar.Setup(vote);
         }
 
         private void OnOpponentVoted(OpponentVoted opponentVoted)
         {
             while (_votingMaps.Count == 0);
             
-            TemporaryOpponentChoiceText = _votingMaps[opponentVoted.VoteIndex].GetBeatmapLevel()?.songName;
-            
-            NotifyPropertyChanged(null);
+            _opponentLevelBar.Setup(_votingMaps[opponentVoted.VoteIndex]);
         }
 
         public void Dispose()

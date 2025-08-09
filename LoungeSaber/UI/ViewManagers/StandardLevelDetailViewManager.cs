@@ -1,5 +1,6 @@
 ﻿using HMUI;
 using LoungeSaber.Models.Map;
+using LoungeSaber.UI.FlowCoordinators;
 using Zenject;
 
 namespace LoungeSaber.UI.ViewManagers;
@@ -32,8 +33,11 @@ public class StandardLevelDetailViewManager : ViewManager
             );
     }
 
-    protected override void SetupManagedController()
+    protected override void SetupManagedController(FlowCoordinator parentFlowCoordinator)
     {
+        if (parentFlowCoordinator is not MatchFlowCoordinator) 
+            return;
+        
         _standardLevelDetailViewController._standardLevelDetailView.actionButton.onClick.AddListener(OnActionButtonPressed);
     }
 
