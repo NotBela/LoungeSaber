@@ -13,13 +13,11 @@ namespace LoungeSaber
     public class Plugin
     {
         internal static Plugin Instance { get; private set; }
-        internal static IPALogger Log { get; private set; }
 
         [Init]
         public void Init(Zenjector zenjector, IPALogger logger, Config config)
         {
             Instance = this;
-            Log = logger;
 
             zenjector.UseLogger(logger);
             zenjector.UseMetadataBinder<Plugin>();

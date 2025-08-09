@@ -29,6 +29,8 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly MatchResultsViewController _matchResultsViewController = null;
         
         [Inject] private readonly LoungeSaberLeaderboardViewController _leaderboardViewController = null;
+
+        [Inject] private readonly SiraLog _siraLog = null;
         
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
@@ -36,6 +38,8 @@ namespace LoungeSaber.UI.FlowCoordinators
             SetTitle("LoungeSaber");
             ProvideInitialViewControllers(_matchmakingMenuViewController, rightScreenViewController: _leaderboardViewController);
         }
+
+        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) => showBackButton = true;
 
         private void OnContinueButtonPressed() => DismissFlowCoordinator(_matchFlowCoordinator);
 
@@ -56,7 +60,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             }
             catch (Exception e)
             {
-                Plugin.Log.Error(e);
+                _siraLog.Error(e);
             }
         }
 
@@ -74,7 +78,10 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         protected override void BackButtonWasPressed(ViewController _)
         {
-            _mainFlowCoordinator.GetType().GetMethod("DismissChildFlowCoordinatorsRecursively", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(_mainFlowCoordinator, new object[] {false});
+            _serverListener.Disconnect();
+            
+            _mainFlowCoordinator.GetType().GetMethod("DismissChildFlowCoordinatorsRecursively", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(_mainFlowCoordinator,
+                [false]);
         }
     }
 }  
