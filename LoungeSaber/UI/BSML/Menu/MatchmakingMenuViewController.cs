@@ -30,6 +30,8 @@ namespace LoungeSaber.UI.BSML.Menu
         [UIAction("aboutButtonOnClick")]
         private void AboutButtonOnClick() => AboutButtonClicked?.Invoke();
 
+        [UIValue("showDiscordLinkModal")] private bool ShowDiscordLinkModal => false;
+
         #region Queue Control
         private readonly Stopwatch _matchmakingTimeStopwatch = new();
         
