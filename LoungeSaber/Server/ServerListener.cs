@@ -30,6 +30,7 @@ namespace LoungeSaber.Server
         public event Action<MatchResults> OnMatchResults;
         
         public event Action OnDisconnected;
+        public event Action OnConnected;
         public event Action<PrematureMatchEnd> OnPrematureMatchEnd;
         
         [Inject] private readonly IPlatformUserModel _platformUserModel = null;
@@ -64,6 +65,7 @@ namespace LoungeSaber.Server
                     _listenerThread = new Thread(ListenToServer);
                     _shouldListenToServer = true;
                     _listenerThread.Start();
+                    OnConnected?.Invoke();
                 }
             }
             catch (Exception e)
@@ -80,6 +82,9 @@ namespace LoungeSaber.Server
 
         public void Disconnect()
         {
+            if (_shouldListenToServer == false)
+                return;
+            
             _shouldListenToServer = false;
             _client.Close();
         }
@@ -96,6 +101,9 @@ namespace LoungeSaber.Server
                     Array.Resize(ref data, bytesRead);
 
                     var json = Encoding.UTF8.GetString(data);
+                    
+                    if (json == "") 
+                        continue;
                     
                     _siraLog.Info(json);
 

@@ -21,6 +21,7 @@ namespace LoungeSaber.UI.FlowCoordinators
     {
         [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null;
         [Inject] private readonly MatchFlowCoordinator _matchFlowCoordinator = null;
+        [Inject] private readonly InfoFlowCoordinator _infoFlowCoordinator = null;
         [Inject] private readonly VotingScreenViewController _votingScreenViewController = null;
         
         [Inject] private readonly ServerListener _serverListener = null;
@@ -29,6 +30,8 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly MatchResultsViewController _matchResultsViewController = null;
         
         [Inject] private readonly LoungeSaberLeaderboardViewController _leaderboardViewController = null;
+
+        [Inject] private readonly SiraLog _siraLog = null;
         
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
@@ -36,6 +39,8 @@ namespace LoungeSaber.UI.FlowCoordinators
             SetTitle("LoungeSaber");
             ProvideInitialViewControllers(_matchmakingMenuViewController, rightScreenViewController: _leaderboardViewController);
         }
+
+        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) => showBackButton = true;
 
         private void OnContinueButtonPressed() => DismissFlowCoordinator(_matchFlowCoordinator);
 
@@ -56,7 +61,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             }
             catch (Exception e)
             {
-                Plugin.Log.Error(e);
+                _siraLog.Error(e);
             }
         }
 
@@ -64,17 +69,31 @@ namespace LoungeSaber.UI.FlowCoordinators
         {
             _serverListener.OnMatchCreated -= OnMatchCreated;
             _matchResultsViewController.ContinueButtonPressed -= OnContinueButtonPressed;
+            _matchmakingMenuViewController.AboutButtonClicked -= OnAboutButtonClicked;
+            _infoFlowCoordinator.OnBackButtonPressed -= OnInfoFlowCoordinatorBackButtonPressed;
         }
         
         public void Initialize()
         {
             _serverListener.OnMatchCreated += OnMatchCreated;
             _matchResultsViewController.ContinueButtonPressed += OnContinueButtonPressed;
+            _matchmakingMenuViewController.AboutButtonClicked += OnAboutButtonClicked;
+            _infoFlowCoordinator.OnBackButtonPressed += OnInfoFlowCoordinatorBackButtonPressed;
+        }
+
+        private void OnInfoFlowCoordinatorBackButtonPressed() => DismissFlowCoordinator(_infoFlowCoordinator);
+
+        private void OnAboutButtonClicked()
+        {
+            PresentFlowCoordinatorSynchronously(_infoFlowCoordinator);
+            _serverListener.Disconnect();
         }
 
         protected override void BackButtonWasPressed(ViewController _)
         {
-            _mainFlowCoordinator.GetType().GetMethod("DismissChildFlowCoordinatorsRecursively", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(_mainFlowCoordinator, new object[] {false});
+            _serverListener.Disconnect();
+            _mainFlowCoordinator.GetType().GetMethod("DismissChildFlowCoordinatorsRecursively", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(_mainFlowCoordinator,
+                [false]);
         }
     }
 }  

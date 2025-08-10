@@ -87,6 +87,9 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
         _checkingServerStatusViewController.SetControllerState(CheckingServerStatusViewController.ControllerState
             .CheckingMaps);
 
+        while (Loader.AreSongsLoading)
+            await Task.Delay(25);
+
         var maps = await _loungeSaberApi.GetMapHashes();
         var missingMapHashes = maps.Where(i => Loader.GetLevelByHash(i) == null).ToArray();
         
