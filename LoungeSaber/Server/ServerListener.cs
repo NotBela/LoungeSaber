@@ -82,6 +82,9 @@ namespace LoungeSaber.Server
 
         public void Disconnect()
         {
+            if (_shouldListenToServer == false)
+                return;
+            
             _shouldListenToServer = false;
             _client.Close();
         }
@@ -98,6 +101,9 @@ namespace LoungeSaber.Server
                     Array.Resize(ref data, bytesRead);
 
                     var json = Encoding.UTF8.GetString(data);
+                    
+                    if (json == "") 
+                        continue;
                     
                     _siraLog.Info(json);
 

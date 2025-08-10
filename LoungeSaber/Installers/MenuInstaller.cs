@@ -5,6 +5,7 @@ using LoungeSaber.Game;
 using LoungeSaber.UI;
 using LoungeSaber.UI.BSML;
 using LoungeSaber.UI.BSML.Components;
+using LoungeSaber.UI.BSML.Info;
 using LoungeSaber.UI.BSML.Leaderboard;
 using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.BSML.Menu;
@@ -27,6 +28,7 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<WaitingForMatchToStartViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<AwaitMatchEndViewController>().FromNewComponentAsViewController()
                 .AsSingle();
+            Container.BindInterfacesAndSelfTo<InfoViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<MatchResultsViewController>().FromNewComponentAsViewController()
                 .AsSingle();
             Container.BindInterfacesAndSelfTo<LeaderboardPanelViewController>().FromNewComponentAsViewController()
@@ -36,6 +38,7 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<CheckingServerStatusViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<MissingMapsViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<ServerCheckingFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
+            Container.BindInterfacesAndSelfTo<InfoFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
 
             Container.BindInterfacesAndSelfTo<GameplaySetupViewManager>().FromNewComponentOnNewGameObject().AsSingle();
             Container.BindInterfacesAndSelfTo<StandardLevelDetailViewManager>().FromNewComponentOnNewGameObject().AsSingle();

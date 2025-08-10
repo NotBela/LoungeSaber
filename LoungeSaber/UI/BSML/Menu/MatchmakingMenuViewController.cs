@@ -16,26 +16,26 @@ namespace LoungeSaber.UI.BSML.Menu
     {
         [Inject] private readonly ServerListener _serverListener = null;
         [Inject] private readonly SiraLog _siraLog = null;
-        
-        private readonly Stopwatch _matchmakingTimeStopwatch = new();
-        
-        
-        [UIComponent("joinMatchmakingPoolButton")] private readonly Button _joinMatchmakingPoolButton = null;
-
-        [UIComponent("leaveMatchmakingPoolButton")]
-        private readonly Button _leaveMatchmakingPoolButton = null;
 
         [UIParams] private readonly BSMLParserParams _parserParams = null;
 
-        public event Action OnDisconnectedFromMatchmakingPool;
-        public event Action OnConnectedToMatchmakingPool;
-
+        public event Action AboutButtonClicked;
+        
         protected override void DidDeactivate(bool firstActivation, bool addedToHierarchy)
         {
             _leaveMatchmakingPoolButton.gameObject.SetActive(false);
             ResetMatchmakingTimer();
         }
 
+        [UIAction("aboutButtonOnClick")]
+        private void AboutButtonOnClick() => AboutButtonClicked?.Invoke();
+
+        #region Queue Control
+        private readonly Stopwatch _matchmakingTimeStopwatch = new();
+        
+        [UIComponent("joinMatchmakingPoolButton")] private readonly Button _joinMatchmakingPoolButton = null;
+        [UIComponent("leaveMatchmakingPoolButton")] private readonly Button _leaveMatchmakingPoolButton = null;
+        
         private void ResetMatchmakingTimer()
         {
             _matchmakingTimeStopwatch.Stop();
@@ -58,7 +58,6 @@ namespace LoungeSaber.UI.BSML.Menu
             _parserParams.EmitEvent("disconnectModalHideEvent");
             ResetMatchmakingTimer();
             _serverListener.Disconnect();
-            OnDisconnectedFromMatchmakingPool?.Invoke();
         }
         
         [UIAction("joinMatchmakingPoolButtonOnClick")]
@@ -70,7 +69,6 @@ namespace LoungeSaber.UI.BSML.Menu
                 _joinMatchmakingPoolButton.interactable = false;
                 _joinMatchmakingPoolButton.SetButtonText("Finding Match (Joining Pool...)");
                 _leaveMatchmakingPoolButton.gameObject.SetActive(true);
-                OnConnectedToMatchmakingPool?.Invoke();
 
                 await _serverListener.Connect(OnConnectedCallback);
             }
@@ -100,7 +98,8 @@ namespace LoungeSaber.UI.BSML.Menu
         private void UpdateButtonText()
         {
             if (_matchmakingTimeStopwatch.IsRunning)
-                _joinMatchmakingPoolButton.SetButtonText($"Finding Match ({_matchmakingTimeStopwatch.Elapsed.Minutes:00}:{_matchmakingTimeStopwatch.Elapsed.Seconds % 60:00} elapsed)");
+                _joinMatchmakingPoolButton.SetButtonText($"Finding Match\n({_matchmakingTimeStopwatch.Elapsed.Minutes:00}:{_matchmakingTimeStopwatch.Elapsed.Seconds % 60:00} elapsed)");
         }
+        #endregion
     }
 }

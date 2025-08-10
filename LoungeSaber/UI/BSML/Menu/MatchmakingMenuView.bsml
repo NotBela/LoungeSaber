@@ -1,11 +1,20 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
      xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
     <vertical>
-        <primary-button on-click="joinMatchmakingPoolButtonOnClick" id="joinMatchmakingPoolButton" text="Find Match" pref-width='34' pref-height='10'/> 
+        <primary-button on-click="joinMatchmakingPoolButtonOnClick" id="joinMatchmakingPoolButton" text="Find Match" pref-width='34' pref-height='10'/>
         <button on-click="leaveMatchmakingPoolButtonOnClick" id="leaveMatchmakingPoolButton" text="Leave" preferred-width="24" pref-height="7" active="false"/>
     </vertical>
+
+    <vertical pref-width="5" pref-height="5" anchor-pos-y="-10" horizontal-fit="PreferredSize">
+        <button text="About" on-click="aboutButtonOnClick"/>
+    </vertical>
     
-    <modal move-to-center="true" click-off-closes="true" show-event="disconnectModalShowEvent" hide-event="disconnectModalHideEvent" size-delta-x="50" size-delta-y="40">
+    <vertical pref-width="90" pref-height="12" anchor-pos-y="-20" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" background="panel-top" bg-color="#5865F2" anchor-pos-x="0">
+        <clickable-text text="It looks like you haven't linked your discord profile yet!" align="Midline" font-size="4"/>
+        <clickable-text text="other join text" align="Midline" font-size="4"/>
+    </vertical>
+    
+    <modal move-to-center="true" click-off-closes="true" show-event="disconnectModalShowEvent" hide-event="disconnectModalHideEvent" size-delta-x="70" size-delta-y="40">
         <vertical>
             <text text="Are you sure you want to leave the matchmaking pool?" align="Midline"/>
             <horizontal>
