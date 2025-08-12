@@ -1,40 +1,38 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using LoungeSaber.Game;
+using LoungeSaber.Server;
 using Zenject;
 
 namespace LoungeSaber.UI.BSML.Menu;
 
 [ViewDefinition("LoungeSaber.UI.BSML.Menu.CheckingServerStatusView.bsml")]
-public class CheckingServerStatusViewController : BSMLAutomaticViewController
+public class CheckingServerStatusViewController : BSMLAutomaticViewController, IInitializable, IDisposable
 {
     [Inject] private readonly MapDownloader _mapDownloader = null;
+    [Inject] private readonly InitialServerChecker _initialServerChecker = null;
     
-    [UIValue("stateText")] private string _stateText { get; set; } = "placeholder";
-    
-    public enum ControllerState
-    {
-        CheckingServer, 
-        CheckingMaps,
-        DownloadingMaps
-    }
+    [UIValue("stateText")] private string StateText { get; set; } = "placeholder";
 
-    public void SetControllerState(ControllerState state)
+    public void SetControllerState(InitialServerChecker.ServerCheckingStates state)
     {
         switch (state)
         {
-            case ControllerState.CheckingServer:
-                _stateText = "Connecting to server...";
+            case InitialServerChecker.ServerCheckingStates.ServerStatus:
+                StateText = "Connecting to server...";
                 break;
-            case ControllerState.CheckingMaps:
-                _stateText = "Fetching maps...";
+            case InitialServerChecker.ServerCheckingStates.Maps:
+                StateText = "Fetching maps...";
                 break;
-            case ControllerState.DownloadingMaps:
-                _stateText = "Downloading maps...";
+            case InitialServerChecker.ServerCheckingStates.UserData:
+                StateText = "Fetching user data...";
+                break;
+            case InitialServerChecker.ServerCheckingStates.DownloadingMaps:
+                StateText = "Downloading maps...";
                 _mapDownloader.OnMapDownloaded += OnMapDownloaded;
                 break;
         };
-        NotifyPropertyChanged(nameof(_stateText));
+        NotifyPropertyChanged(nameof(StateText));
     }
 
     private void OnMapDownloaded(int mapsDownloaded, int totalMaps)
@@ -42,8 +40,18 @@ public class CheckingServerStatusViewController : BSMLAutomaticViewController
         if (mapsDownloaded == totalMaps)
             _mapDownloader.OnMapDownloaded -= OnMapDownloaded;
         
-        _stateText = $"Downloading maps... ({mapsDownloaded}/{totalMaps})";
+        StateText = $"Downloading maps... ({mapsDownloaded}/{totalMaps})";
         
-        NotifyPropertyChanged(nameof(_stateText));
+        NotifyPropertyChanged(nameof(StateText));
+    }
+
+    public void Initialize()
+    {
+        _initialServerChecker.ServerCheckingStateUpdated += SetControllerState;
+    }
+
+    public void Dispose()
+    {
+        _initialServerChecker.ServerCheckingStateUpdated -= SetControllerState;
     }
 }

@@ -22,119 +22,89 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
     [Inject] private readonly MissingMapsViewController _missingMapsViewController = null;
     
     [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null;
-    
-    [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
+
+    [Inject] private readonly InitialServerChecker _serverChecker = null;
     [Inject] private readonly MapDownloader _mapDownloader = null;
     
     [Inject] private readonly SiraLog _siraLog = null;
-    
-    [Inject] private readonly PluginConfig _config = null;
 
     protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
-        showBackButton = false;
-        SetTitle("LoungeSaber");
-
-        ProvideInitialViewControllers(_checkingServerStatusViewController);
-        _checkingServerStatusViewController.SetControllerState(CheckingServerStatusViewController.ControllerState
-            .CheckingServer);
-        
-        _cantConnectToServerViewController.OnContinueButtonPressed += OnContinueButtonPressed;
-
-        Task.Run(async Task () =>
+        try
         {
-            await StartServerCheckingExecutionFlow();
-        });
+            showBackButton = false;
+            SetTitle("LoungeSaber");
+
+            ProvideInitialViewControllers(_checkingServerStatusViewController);
+            _checkingServerStatusViewController.SetControllerState(InitialServerChecker.ServerCheckingStates.ServerStatus);
+        
+            _cantConnectToServerViewController.OnContinueButtonPressed += OnContinueButtonPressed;
+            
+            _serverChecker.ServerCheckFailed += OnServerCheckFailed;
+            _serverChecker.ServerCheckFinished += ServerCheckFinished;
+            _serverChecker.StartMapDownload += OnStartMapDownload;
+
+            Task.Run(async Task() =>
+            {
+                await _serverChecker.CheckServer();
+            });
+        }
+        catch (Exception e)
+        {
+            _siraLog.Error(e);
+        }
     }
-    
+
+    private void OnStartMapDownload(string[] missingMapHashes)
+    {
+        ReplaceViewControllerSynchronously(_missingMapsViewController);
+        _missingMapsViewController.SetMissingMapCount(missingMapHashes.Length);
+        
+        _missingMapsViewController.UserChoseToDownloadMaps += UserChoseToDownloadMaps;
+        return;
+
+        async void UserChoseToDownloadMaps(bool choice)
+        {
+            try
+            {
+                if (choice)
+                {
+                    await DownloadMaps(missingMapHashes);
+                    return;
+                }
+                
+                _mainFlowCoordinator.DismissFlowCoordinator(this);
+            }
+            catch(Exception e)
+            {
+                _siraLog.Error(e);
+            }
+        }
+    }
+
+    private void ServerCheckFinished()
+    {
+        PresentFlowCoordinatorSynchronously(_matchmakingMenuFlowCoordinator);
+    }
+
+    private void OnServerCheckFailed(string reason)
+    {
+        _serverChecker.ServerCheckFinished -= ServerCheckFinished;
+        
+        ReplaceViewControllerSynchronously(_cantConnectToServerViewController);
+        _cantConnectToServerViewController.SetReasonText(reason);
+    }
+
     protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) => _cantConnectToServerViewController.OnContinueButtonPressed -= OnContinueButtonPressed;
     
     private void OnContinueButtonPressed() => _mainFlowCoordinator.DismissFlowCoordinator(this);
-
-    private async Task StartServerCheckingExecutionFlow()
-    {
-        var serverResponse = await _loungeSaberApi.GetServerStatus();
-
-        if (serverResponse == null)
-        {
-            ReplaceViewControllerSynchronously(_cantConnectToServerViewController);
-            _cantConnectToServerViewController.SetReasonText("InvalidServerResponse");
-            return;
-        }
-
-        if (!serverResponse.AllowedModVersions.Contains(IPA.Loader.PluginManager.GetPluginFromId("LoungeSaber").HVersion
-                .ToString()))
-        {
-            ReplaceViewControllerSynchronously(_cantConnectToServerViewController);
-            _cantConnectToServerViewController.SetReasonText("OutdatedPluginVersion");
-            return;
-        }
-
-        if (!serverResponse.AllowedGameVersions.Contains(UnityGame.GameVersion.ToString()))
-        {
-            ReplaceViewControllerSynchronously(_cantConnectToServerViewController);
-            _cantConnectToServerViewController.SetReasonText("OutdatedGameVersion");
-            return;
-        }
-
-        if (serverResponse.State != ServerStatus.ServerState.Online)
-        {
-            ReplaceViewControllerSynchronously(_cantConnectToServerViewController);
-            _cantConnectToServerViewController.SetReasonText("ServerInMaintenance");
-            return;
-        }
-        
-        _checkingServerStatusViewController.SetControllerState(CheckingServerStatusViewController.ControllerState
-            .CheckingMaps);
-
-        while (Loader.AreSongsLoading)
-            await Task.Delay(25);
-
-        var maps = await _loungeSaberApi.GetMapHashes();
-        var missingMapHashes = maps.Where(i => Loader.GetLevelByHash(i) == null).ToArray();
-        
-        if (missingMapHashes.Length == 0)
-        {
-            PresentFlowCoordinatorSynchronously(_matchmakingMenuFlowCoordinator);
-            return;
-        }
-
-        if (_config.DownloadMapsAutomatically)
-        {
-            await DownloadMaps(missingMapHashes);
-            return;
-        }
-
-        ReplaceViewControllerSynchronously(_missingMapsViewController);
-        _missingMapsViewController.SetMissingMapCount(missingMapHashes.Length);
-
-        _missingMapsViewController.UserChoseToDownloadMaps += OnChoiceRecieved;
-        return;
-        
-        void OnChoiceRecieved(bool choice)
-        {
-            _missingMapsViewController.UserChoseToDownloadMaps -= OnChoiceRecieved;
-            
-            if (choice)
-            {
-                Task.Run(async Task () =>
-                {
-                    await DownloadMaps(missingMapHashes);
-                });
-                
-                return;
-            }
-            
-            _mainFlowCoordinator.DismissFlowCoordinator(this);
-        }
-    }
     
     private async Task DownloadMaps(string[] missingMapHashes)
     {
         try
         {
             ReplaceViewControllerSynchronously(_checkingServerStatusViewController);
-            _checkingServerStatusViewController.SetControllerState(CheckingServerStatusViewController.ControllerState.DownloadingMaps);
+            _checkingServerStatusViewController.SetControllerState(InitialServerChecker.ServerCheckingStates.DownloadingMaps);
 
             await _mapDownloader.DownloadMaps(missingMapHashes);
             
@@ -151,7 +121,7 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
             _siraLog.Error(ex);
             showBackButton = true;
             ReplaceViewControllerSynchronously(_cantConnectToServerViewController);
-            _cantConnectToServerViewController.SetReasonText("Unhandled exception downloading beatmap, please check your logs for more details!");
+            _cantConnectToServerViewController.SetReasonText("Unhandled exception downloading beatmaps, please check your logs for more details!");
         }
     }
 }

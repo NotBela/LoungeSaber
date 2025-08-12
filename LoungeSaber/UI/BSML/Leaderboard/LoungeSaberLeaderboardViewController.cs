@@ -19,8 +19,6 @@ namespace LoungeSaber.UI.BSML.Leaderboard
         [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         [Inject] private readonly SiraLog _siraLog = null;
         
-        [Inject] private readonly IPlatformUserModel _platformUserModel = null;
-        
         private bool _isLoaded = false;
 
         [UIValue("is-loaded")]
@@ -40,6 +38,8 @@ namespace LoungeSaber.UI.BSML.Leaderboard
         [UIComponent("leaderboard")] private readonly CustomCellListTableData _leaderboard = null;
 
         [UIValue("cell-data")] private readonly List<IconSegmentedControl.DataItem> _cellData = new(){};
+
+        private string _userId;
 
         private void Awake()
         {
@@ -64,6 +64,11 @@ namespace LoungeSaber.UI.BSML.Leaderboard
             {
                 _siraLog.Error(e);
             }
+        }
+
+        public void InitUserInfo(Models.UserInfo.UserInfo userInfo)
+        {
+            _userId = userInfo.UserId;
         }
 
         private void SetLeaderboardData(Models.UserInfo.UserInfo[] userInfo)
@@ -147,8 +152,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
                     case LeaderboardStates.Self:
                         UpEnabled = false;
                         DownEnabled = false;
-                        var ownId = (await _platformUserModel.GetUserInfo(CancellationToken.None)).platformUserId;
-                        var aroundUser = await _loungeSaberApi.GetAroundUser(ownId);
+                        var aroundUser = await _loungeSaberApi.GetAroundUser(_userId);
                         SetLeaderboardData(aroundUser);
                         break;
                 }

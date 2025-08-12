@@ -20,9 +20,11 @@ namespace LoungeSaber.Models.UserInfo
         public long Rank { get; private set; }
     
         [JsonProperty("discordId")] [CanBeNull] public string DiscordId { get; private set; }
+        
+        public DivisionInfo Division { get; private set; }
     
         [JsonConstructor]
-        public UserInfo(string username, string userId, int mmr, [CanBeNull] Badge badge, long rank, [CanBeNull] string discordId)
+        public UserInfo(string username, string userId, int mmr, DivisionInfo division, [CanBeNull] Badge badge, long rank, [CanBeNull] string discordId)
         {
             Username = username;
             UserId = userId;
@@ -30,6 +32,7 @@ namespace LoungeSaber.Models.UserInfo
             Badge = badge;
             Rank = rank;
             DiscordId = discordId;
+            Division = division;
         }
         
         public string GetFormattedUserName()
