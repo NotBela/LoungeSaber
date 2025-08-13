@@ -1,8 +1,7 @@
 <bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
     <horizontal pref-width="91" horizontal-fit="Unconstrained" vertical-fit="PreferredSize" spacing="4" bg="title-gradient" bg-color="~bgColor" pad="2">
-        <vertical active="~showRankingScreen" horizontal-fit="Unconstrained">
-            <text text="~globalRankingText" font-size="3.5" italics="true" align="Left"/>
+        <vertical active="~showDivisionScreen" horizontal-fit="Unconstrained">
             <text text="~divisionText" font-size="3.5" italics="true" align="Left"/>
         </vertical>
         <vertical active="~showLoadingScreen">

@@ -1,10 +1,5 @@
-﻿using System.Reflection;
-using HarmonyLib;
-using HMUI;
-using IPA.Utilities;
-using LoungeSaber.Configuration;
+﻿using LoungeSaber.Configuration;
 using LoungeSaber.Game;
-using LoungeSaber.Models.Server;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Menu;
 using SiraUtil.Logging;
@@ -31,29 +26,19 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
 
     protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
-        try
-        {
-            showBackButton = false;
-            SetTitle("LoungeSaber");
+        showBackButton = false;
+        SetTitle("LoungeSaber");
 
-            ProvideInitialViewControllers(_checkingServerStatusViewController);
-            _checkingServerStatusViewController.SetControllerState(InitialServerChecker.ServerCheckingStates.ServerStatus);
-        
-            _cantConnectToServerViewController.OnContinueButtonPressed += OnContinueButtonPressed;
-            
-            _serverChecker.ServerCheckFailed += OnServerCheckFailed;
-            _serverChecker.ServerCheckFinished += ServerCheckFinished;
-            _serverChecker.StartMapDownload += OnStartMapDownload;
+        ProvideInitialViewControllers(_checkingServerStatusViewController);
+        _checkingServerStatusViewController.SetControllerState(InitialServerChecker.ServerCheckingStates.ServerStatus);
 
-            Task.Run(async Task() =>
-            {
-                await _serverChecker.CheckServer();
-            });
-        }
-        catch (Exception e)
-        {
-            _siraLog.Error(e);
-        }
+        _cantConnectToServerViewController.OnContinueButtonPressed += OnContinueButtonPressed;
+
+        _serverChecker.ServerCheckFailed += OnServerCheckFailed;
+        _serverChecker.ServerCheckFinished += ServerCheckFinished;
+        _serverChecker.StartMapDownload += OnStartMapDownload;
+
+        Task.Run(async Task () => { await _serverChecker.CheckServer(); });
     }
 
     private void OnStartMapDownload(string[] missingMapHashes)

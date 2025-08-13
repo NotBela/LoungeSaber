@@ -1,6 +1,7 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.FloatingScreen;
 using BeatSaberMarkupLanguage.ViewControllers;
+using HMUI;
 using LoungeSaber.Server;
 using SiraUtil.Logging;
 using UnityEngine;
@@ -30,11 +31,10 @@ namespace LoungeSaber.UI.BSML.Leaderboard
 
         [UIValue("showLoadingScreen")] private bool _showLoadingScreen => IsLoading;
         
-        [UIValue("showRankingScreen")] private bool _showRankingScreen => !IsLoading;
+        [UIValue("showDivisionScreen")] private bool _showRankingScreen => !IsLoading;
         
         
-        [UIValue("globalRankingText")] private string _globalRankingText { get; set; } = "placeholder";
-        [UIValue("divisionText")] private string _divisionText { get; set; } = "placeholder";
+        [UIValue("divisionText")] private string _globalRankingText { get; set; } = "placeholder";
 
         [UIValue("bgColor")] private string _bgColor { get; set; } = "#808080";
         
@@ -44,12 +44,10 @@ namespace LoungeSaber.UI.BSML.Leaderboard
         {
             IsLoading = true;
             
-            var userId = (await _platformUserModel.GetUserInfo(CancellationToken.None)).platformUserId;
-            
-            var userData = await _loungeSaberApi.GetUserInfo(userId);
+            var userData = await _loungeSaberApi.GetUserInfo((await _platformUserModel.GetUserInfo(CancellationToken.None)).platformUserId);
 
-            _globalRankingText = $"<b>Global Ranking:</b> #{(userData == null ? "0" : userData.Rank)}";
-            _divisionText = "placeholder"; //TODO: waiting on garrick
+            _globalRankingText = "<b>Division: </b>" + (userData == null ? "None" : $"{userData.Division.Division} {userData.Division.SubDivision}");
+            _bgColor = userData?.Division.Color ?? "#808080";
             
             IsLoading = false;
             
@@ -62,7 +60,10 @@ namespace LoungeSaber.UI.BSML.Leaderboard
             {
                 if (firstActivation)
                 {
+                    var screenSystem = Resources.FindObjectsOfTypeAll<ScreenSystem>().First();
+                    
                     CreateFloatingLeaderboardPanel();
+                    _floatingScreen.ScreenPosition = screenSystem.rightScreen.transform.position;
                     _floatingScreen.gameObject.SetActive(true);
                     await UpdateRankingInfo();
                     return;
@@ -80,7 +81,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
 
         private void CreateFloatingLeaderboardPanel()
         {
-            _floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(100f, 25f), false, Vector2.zero, Quaternion.identity);
+            _floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(100f, 25f), false, Vector3.zero, Quaternion.identity);
             _floatingScreen.SetRootViewController(this, AnimationType.In);
             _floatingScreen.name = "LoungeSaberFloatingScreen";
         }

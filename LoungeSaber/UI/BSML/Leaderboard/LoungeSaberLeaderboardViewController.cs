@@ -13,11 +13,12 @@ using Zenject;
 namespace LoungeSaber.UI.BSML.Leaderboard
 {
     [ViewDefinition("LoungeSaber.UI.BSML.Leaderboard.LoungeSaberLeaderboardView.bsml")]
-    public class LoungeSaberLeaderboardViewController : BSMLAutomaticViewController
+    public class LoungeSaberLeaderboardViewController : BSMLAutomaticViewController, IInitializable, IDisposable
     {
         [Inject] private readonly PlatformLeaderboardViewController _platformLeaderboardViewController = null;
         [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         [Inject] private readonly SiraLog _siraLog = null;
+        [Inject] private readonly InitialServerChecker _initialServerChecker = null;
         
         private bool _isLoaded = false;
 
@@ -199,6 +200,21 @@ namespace LoungeSaber.UI.BSML.Leaderboard
             {
                 _siraLog.Error(e);
             }
+        }
+
+        public void Initialize()
+        {
+            _initialServerChecker.OnUserInfoFetched += OnUserInfoFetched;
+        }
+
+        private void OnUserInfoFetched(Models.UserInfo.UserInfo userInfo)
+        {
+            _userId = userInfo.UserId;
+        }
+
+        public void Dispose()
+        {
+            _initialServerChecker.OnUserInfoFetched -= OnUserInfoFetched;
         }
     }
 }
