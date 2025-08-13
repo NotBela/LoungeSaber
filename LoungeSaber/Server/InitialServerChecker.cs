@@ -25,14 +25,16 @@ public class InitialServerChecker
     
     public async Task CheckServer()
     {
+        
         await CheckServerState();
         await CheckUserData();
-        await CheckMaps();
+        if (!await CheckMaps())
+            return;
         
         ServerCheckFinished?.Invoke();
     }
 
-    private async Task CheckMaps()
+    private async Task<bool> CheckMaps()
     {
         ServerCheckingStateUpdated?.Invoke(ServerCheckingStates.Maps);
         
@@ -44,10 +46,11 @@ public class InitialServerChecker
         
         if (missingMapHashes.Length == 0)
         {
-            return;
+            return true;
         }
         
         StartMapDownload?.Invoke(missingMapHashes);
+        return false;
     }
 
     private async Task CheckUserData()

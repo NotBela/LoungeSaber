@@ -27,6 +27,7 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
     [Inject] private readonly MapDownloader _mapDownloader = null;
     
     [Inject] private readonly SiraLog _siraLog = null;
+    [Inject] private readonly PluginConfig _config = null;
 
     protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
@@ -57,6 +58,12 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
 
     private void OnStartMapDownload(string[] missingMapHashes)
     {
+        if (_config.DownloadMapsAutomatically)
+        {
+            UserChoseToDownloadMaps(true);
+            return;
+        }
+        
         ReplaceViewControllerSynchronously(_missingMapsViewController);
         _missingMapsViewController.SetMissingMapCount(missingMapHashes.Length);
         
@@ -82,10 +89,7 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
         }
     }
 
-    private void ServerCheckFinished()
-    {
-        PresentFlowCoordinatorSynchronously(_matchmakingMenuFlowCoordinator);
-    }
+    private void ServerCheckFinished() => PresentFlowCoordinatorSynchronously(_matchmakingMenuFlowCoordinator);
 
     private void OnServerCheckFailed(string reason)
     {
@@ -95,8 +99,15 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
         _cantConnectToServerViewController.SetReasonText(reason);
     }
 
-    protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) => _cantConnectToServerViewController.OnContinueButtonPressed -= OnContinueButtonPressed;
-    
+    protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
+    {
+        _cantConnectToServerViewController.OnContinueButtonPressed -= OnContinueButtonPressed;
+        
+        _serverChecker.ServerCheckFailed -= OnServerCheckFailed;
+        _serverChecker.ServerCheckFinished -= ServerCheckFinished;
+        _serverChecker.StartMapDownload -= OnStartMapDownload;
+    }
+
     private void OnContinueButtonPressed() => _mainFlowCoordinator.DismissFlowCoordinator(this);
     
     private async Task DownloadMaps(string[] missingMapHashes)
