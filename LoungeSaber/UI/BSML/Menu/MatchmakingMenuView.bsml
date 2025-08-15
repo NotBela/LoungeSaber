@@ -1,12 +1,15 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
      xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
-    <vertical>
+    <vertical anchor-pos-x="0" anchor-pos-y="-15">
         <primary-button on-click="joinMatchmakingPoolButtonOnClick" id="joinMatchmakingPoolButton" text="Find Match" pref-width='34' pref-height='10'/>
-        <button on-click="leaveMatchmakingPoolButtonOnClick" id="leaveMatchmakingPoolButton" text="Leave" preferred-width="24" pref-height="7" active="false"/>
+    </vertical>
+    
+    <vertical anchor-pos-x="0" anchor-pos-y="10">
+        <button on-click="leaveMatchmakingPoolButtonOnClick" id="leaveMatchmakingPoolButton" text="Leave" preferred-width="24" pref-height="8" active="false"/>
     </vertical>
 
     <vertical pref-width="5" pref-height="5" anchor-pos-y="-10" horizontal-fit="PreferredSize">
-        <button text="About" on-click="aboutButtonOnClick"/>
+        <button text="About" on-click="aboutButtonOnClick" id="aboutButton"/>
     </vertical>
     
     <vertical pref-width="90" pref-height="12" anchor-pos-y="-20" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" background="panel-top" bg-color="#5865F2" anchor-pos-x="0" active="~showDiscordLinkModal">

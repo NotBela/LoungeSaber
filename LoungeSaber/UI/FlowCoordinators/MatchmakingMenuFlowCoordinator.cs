@@ -65,11 +65,6 @@ namespace LoungeSaber.UI.FlowCoordinators
             }
         }
 
-        public void InitUserData(Models.UserInfo.UserInfo userInfo)
-        {
-            _leaderboardViewController.InitUserInfo(userInfo);
-        }
-
         public void Dispose()
         {
             _serverListener.OnMatchCreated -= OnMatchCreated;

@@ -1,11 +1,16 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
+using HMUI;
+using IPA.Utilities;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
+using LoungeSaber.UI.FlowCoordinators;
 using SiraUtil.Logging;
+using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
@@ -30,7 +35,17 @@ namespace LoungeSaber.UI.BSML.Menu
         [UIAction("aboutButtonOnClick")]
         private void AboutButtonOnClick() => AboutButtonClicked?.Invoke();
 
+        [UIComponent("aboutButton")] private readonly Button _aboutButton = null;
+
         [UIValue("showDiscordLinkModal")] private bool ShowDiscordLinkModal => false;
+
+        private void ChangeButtonState(bool inMatch)
+        {
+            _aboutButton.interactable = !inMatch;
+            _leaveMatchmakingPoolButton.gameObject.SetActive(inMatch);
+            _joinMatchmakingPoolButton.interactable = !inMatch;
+            _leaveMatchmakingPoolButton.gameObject.SetActive(inMatch);
+        }
 
         #region Queue Control
         private readonly Stopwatch _matchmakingTimeStopwatch = new();
@@ -56,7 +71,8 @@ namespace LoungeSaber.UI.BSML.Menu
         [UIAction("leaveMatchmakingPoolAllowButtonOnClick")]
         private void LeaveMatchmakingPoolAllowButton()
         {
-            _leaveMatchmakingPoolButton.gameObject.SetActive(false);
+            ChangeButtonState(false);
+            
             _parserParams.EmitEvent("disconnectModalHideEvent");
             ResetMatchmakingTimer();
             _serverListener.Disconnect();
@@ -67,10 +83,9 @@ namespace LoungeSaber.UI.BSML.Menu
         {
             try
             {
+                ChangeButtonState(true);
                 _matchmakingTimeStopwatch.Stop();
-                _joinMatchmakingPoolButton.interactable = false;
                 _joinMatchmakingPoolButton.SetButtonText("Finding Match (Joining Pool...)");
-                _leaveMatchmakingPoolButton.gameObject.SetActive(true);
 
                 await _serverListener.Connect(OnConnectedCallback);
             }

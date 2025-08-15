@@ -67,11 +67,6 @@ namespace LoungeSaber.UI.BSML.Leaderboard
             }
         }
 
-        public void InitUserInfo(Models.UserInfo.UserInfo userInfo)
-        {
-            _userId = userInfo.UserId;
-        }
-
         private void SetLeaderboardData(Models.UserInfo.UserInfo[] userInfo)
         {
             _leaderboard.Data = userInfo.Select(i => new LeaderboardSlot(i)).ToList();
