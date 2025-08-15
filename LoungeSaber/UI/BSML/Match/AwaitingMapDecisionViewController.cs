@@ -4,6 +4,7 @@ using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Components;
+using LoungeSaber.UI.BSML.Components.CustomLevelBar;
 using UnityEngine;
 using Zenject;
 

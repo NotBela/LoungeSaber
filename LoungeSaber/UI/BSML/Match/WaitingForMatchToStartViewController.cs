@@ -5,6 +5,7 @@ using BeatSaverSharp.Models;
 using HarmonyLib;
 using LoungeSaber.Models.Map;
 using LoungeSaber.UI.BSML.Components;
+using LoungeSaber.UI.BSML.Components.CustomLevelBar;
 using SiraUtil.Logging;
 using UnityEngine;
 using UnityEngine.UI;

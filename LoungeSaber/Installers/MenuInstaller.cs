@@ -6,6 +6,7 @@ using LoungeSaber.Server;
 using LoungeSaber.UI;
 using LoungeSaber.UI.BSML;
 using LoungeSaber.UI.BSML.Components;
+using LoungeSaber.UI.BSML.Components.CustomLevelBar;
 using LoungeSaber.UI.BSML.Info;
 using LoungeSaber.UI.BSML.Leaderboard;
 using LoungeSaber.UI.BSML.Match;

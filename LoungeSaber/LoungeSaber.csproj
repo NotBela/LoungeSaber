@@ -196,5 +196,7 @@
       <None Remove="UI\BSML\Match\VotingListView.bsml" />
       <None Remove="UI\BSML\Info\InfoView.bsml" />
       <EmbeddedResource Include="UI\BSML\Info\InfoView.bsml" />
+      <None Remove="Resources\profile-icon.png" />
+      <EmbeddedResource Include="Resources\profile-icon.png" />
     </ItemGroup>
 </Project>

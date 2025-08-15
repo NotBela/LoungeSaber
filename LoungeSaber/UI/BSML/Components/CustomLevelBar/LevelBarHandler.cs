@@ -1,9 +1,8 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.TypeHandlers;
-using SongCore;
 
-namespace LoungeSaber.UI.BSML.Components;
+namespace LoungeSaber.UI.BSML.Components.CustomLevelBar;
 
 [ComponentHandler(typeof(LevelBar))]
 public class LevelBarHandler : TypeHandler<CustomLevelBar>

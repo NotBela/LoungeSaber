@@ -1,10 +1,8 @@
 ﻿using BeatSaberMarkupLanguage.Tags;
-using HMUI;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
-namespace LoungeSaber.UI.BSML.Components;
+namespace LoungeSaber.UI.BSML.Components.CustomLevelBar;
 
 public class LevelBarTag : BSMLTag
 {
@@ -19,7 +17,7 @@ public class LevelBarTag : BSMLTag
         containerTransform.sizeDelta = Vector2.zero;
         containerTransform.anchoredPosition = Vector2.zero;
 
-        var levelBar = containerObject.AddComponent<CustomLevelBar>();
+        var levelBar = containerObject.AddComponent<Components.CustomLevelBar.CustomLevelBar>();
         levelBar.Init(parent);
         levelBar.LevelBar._showDifficultyAndCharacteristic = true;
         

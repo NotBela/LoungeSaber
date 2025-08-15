@@ -1,9 +1,7 @@
-﻿using BeatSaberMarkupLanguage.Attributes;
-using LoungeSaber.Models.Map;
+﻿using LoungeSaber.Models.Map;
 using UnityEngine;
-using Object = System.Object;
 
-namespace LoungeSaber.UI.BSML.Components;
+namespace LoungeSaber.UI.BSML.Components.CustomLevelBar;
 
 public class CustomLevelBar : MonoBehaviour
 {
