@@ -9,11 +9,19 @@
         </vertical>
         <vertical active='~is-loaded' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pref-width='80' pref-height='70'>
             <custom-list cell-size="5.99" visible-cells="10" show-scrollbar="false" clickable-cells="false" align-to-center="false" id="leaderboard">
-                <horizontal>
+                <vertical horizontal-fit="PreferredSize" pref-width="15" anchor-pos-x="-30">
                     <text text="~rankText" align="Left"/>
-                    <text text="~playerNameText" align="Left"/>
+                </vertical>
+                <vertical pref-width="20" anchor-pos-x="-15">
+                    <text text="~playerNameText" align="Left" />
+                </vertical>
+                <vertical pref-width="10" anchor-pos-x="20">
                     <text text="~mmrText" align="Right"/>
-                </horizontal>
+                </vertical>
+                    
+                <vertical pref-width="10" anchor-pos-x="30">
+                    <icon-button icon="LoungeSaber.Resources.profile-icon.png" on-click="profileButtonOnClick" pref-width="8" pref-height="8" show-underline="false"/>
+                </vertical>
             </custom-list>
         </vertical>
         <vertical active='~is-loading' pref-width='80' pref-height='10'>
@@ -24,4 +32,14 @@
     </horizontal>
     <page-button direction='Up' anchor-pos-x='-37.75' anchor-pos-y='-7' active='~up-enabled' pref-width='5' on-click='up-clicked'/>
     <page-button direction='Down' anchor-pos-x='-37.75' anchor-pos-y='-34' active='~down-enabled' pref-width='5' on-click='down-clicked'/>
+    
+    <modal clickerino-offerino-closerino="true" size-delta-x="55" size-delta-y="40" move-to-center="false" hide-event="profileModalHide" show-event="profileModalShow" anchor-pos-y="0" anchor-pos-x="5">
+        <vertical pref-width="50" pref-height="40">
+            <text text="~profileNameText" underlined="true" align="Left" font-size="3.5"/>
+            <text text="~profileMmrText" align="Left" font-size="3.5"/>
+            <text text="~profileDivisionText" align="Left" font-size="3.5"/>
+            <text text="~profileRankText" align="Left" font-size="3.5"/>
+            <text text="~profilePlayedMatches" align="Left" font-size="3.5"/>
+        </vertical>
+    </modal>
 </bg>
