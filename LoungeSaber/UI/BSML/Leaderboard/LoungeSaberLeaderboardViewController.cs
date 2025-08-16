@@ -116,7 +116,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
         {
             _leaderboard.Data = userInfo.Select(i =>
             {
-                var leaderboardSlot = new LeaderboardSlot(i);
+                var leaderboardSlot = new LeaderboardSlot(i, i.UserId == _userId);
                 leaderboardSlot.OnUserInfoButtonClicked += OnUserInfoButtonClicked;
                 return leaderboardSlot;
             }).ToList();

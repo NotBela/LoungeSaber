@@ -10,10 +10,10 @@
         <vertical active='~is-loaded' horizontal-fit='PreferredSize' vertical-fit='PreferredSize' pref-width='80' pref-height='70'>
             <custom-list cell-size="5.99" visible-cells="10" show-scrollbar="false" clickable-cells="false" align-to-center="false" id="leaderboard">
                 <vertical horizontal-fit="PreferredSize" pref-width="15" anchor-pos-x="-30">
-                    <text text="~rankText" align="Left"/>
+                    <text text="~rankText" align="Left" color="~leaderboardCellColor"/>
                 </vertical>
                 <vertical pref-width="20" anchor-pos-x="-15">
-                    <text text="~playerNameText" align="Left" />
+                    <text text="~playerNameText" align="Left" color="~leaderboardCellColor"/>
                 </vertical>
                 <vertical pref-width="10" anchor-pos-x="20">
                     <text text="~mmrText" align="Right"/>
