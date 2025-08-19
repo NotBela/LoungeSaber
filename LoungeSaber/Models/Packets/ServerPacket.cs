@@ -1,6 +1,7 @@
 ﻿using System;
 using LoungeSaber_Server.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Packets.ServerPackets;
+using LoungeSaber.Models.Packets.ServerPackets.Match;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -32,7 +33,7 @@ namespace LoungeSaber.Models.Packets
                 case ServerPacketTypes.MatchStarted:
                     return JsonConvert.DeserializeObject<MatchStarted>(json);
                 case ServerPacketTypes.MatchResults:
-                    return JsonConvert.DeserializeObject<MatchResults>(json);
+                    return JsonConvert.DeserializeObject<MatchResultsPacket>(json);
                 case ServerPacketTypes.PrematureMatchEnd:
                     return JsonConvert.DeserializeObject<PrematureMatchEnd>(json);
                 default:

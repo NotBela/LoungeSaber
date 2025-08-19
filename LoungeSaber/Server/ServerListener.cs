@@ -8,6 +8,7 @@ using LoungeSaber_Server.Models.Packets.ServerPackets;
 using LoungeSaber.Configuration;
 using LoungeSaber.Models.Packets;
 using LoungeSaber.Models.Packets.ServerPackets;
+using LoungeSaber.Models.Packets.ServerPackets.Match;
 using LoungeSaber.Models.Packets.UserPackets;
 using SiraUtil.Logging;
 using Zenject;
@@ -27,7 +28,7 @@ namespace LoungeSaber.Server
         public event Action<MatchCreatedPacket> OnMatchCreated;
         public event Action<OpponentVoted> OnOpponentVoted;
         public event Action<MatchStarted> OnMatchStarting;
-        public event Action<MatchResults> OnMatchResults;
+        public event Action<MatchResultsPacket> OnMatchResults;
         
         public event Action OnDisconnected;
         public event Action OnConnected;
@@ -121,7 +122,7 @@ namespace LoungeSaber.Server
                             OnMatchStarting?.Invoke(packet as MatchStarted);
                             break;
                         case ServerPacket.ServerPacketTypes.MatchResults:
-                            OnMatchResults?.Invoke(packet as MatchResults);
+                            OnMatchResults?.Invoke(packet as MatchResultsPacket);
                             Disconnect();
                             break;
                         case ServerPacket.ServerPacketTypes.PrematureMatchEnd:

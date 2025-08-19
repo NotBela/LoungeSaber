@@ -4,6 +4,7 @@ namespace LoungeSaber.Models.Packets.ServerPackets.Match;
 
 public record Score
 {
+    [JsonConstructor]
     public Score(int Points, float RelativeScore, bool ProMode, int Misses, bool FullCombo)
     {
         this.Points = Points;

@@ -1,7 +1,6 @@
-﻿using LoungeSaber.Models.Packets.ServerPackets.Match;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace LoungeSaber.Models.Packets.ServerPackets;
+namespace LoungeSaber.Models.Packets.ServerPackets.Match;
 
 
 public class MatchResultsPacket : ServerPacket

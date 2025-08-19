@@ -3,6 +3,7 @@ using HMUI;
 using LoungeSaber.Game;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;
+using LoungeSaber.Models.Packets.ServerPackets.Match;
 using LoungeSaber.Models.Packets.UserPackets;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Match;
@@ -56,7 +57,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             _standardLevelDetailViewManager.SetData(votingMap, votingMaps);
         }
 
-        private void OnMatchResultsReceived(MatchResults results)
+        private void OnMatchResultsReceived(MatchResultsPacket results)
         {
             ReplaceViewControllerSynchronously(_matchResultsViewController);
             _matchResultsViewController.PopulateData(results);
