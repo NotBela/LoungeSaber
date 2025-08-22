@@ -15,8 +15,9 @@ public class DivisionInfo(DivisionInfo.DivisionName division, byte subDivision, 
         Bronze,
         Silver,
         Gold,
-        Diamond,
         Platinum,
+        Diamond,
+        Emerald,
         Master,
         GrandMaster
     }
