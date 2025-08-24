@@ -1,15 +1,13 @@
-﻿using System.Globalization;
+﻿using System.Collections;
+using System.Globalization;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
-using BeatSaverSharp.Models;
-using HarmonyLib;
+using HMUI;
 using LoungeSaber.Models.Map;
-using LoungeSaber.UI.BSML.Components;
 using LoungeSaber.UI.BSML.Components.CustomLevelBar;
-using SiraUtil.Logging;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
+using Object = System.Object;
 
 namespace LoungeSaber.UI.BSML.Match
 {
@@ -17,6 +15,10 @@ namespace LoungeSaber.UI.BSML.Match
     public class WaitingForMatchToStartViewController : BSMLAutomaticViewController, ITickable
     {
         [UIValue("matchStartTimer")] private string MatchStartTimer { get; set; } = "";
+        
+        
+        [UIComponent("difficultySegmentData")] private readonly TextSegmentedControl _difficultySegmentData = null;
+        [UIComponent("categorySegmentData")] private readonly TextSegmentedControl _categorySegmentData = null;
 
         private CustomLevelBar _customLevelBar = null;
          
@@ -29,6 +31,9 @@ namespace LoungeSaber.UI.BSML.Match
                 .First(i => i.name == "WaitingForMatchStartLevelBar");
         }
         
+        [UIAction("nothing")]
+        private void Nothing(SegmentedControl _, int cell){}
+        
         public async Task PopulateData(VotingMap votingMap, DateTime startTime)
         {
             while (_customLevelBar is null)
@@ -37,7 +42,21 @@ namespace LoungeSaber.UI.BSML.Match
             _startTime = startTime;
             
             _customLevelBar?.Setup(votingMap);
+
+            StartCoroutine(UpdateTexts());
+
+            return;
+
+            IEnumerator UpdateTexts()
+            {
+                yield return new WaitForEndOfFrame();
+                
+                _difficultySegmentData.SetTexts([votingMap.GetBaseGameDifficultyType().Name()]);
+                _categorySegmentData.SetTexts(["Category: " + votingMap.Category]);
+            }
         }
+        
+        
 
         public void Tick()
         {
