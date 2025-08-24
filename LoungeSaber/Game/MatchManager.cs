@@ -42,12 +42,12 @@ namespace LoungeSaber.Game
                 new GameplayModifiers(GameplayModifiers.EnergyType.Bar, true, false, false, GameplayModifiers.EnabledObstacleType.All, false, false, false, false, GameplayModifiers.SongSpeed.Normal, false, false, proMode, false, false),
                 _playerDataModel.playerData.playerSpecificSettings,
                 null,
+                //TODO: fix this sometimes causing an exception because of creating from addressables
                 EnvironmentsListModel.CreateFromAddressables(),
                 "Menu",
                 false,
                 true,
                 null,
-                // TODO: fix restart button being visible
                 diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
                 AfterSceneSwitchCallback,
                 null

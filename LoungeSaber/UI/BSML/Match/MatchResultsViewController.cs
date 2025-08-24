@@ -19,40 +19,34 @@ namespace LoungeSaber.UI.BSML.Match
         [UIValue("titleBgColor")] private string TitleBgColor { get; set; } = "#0000FF";
         [UIValue("titleText")] private string TitleText { get; set; } = "You Win";
         
-        [UIValue("clientNameText")] private string ClientNameText { get; set; } = "placeholder";
-        [UIValue("clientScoreText")] private string ClientScoreText { get; set; } = "placeholder";
-        [UIValue("newClientMmrText")] private string NewClientMmrText { get; set; } = "placeholder";
+        [UIValue("winnerScoreText")] private string WinnerScoreText { get; set; }
+        [UIValue("loserScoreText")] private string LoserScoreText { get; set; }
         
-        [UIValue("opponentNameText")] private string OpponentNameText { get; set; } = "placeholder";
-        [UIValue("opponentScoreText")] private string OpponentScoreText { get; set; } = "placeholder";
-        [UIValue("newOpponentMmrText")] private string NewOpponentMmrText { get; set; } = "placeholder";
+        
+        [UIValue("mmrChangeText")] private string MmrChangeText { get; set; }
         
         public void PopulateData(MatchResultsPacket results)
         {
+            WinnerScoreText = FormatScore(results.WinnerScore, true);
+            LoserScoreText = FormatScore(results.LoserScore, false);
+
             var won = results.WinnerScore.User.UserId ==
-                      _platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId;
+                       _platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId;
             
             TitleText = won ? "You Win!" : "You Lose!";
             TitleBgColor = won ? "#0000FF" : "#FF0000";
 
-            ClientNameText = won ? results.WinnerScore.User.GetFormattedUserName() : results.LoserScore.User.GetFormattedUserName();
-            OpponentNameText = won ? results.LoserScore.User.GetFormattedUserName() : results.WinnerScore.User.GetFormattedUserName();
-
-            ClientScoreText = FormatScore(won ? results.WinnerScore.Score : results.LoserScore.Score);
-            OpponentScoreText = FormatScore(won ? results.LoserScore.Score : results.WinnerScore.Score);
-
-            NewOpponentMmrText = results.MmrChange.ToString().FormatWithHtmlColor(!won ? "#90EE90" : "#FF7F7F");
-            NewClientMmrText = results.MmrChange.ToString().FormatWithHtmlColor(!won ? "#90EE90" : "#FF7F7F");
+            MmrChangeText =
+                $"You {(won ? "gained" : "lost")}: {results.MmrChange.ToString().FormatWithHtmlColor(won ? "#90EE90" : "#FF7F7F")} MMR";
             
             NotifyPropertyChanged(null);
         }
 
-        // private string FormatMmrChange(int change, Models.UserInfo.UserInfo info, bool won) => $"{info.Mmr} ({(!won ? "<color=#90EE90>+" : "<color=#FF7F7F>-")}{change}</color>)";
-
-        private string FormatScore(Score scoreSubmission) => 
-            $"{(scoreSubmission.RelativeScore).ToString("F2", CultureInfo.InvariantCulture)}% " +
-            $"({(scoreSubmission.FullCombo ? "<color=#90EE90>FC</color>" : $"<color=#FF7F7F>{scoreSubmission.Misses}x</color>")})" +
-            $"{(scoreSubmission.ProMode ? " [PM]" : "")}";
+        private string FormatScore(MatchScore score, bool winner) => 
+            $"{(winner ? "1" : "2")}. {score.User.GetFormattedUserName()} - " +
+            $"{(score.Score.RelativeScore * 100):F}% " +
+            $"{(score.Score.FullCombo ? "FC".FormatWithHtmlColor("#90EE90") : $"{score.Score.Misses}x".FormatWithHtmlColor("#FF7F7F"))}" +
+            $"{(score.Score.ProMode ? " (PM)" : "")}";
         
         [UIAction("continueButtonClicked")]
         private void ContinueButtonClicked() => ContinueButtonPressed?.Invoke();
