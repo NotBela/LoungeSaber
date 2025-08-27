@@ -10,6 +10,7 @@ namespace LoungeSaber.UI
     {
         [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null;
         [Inject] private readonly ServerCheckingFlowCoordinator _serverCheckingFlowCoordinator = null;
+        [Inject] private readonly MenuButtons _menuButtons = null;
         
         private readonly MenuButton _menuButton;
         
@@ -20,8 +21,8 @@ namespace LoungeSaber.UI
 
         private void OnClick() => _mainFlowCoordinator.PresentFlowCoordinator(_serverCheckingFlowCoordinator);
 
-        public void Initialize() => MenuButtons.Instance.RegisterButton(_menuButton);
+        public void Initialize() => _menuButtons.RegisterButton(_menuButton);
 
-        public void Dispose() => MenuButtons.Instance.UnregisterButton(_menuButton);
+        public void Dispose() => _menuButtons.UnregisterButton(_menuButton);
     }
 }
