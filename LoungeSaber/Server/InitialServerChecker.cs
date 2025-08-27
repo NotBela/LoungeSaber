@@ -25,9 +25,10 @@ public class InitialServerChecker
     
     public async Task CheckServer()
     {
-        
-        await CheckServerState();
-        await CheckUserData();
+        if (!await CheckServerState())
+            return;
+        if (!await CheckUserData())
+            return;
         if (!await CheckMaps())
             return;
         
@@ -53,42 +54,51 @@ public class InitialServerChecker
         return false;
     }
 
-    private async Task CheckUserData()
+    private async Task<bool> CheckUserData()
     {
         ServerCheckingStateUpdated?.Invoke(ServerCheckingStates.UserData);
 
         var userData = await _loungeSaberApi.GetUserInfo((await _platformUserModel.GetUserInfo(CancellationToken.None)).platformUserId);
+
+        if (userData?.Banned == true)
+        {
+            ServerCheckFailed?.Invoke("You have been banned from LoungeSaber.");
+            return false;
+        }
         
         OnUserInfoFetched?.Invoke(userData);
+        return true;
     }
     
-    private async Task CheckServerState()
+    private async Task<bool> CheckServerState()
     {
         var serverResponse = await _loungeSaberApi.GetServerStatus();
 
         if (serverResponse == null)
         {
             ServerCheckFailed?.Invoke("InvalidServerResponse");
-            return;
+            return false;
         }
 
         if (!serverResponse.AllowedModVersions.Contains(IPA.Loader.PluginManager.GetPluginFromId("LoungeSaber").HVersion
                 .ToString()))
         {
             ServerCheckFailed?.Invoke("OutdatedPluginVersion");
-            return;
+            return false;
         }
 
         if (!serverResponse.AllowedGameVersions.Contains(UnityGame.GameVersion.ToString()))
         {
             ServerCheckFailed?.Invoke("OutdatedGameVersion");
-            return;
+            return false;
         }
+
+        if (serverResponse.State == ServerStatus.ServerState.Online) 
+            return true;
         
-        if (serverResponse.State != ServerStatus.ServerState.Online)
-        {
-            ServerCheckFailed?.Invoke("ServerInMaintenance");
-        }
+        ServerCheckFailed?.Invoke("ServerInMaintenance");
+        return false;
+
     }
 
     public enum ServerCheckingStates
