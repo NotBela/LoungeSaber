@@ -30,7 +30,7 @@ public class MapDownloader
             var beatmapData = await map.LatestVersion.DownloadZIP();
             
             var zippedBeatmap = new ZipArchive(new MemoryStream(beatmapData ?? throw new Exception("Beatmap data is null!")), ZipArchiveMode.Read);
-            zippedBeatmap.ExtractToDirectory(Path.Combine(UnityGame.InstallPath, "Beat Saber_Data", "CustomLevels", $"{map.Name} ({map.ID})"));
+            zippedBeatmap.ExtractToDirectory(Path.Combine(UnityGame.InstallPath, "Beat Saber_Data", "CustomLevels", Path.GetInvalidFileNameChars().Aggregate($"{map.Name} ({map.ID})", (current, c) => current.Replace(c.ToString(), string.Empty))));
             
             mapsDownloaded++;
             OnMapDownloaded?.Invoke(mapsDownloaded, mapHashes.Length);

@@ -1,46 +1,31 @@
-﻿using JetBrains.Annotations;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace LoungeSaber.Models.UserInfo
+namespace LoungeSaber.Models.UserInfo;
+
+[method: JsonConstructor]
+public class UserInfo(string username, string userId, int mmr, Badge? badge, long rank, string? discordId, bool banned, DivisionInfo divisionInfo)
 {
-    public class UserInfo
-    {
-        [JsonProperty("username")]
-        public string Username { get; private set; }
+    [JsonProperty("username")]
+    public string Username { get; private set; } = username;
+
+    [JsonProperty("userId")]
+    public string UserId { get; private set; } = userId;
+
+    [JsonProperty("mmr")]
+    public int Mmr { get; private set; }= mmr;
+
+    [JsonProperty("badge")]
+    public Badge? Badge { get; private set; }= badge;
+
+    [JsonProperty("rank")]
+    public long Rank { get; private set; }= rank;
+
+    [JsonProperty("discordId")]
+    public string? DiscordId { get; private set; } = discordId;
+
+    [JsonProperty("banned")]
+    public bool Banned { get; private set; } = banned;
     
-        [JsonProperty("userId")]
-        public string UserId { get; private set; }
-    
-        [JsonProperty("mmr")]
-        public int Mmr { get; private set; }
-    
-        [JsonProperty("badge")] [CanBeNull] public Badge Badge { get; private set; }
-    
-        [JsonProperty("rank")]
-        public long Rank { get; private set; }
-    
-        [JsonProperty("discordId")] [CanBeNull] public string DiscordId { get; private set; }
-        
-        public DivisionInfo Division { get; private set; }
-    
-        [JsonConstructor]
-        public UserInfo(string username, string userId, int mmr, DivisionInfo division, [CanBeNull] Badge badge, long rank, [CanBeNull] string discordId)
-        {
-            Username = username;
-            UserId = userId;
-            Mmr = mmr;
-            Badge = badge;
-            Rank = rank;
-            DiscordId = discordId;
-            Division = division;
-        }
-        
-        public string GetFormattedUserName()
-        {
-            if (Badge == null) return Username;
-            
-            var formatted = $"<color={Badge.ColorCode}>{Username}</color>";
-            return !Badge.Bold ? formatted : $"<b>{formatted}</b>";
-        }
-    }
+    [JsonProperty("division")]
+    public DivisionInfo Division { get; private set; } = divisionInfo;
 }
