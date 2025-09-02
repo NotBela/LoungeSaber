@@ -11,6 +11,7 @@ using LoungeSaber.UI.BSML.Info;
 using LoungeSaber.UI.BSML.Leaderboard;
 using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.BSML.Menu;
+using LoungeSaber.UI.BSML.Settings;
 using LoungeSaber.UI.FlowCoordinators;
 using LoungeSaber.UI.ViewManagers;
 using Zenject;
@@ -34,6 +35,8 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<MatchResultsViewController>().FromNewComponentAsViewController()
                 .AsSingle();
             Container.BindInterfacesAndSelfTo<LeaderboardPanelViewController>().FromNewComponentAsViewController()
+                .AsSingle();
+            Container.BindInterfacesAndSelfTo<LoungeSaberSettingsViewController>().FromNewComponentAsViewController()
                 .AsSingle();
             Container.BindInterfacesAndSelfTo<LoungeSaberLeaderboardViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<CantConnectToServerViewController>().FromNewComponentAsViewController().AsSingle();

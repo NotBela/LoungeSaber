@@ -198,5 +198,7 @@
       <EmbeddedResource Include="UI\BSML\Info\InfoView.bsml" />
       <None Remove="Resources\profile-icon.png" />
       <EmbeddedResource Include="Resources\profile-icon.png" />
+      <None Remove="UI\BSML\Settings\LoungeSaberSettingsView.bsml" />
+      <EmbeddedResource Include="UI\BSML\Settings\LoungeSaberSettingsView.bsml" />
     </ItemGroup>
 </Project>
