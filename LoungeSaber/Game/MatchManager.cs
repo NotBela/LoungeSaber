@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Server;
+using LoungeSaber.UI.BSML.PauseMenu;
 using SiraUtil.Logging;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -12,16 +14,20 @@ namespace LoungeSaber.Game
 {
     public class MatchManager : IInitializable, IDisposable
     {
-        [Inject] private readonly MenuTransitionsHelper _menuTransitionsHelper = null;
-        [Inject] private readonly PlayerDataModel _playerDataModel = null;
-        [Inject] private readonly SiraLog _siraLog = null;
+        [Inject] private readonly MenuTransitionsHelper _menuTransitionsHelper = null!;
+        [Inject] private readonly PlayerDataModel _playerDataModel = null!;
+        [Inject] private readonly SiraLog _siraLog = null!;
         
-        [Inject] private readonly ServerListener _serverListener = null;
+        [Inject] private readonly ServerListener _serverListener = null!;
         
         public bool InMatch { get; private set; } = false;
 
-        public event Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> OnLevelCompleted; 
+        [CanBeNull] public Models.UserInfo.UserInfo Opponent { get; private set; }
 
+        public event Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> OnLevelCompleted;
+
+        public void SetOpponent(Models.UserInfo.UserInfo opponent) => Opponent = opponent;
+        
         public void StartMatch(VotingMap level, DateTime unpauseTime, bool proMode)
         {
             if (InMatch) 
@@ -64,6 +70,8 @@ namespace LoungeSaber.Game
         {
             try
             {
+                diContainer.Resolve<PauseMenuViewController>().SetMatchStartingTime(unpauseTime);
+                
                 var startingMenuController = diContainer.TryResolve<MatchStartUnpauseController>() ?? throw new Exception("Could not resolve StartingPauseMenuController");
 
                 await startingMenuController.UnpauseLevelAtTime(unpauseTime);

@@ -30,6 +30,7 @@ namespace LoungeSaber.UI.BSML.Menu
         {
             _leaveMatchmakingPoolButton.gameObject.SetActive(false);
             ResetMatchmakingTimer();
+            ChangeButtonState(false);
         }
 
         [UIAction("aboutButtonOnClick")]

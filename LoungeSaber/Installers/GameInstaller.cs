@@ -3,6 +3,7 @@ using LoungeSaber.AffinityPatches;
 using LoungeSaber.AffinityPatches.EnergyPatches;
 using LoungeSaber.AffinityPatches.ScorePatches;
 using LoungeSaber.Game;
+using LoungeSaber.UI.BSML.PauseMenu;
 using Zenject;
 
 namespace LoungeSaber.Installers
@@ -15,6 +16,7 @@ namespace LoungeSaber.Installers
                 return;
             
             Container.BindInterfacesAndSelfTo<MatchStartUnpauseController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PauseMenuViewController>().FromNewComponentAsViewController().AsSingle();
             
             // affinity patches
             Container.BindInterfacesAndSelfTo<PausePatch>().AsSingle();

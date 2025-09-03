@@ -23,6 +23,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly MatchFlowCoordinator _matchFlowCoordinator = null;
         [Inject] private readonly InfoFlowCoordinator _infoFlowCoordinator = null;
         [Inject] private readonly VotingScreenViewController _votingScreenViewController = null;
+        [Inject] private readonly MatchManager _matchManager = null;
         
         [Inject] private readonly ServerListener _serverListener = null;
         [Inject] private readonly MatchmakingMenuViewController _matchmakingMenuViewController = null;
@@ -55,6 +56,7 @@ namespace LoungeSaber.UI.FlowCoordinators
                 void OnActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
                 {
                     _votingScreenViewController.didActivateEvent -= OnActivated;
+                    _matchManager.SetOpponent(packet.Opponent);
                     
                     _votingScreenViewController.PopulateData(packet);
                 }
