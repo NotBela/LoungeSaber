@@ -200,5 +200,7 @@
       <EmbeddedResource Include="Resources\profile-icon.png" />
       <None Remove="UI\BSML\Settings\LoungeSaberSettingsView.bsml" />
       <EmbeddedResource Include="UI\BSML\Settings\LoungeSaberSettingsView.bsml" />
+      <None Remove="UI\BSML\PauseMenu\PauseMenuView.bsml" />
+      <EmbeddedResource Include="UI\BSML\PauseMenu\PauseMenuView.bsml" />
     </ItemGroup>
 </Project>
