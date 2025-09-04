@@ -14,9 +14,6 @@ namespace LoungeSaber.AffinityPatches
             _pauseMenuManager._backButton.gameObject.SetActive(false);
             _pauseMenuManager._continueButton.gameObject.SetActive(false);
             _pauseMenuManager._restartButton.gameObject.SetActive(false);
-
-            __instance._songNameText.text = "Starting Soon...";
-            __instance._authorNameText.text = "Get ready!";
         }
     }
 }
