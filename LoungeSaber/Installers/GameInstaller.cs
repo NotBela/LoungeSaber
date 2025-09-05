@@ -22,6 +22,7 @@ namespace LoungeSaber.Installers
             // affinity patches
             Container.BindInterfacesAndSelfTo<PausePatch>().AsSingle();
             Container.BindInterfacesAndSelfTo<PauseMenuStartPatch>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ContinuePausePatch>().AsSingle();
             
             Container.BindInterfacesAndSelfTo<EnergyBarInitPatch>().AsSingle();
             

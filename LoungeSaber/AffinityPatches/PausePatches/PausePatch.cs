@@ -2,7 +2,7 @@
 using SiraUtil.Affinity;
 using Zenject;
 
-namespace LoungeSaber.AffinityPatches
+namespace LoungeSaber.AffinityPatches.PausePatches
 {
     public class PausePatch : IAffinity
     {
