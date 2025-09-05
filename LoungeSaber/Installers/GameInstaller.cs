@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using LoungeSaber.AffinityPatches;
 using LoungeSaber.AffinityPatches.EnergyPatches;
+using LoungeSaber.AffinityPatches.PausePatches;
 using LoungeSaber.AffinityPatches.ScorePatches;
 using LoungeSaber.Game;
 using LoungeSaber.UI.BSML.PauseMenu;
@@ -20,7 +21,6 @@ namespace LoungeSaber.Installers
             
             // affinity patches
             Container.BindInterfacesAndSelfTo<PausePatch>().AsSingle();
-            Container.BindInterfacesAndSelfTo<LevelBarSetupPatch>().AsSingle();
             Container.BindInterfacesAndSelfTo<PauseMenuStartPatch>().AsSingle();
             
             Container.BindInterfacesAndSelfTo<EnergyBarInitPatch>().AsSingle();

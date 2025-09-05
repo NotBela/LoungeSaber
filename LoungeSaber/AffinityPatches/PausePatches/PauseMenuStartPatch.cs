@@ -1,6 +1,6 @@
 ﻿using SiraUtil.Affinity;
 
-namespace LoungeSaber.AffinityPatches
+namespace LoungeSaber.AffinityPatches.PausePatches
 {
     public class PauseMenuStartPatch : IAffinity
     {
@@ -8,6 +8,8 @@ namespace LoungeSaber.AffinityPatches
         [AffinityPostfix]
         private void Postfix(PauseMenuManager __instance)
         {
+            __instance._backButton.gameObject.SetActive(false);
+            __instance._continueButton.gameObject.SetActive(false);
             __instance._restartButton.gameObject.SetActive(false);
         }
     }
