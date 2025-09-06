@@ -1,4 +1,5 @@
-﻿using IPA.Utilities;
+﻿#nullable enable
+using IPA.Utilities;
 using LoungeSaber.Configuration;
 using LoungeSaber.Game;
 using LoungeSaber.Models.Server;
@@ -10,18 +11,19 @@ namespace LoungeSaber.Server;
 
 public class InitialServerChecker
 {
-    [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
-    [Inject] private readonly IPlatformUserModel _platformUserModel = null;
+    [Inject] private readonly LoungeSaberApi _loungeSaberApi = null!;
+    [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
     
-    public event Action<string> ServerCheckFailed;
+    public event Action<string>? ServerCheckFailed;
 
-    public event Action<ServerCheckingStates> ServerCheckingStateUpdated;
+    public event Action<ServerCheckingStates>? ServerCheckingStateUpdated;
 
-    public event Action<Models.UserInfo.UserInfo> OnUserInfoFetched;
+    // keeping this around bc i will need it for the leaderboard redesign
+    public event Action<Models.UserInfo.UserInfo?>? OnUserInfoFetched;
 
-    public event Action ServerCheckFinished;
+    public event Action? ServerCheckFinished;
 
-    public event Action<string[]> StartMapDownload;
+    public event Action<string[]>? StartMapDownload;
     
     public async Task CheckServer()
     {
@@ -59,8 +61,8 @@ public class InitialServerChecker
         ServerCheckingStateUpdated?.Invoke(ServerCheckingStates.UserData);
 
         var userData = await _loungeSaberApi.GetUserInfo((await _platformUserModel.GetUserInfo(CancellationToken.None)).platformUserId);
-
-        if (userData?.Banned == true)
+        
+        if (userData != null && userData?.Banned == true)
         {
             ServerCheckFailed?.Invoke("You have been banned from LoungeSaber.");
             return false;

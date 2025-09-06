@@ -36,6 +36,23 @@ namespace LoungeSaber.Server
         
         [Inject] private readonly IPlatformUserModel _platformUserModel = null;
 
+        private bool Connected
+        {
+            get
+            {
+                try
+                {
+                    var poll = _client.Client.Poll(1, SelectMode.SelectRead) && !_client.GetStream().DataAvailable;
+
+                    return !poll;
+                }
+                catch (SocketException e)
+                {
+                    return e.SocketErrorCode is SocketError.WouldBlock or SocketError.Interrupted;
+                }
+            }
+        }
+
         public async Task Connect(Action<JoinResponse> onConnectedCallBack)
         {
             try
@@ -96,6 +113,9 @@ namespace LoungeSaber.Server
             {
                 try
                 {
+                    if (!Connected)
+                        return;
+                    
                     var data = new byte[1024];
 
                     var bytesRead = _client.GetStream().Read(data, 0, data.Length);
@@ -123,11 +143,9 @@ namespace LoungeSaber.Server
                             break;
                         case ServerPacket.ServerPacketTypes.MatchResults:
                             OnMatchResults?.Invoke(packet as MatchResultsPacket);
-                            Disconnect();
                             break;
                         case ServerPacket.ServerPacketTypes.PrematureMatchEnd:
                             OnPrematureMatchEnd?.Invoke(packet as PrematureMatchEnd);
-                            Disconnect();
                             break;
                         default:
                             throw new Exception("Could not get packet type!");

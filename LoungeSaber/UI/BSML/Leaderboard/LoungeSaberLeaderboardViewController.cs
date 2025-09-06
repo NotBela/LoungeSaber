@@ -15,12 +15,13 @@ using Zenject;
 namespace LoungeSaber.UI.BSML.Leaderboard
 {
     [ViewDefinition("LoungeSaber.UI.BSML.Leaderboard.LoungeSaberLeaderboardView.bsml")]
-    public class LoungeSaberLeaderboardViewController : BSMLAutomaticViewController, IInitializable, IDisposable
+    public class LoungeSaberLeaderboardViewController : BSMLAutomaticViewController
     {
         [Inject] private readonly PlatformLeaderboardViewController _platformLeaderboardViewController = null;
         [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
         [Inject] private readonly SiraLog _siraLog = null;
-        [Inject] private readonly InitialServerChecker _initialServerChecker = null;
+
+        [Inject] private readonly IPlatformUserModel _platformUserModel = null;
 
         [UIParams] private readonly BSMLParserParams _parserParams = null;
         
@@ -29,23 +30,6 @@ namespace LoungeSaber.UI.BSML.Leaderboard
             _cellData.Add(new IconSegmentedControl.DataItem(_platformLeaderboardViewController.GetField<Sprite, PlatformLeaderboardViewController>("_globalLeaderboardIcon"), Localization.Get("BUTTON_HIGHSCORES_GLOBAL")));
             _cellData.Add(new IconSegmentedControl.DataItem(_platformLeaderboardViewController.GetField<Sprite, PlatformLeaderboardViewController>("_aroundPlayerLeaderboardIcon"), Localization.Get("BUTTON_HIGHSCORES_AROUND_YOU"))); 
             IsLoaded = false;
-        }
-        
-        private string _userId;
-
-        public void Initialize()
-        {
-            _initialServerChecker.OnUserInfoFetched += OnUserInfoFetched;
-        }
-
-        private void OnUserInfoFetched(Models.UserInfo.UserInfo userInfo)
-        {
-            _userId = userInfo.UserId;
-        }
-
-        public void Dispose()
-        {
-            _initialServerChecker.OnUserInfoFetched -= OnUserInfoFetched;
         }
 
         #region UserInfo Modal
@@ -116,7 +100,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
         {
             _leaderboard.Data = userInfo.Select(i =>
             {
-                var leaderboardSlot = new LeaderboardSlot(i, i.UserId == _userId);
+                var leaderboardSlot = new LeaderboardSlot(i, i.UserId == _platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId);
                 leaderboardSlot.OnUserInfoButtonClicked += OnUserInfoButtonClicked;
                 return leaderboardSlot;
             }).ToList();
@@ -199,7 +183,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
                     case LeaderboardStates.Self:
                         UpEnabled = false;
                         DownEnabled = false;
-                        var aroundUser = await _loungeSaberApi.GetAroundUser(_userId);
+                        var aroundUser = await _loungeSaberApi.GetAroundUser(_platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId);
                         SetLeaderboardData(aroundUser);
                         break;
                 }

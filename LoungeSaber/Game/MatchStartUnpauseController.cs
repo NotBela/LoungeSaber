@@ -15,8 +15,8 @@ namespace LoungeSaber.Game
         {
             await Task.Delay((int) Math.Max(0, (unpauseTime - DateTime.UtcNow).TotalMilliseconds));
             
-            _pauseController.HandlePauseMenuManagerDidPressContinueButton();
             StillInStartingPauseMenu = false;
+            _pauseController.HandlePauseMenuManagerDidPressContinueButton();
         }
     }
 }
