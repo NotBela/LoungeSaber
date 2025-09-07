@@ -26,7 +26,7 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
 
     protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
-        showBackButton = false;
+        showBackButton = true;
         SetTitle("LoungeSaber");
 
         ProvideInitialViewControllers(_checkingServerStatusViewController);
@@ -99,6 +99,8 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
     {
         try
         {
+            showBackButton = false;
+            
             ReplaceViewControllerSynchronously(_checkingServerStatusViewController);
             _checkingServerStatusViewController.SetControllerState(InitialServerChecker.ServerCheckingStates.DownloadingMaps);
 
