@@ -30,17 +30,17 @@ public abstract class SynchronousFlowCoordinator : FlowCoordinator
         ReplaceTopViewController(viewController, animationType: immediately ? ViewController.AnimationType.None : ViewController.AnimationType.In);
     }
 
-    protected void PresentFlowCoordinatorSynchronously(FlowCoordinator flowCoordinator)
+    public void PresentFlowCoordinatorSynchronously(FlowCoordinator flowCoordinator, bool immediately = false)
     {
         while (isInTransition);
         
-        StartCoroutine(PresentFlowCoordinatorCoroutine(flowCoordinator));
+        StartCoroutine(PresentFlowCoordinatorCoroutine(flowCoordinator, immediately));
     }
 
-    private IEnumerator PresentFlowCoordinatorCoroutine(FlowCoordinator flowCoordinator)
+    private IEnumerator PresentFlowCoordinatorCoroutine(FlowCoordinator flowCoordinator, bool immediately)
     {
         yield return new WaitForEndOfFrame();
         
-        PresentFlowCoordinator(flowCoordinator);
+        PresentFlowCoordinator(flowCoordinator, immediately: immediately);
     }
 }

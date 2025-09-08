@@ -7,6 +7,7 @@ using LoungeSaber.UI;
 using LoungeSaber.UI.BSML;
 using LoungeSaber.UI.BSML.Components;
 using LoungeSaber.UI.BSML.Components.CustomLevelBar;
+using LoungeSaber.UI.BSML.Disconnect;
 using LoungeSaber.UI.BSML.Info;
 using LoungeSaber.UI.BSML.Leaderboard;
 using LoungeSaber.UI.BSML.Match;
@@ -42,8 +43,13 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<CantConnectToServerViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<CheckingServerStatusViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<MissingMapsViewController>().FromNewComponentAsViewController().AsSingle();
+            Container.BindInterfacesAndSelfTo<DisconnectedViewController>().FromNewComponentAsViewController()
+                .AsSingle();
+            
             Container.BindInterfacesAndSelfTo<ServerCheckingFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
             Container.BindInterfacesAndSelfTo<InfoFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<DisconnectFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
 
             Container.BindInterfacesAndSelfTo<GameplaySetupViewManager>().FromNewComponentOnNewGameObject().AsSingle();
             Container.BindInterfacesAndSelfTo<StandardLevelDetailViewManager>().FromNewComponentOnNewGameObject().AsSingle();

@@ -7,6 +7,7 @@ using LoungeSaber.Game;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Server;
 using LoungeSaber.Server;
+using LoungeSaber.UI.BSML.Disconnect;
 using LoungeSaber.UI.BSML.Leaderboard;
 using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.BSML.Menu;

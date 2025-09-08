@@ -6,6 +6,7 @@ using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Packets.ServerPackets.Match;
 using LoungeSaber.Models.Packets.UserPackets;
 using LoungeSaber.Server;
+using LoungeSaber.UI.BSML.Disconnect;
 using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.ViewManagers;
 using SiraUtil.Logging;
@@ -13,7 +14,7 @@ using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators
 {
-    public class MatchFlowCoordinator : SynchronousFlowCoordinator
+    public class MatchFlowCoordinator : SynchronousFlowCoordinator, IInitializable, IDisposable
     {
         [Inject] private readonly VotingScreenViewController _votingScreenViewController = null;
         [Inject] private readonly AwaitingMapDecisionViewController _awaitingMapDecisionViewController = null;
@@ -28,6 +29,9 @@ namespace LoungeSaber.UI.FlowCoordinators
         
         [Inject] private readonly StandardLevelDetailViewManager _standardLevelDetailViewManager = null;
         [Inject] private readonly GameplaySetupViewManager _gameplaySetupViewManager = null;
+
+        [Inject] private readonly DisconnectFlowCoordinator _disconnectFlowCoordinator = null;
+        [Inject] private readonly DisconnectedViewController _disconnectedViewController = null;
 
         private NavigationController _votingScreenNavigationController;
          
@@ -46,6 +50,12 @@ namespace LoungeSaber.UI.FlowCoordinators
             _matchManager.OnLevelCompleted += OnLevelCompleted;
             _serverListener.OnMatchResults += OnMatchResultsReceived;
             _standardLevelDetailViewManager.OnMapVoteButtonPressed += OnMapVotedFor;
+            _matchManager.OnLevelIncomplete += OnLevelIncomplete;
+        }
+
+        private void OnLevelIncomplete()
+        {
+            PresentFlowCoordinatorSynchronously(_disconnectFlowCoordinator);
         }
 
         private void OnVotingMapSelected(VotingMap votingMap, List<VotingMap> votingMaps)
@@ -106,6 +116,18 @@ namespace LoungeSaber.UI.FlowCoordinators
             }
         }
         
+        private async void OnDisconnectedViewOkButtonClicked()
+        {
+            try
+            {
+                await DismissChildFlowCoordinatorsRecursively();
+            }
+            catch (Exception e)
+            {
+                _siraLog.Error(e);
+            }
+        }
+        
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
         {
             _votingScreenViewController.MapSelected -= OnVotingMapSelected;
@@ -113,6 +135,17 @@ namespace LoungeSaber.UI.FlowCoordinators
             _matchManager.OnLevelCompleted -= OnLevelCompleted;
             _serverListener.OnMatchResults -= OnMatchResultsReceived;
             _standardLevelDetailViewManager.OnMapVoteButtonPressed -= OnMapVotedFor;
+            _matchManager.OnLevelIncomplete -= OnLevelIncomplete;
+        }
+
+        public void Initialize()
+        {
+            _disconnectedViewController.OnOkButtonClicked += OnDisconnectedViewOkButtonClicked;
+        }
+
+        public void Dispose()
+        {
+            _disconnectedViewController.OnOkButtonClicked -= OnDisconnectedViewOkButtonClicked;
         }
     }
 }

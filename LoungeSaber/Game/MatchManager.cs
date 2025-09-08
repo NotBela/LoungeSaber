@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BeatSaberMarkupLanguage;
 using JetBrains.Annotations;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Server;
+using LoungeSaber.UI.BSML.Disconnect;
 using LoungeSaber.UI.BSML.PauseMenu;
+using LoungeSaber.UI.FlowCoordinators;
 using SiraUtil.Logging;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -25,6 +28,8 @@ namespace LoungeSaber.Game
         [CanBeNull] public Models.UserInfo.UserInfo Opponent { get; private set; }
 
         public event Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> OnLevelCompleted;
+
+        public event Action OnLevelIncomplete;
 
         public void SetOpponent(Models.UserInfo.UserInfo opponent) => Opponent = opponent;
         
@@ -55,14 +60,21 @@ namespace LoungeSaber.Game
                 true,
                 null,
                 diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
-                AfterSceneSwitchCallback,
+                AfterSceneSwitchToMenuCallback,
                 null
                 );
         }
 
-        private void AfterSceneSwitchCallback(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSo, LevelCompletionResults levelCompletionResults)
+        private void AfterSceneSwitchToMenuCallback(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSo, LevelCompletionResults levelCompletionResults)
         {
             InMatch = false;
+            
+            if (levelCompletionResults.levelEndStateType == LevelCompletionResults.LevelEndStateType.Incomplete)
+            {
+                OnLevelIncomplete?.Invoke();
+                return;
+            }
+            
             OnLevelCompleted?.Invoke(levelCompletionResults, standardLevelScenesTransitionSetupDataSo);
         }
 
@@ -90,9 +102,7 @@ namespace LoungeSaber.Game
         private void OnDisconnect()
         {
             if (InMatch && SceneManager.GetActiveScene().name == "GameCore")
-            {
                 _menuTransitionsHelper.StopStandardLevel();
-            }
         }
 
         public void Dispose()

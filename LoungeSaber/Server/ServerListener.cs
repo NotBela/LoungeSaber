@@ -100,11 +100,12 @@ namespace LoungeSaber.Server
 
         public void Disconnect()
         {
-            if (_shouldListenToServer == false)
+            if (!_shouldListenToServer)
                 return;
             
             _shouldListenToServer = false;
             _client.Close();
+            OnDisconnected?.Invoke();
         }
 
         private void ListenToServer()
@@ -155,7 +156,6 @@ namespace LoungeSaber.Server
                 {
                     _siraLog.Error(e);
                     Disconnect();
-                    OnDisconnected?.Invoke();
                 }
             }
         }

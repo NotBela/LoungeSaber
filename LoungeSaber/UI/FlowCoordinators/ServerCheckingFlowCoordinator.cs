@@ -1,4 +1,5 @@
-﻿using LoungeSaber.Configuration;
+﻿using HMUI;
+using LoungeSaber.Configuration;
 using LoungeSaber.Game;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Menu;
@@ -39,6 +40,11 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
         _serverChecker.StartMapDownload += OnStartMapDownload;
 
         Task.Run(async Task () => { await _serverChecker.CheckServer(); });
+    }
+
+    protected override void BackButtonWasPressed(ViewController _)
+    {
+        _mainFlowCoordinator.DismissFlowCoordinator(this);
     }
 
     private void OnStartMapDownload(string[] missingMapHashes)
