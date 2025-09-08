@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BeatSaberMarkupLanguage;
 using JetBrains.Annotations;
+using LoungeSaber_Server.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Disconnect;
@@ -29,7 +30,9 @@ namespace LoungeSaber.Game
 
         public event Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> OnLevelCompleted;
 
-        public event Action OnLevelIncomplete;
+        public event Action<string> OnLevelIncomplete;
+
+        private bool _shouldShowDisconnectScreen = false;
 
         public void SetOpponent(Models.UserInfo.UserInfo opponent) => Opponent = opponent;
         
@@ -41,11 +44,10 @@ namespace LoungeSaber.Game
             InMatch = true;
             
             var beatmapLevel = level.GetBeatmapLevel() ?? throw new Exception("Could not get beatmap level!");
-            var difficulty = level.GetBaseGameDifficultyType();
 
             _menuTransitionsHelper.StartStandardLevel(
                 "Solo",
-                beatmapLevel.GetBeatmapKeys().First(i => i.beatmapCharacteristic.serializedName == "Standard" && i.difficulty == difficulty),
+                level.GetBeatmapKey(),
                 beatmapLevel,
                 _playerDataModel.playerData.overrideEnvironmentSettings,
                 _playerDataModel.playerData.colorSchemesSettings.overrideDefaultColors ? _playerDataModel.playerData.colorSchemesSettings.GetSelectedColorScheme() : null,
@@ -69,9 +71,11 @@ namespace LoungeSaber.Game
         {
             InMatch = false;
             
-            if (levelCompletionResults.levelEndStateType == LevelCompletionResults.LevelEndStateType.Incomplete)
+            if (_shouldShowDisconnectScreen)
             {
-                OnLevelIncomplete?.Invoke();
+                _shouldShowDisconnectScreen = false;
+                
+                OnLevelIncomplete?.Invoke("Disconnected");
                 return;
             }
             
@@ -94,15 +98,30 @@ namespace LoungeSaber.Game
             }
         }
 
+        private void StopLevel()
+        {
+            _shouldShowDisconnectScreen = true;
+            
+            if (InMatch && SceneManager.GetActiveScene().name == "GameCore")
+                _menuTransitionsHelper.StopStandardLevel();
+        }
+
         public void Initialize()
         {
             _serverListener.OnDisconnected += OnDisconnect;
+            _serverListener.OnPrematureMatchEnd += OnPrematureMatchEnd;
+        }
+
+        private void OnPrematureMatchEnd(PrematureMatchEnd prematureMatchEnd)
+        {
+            StopLevel();
+            
+            OnLevelIncomplete?.Invoke("Opponent Disconnected");
         }
 
         private void OnDisconnect()
         {
-            if (InMatch && SceneManager.GetActiveScene().name == "GameCore")
-                _menuTransitionsHelper.StopStandardLevel();
+            StopLevel();
         }
 
         public void Dispose()

@@ -53,9 +53,10 @@ namespace LoungeSaber.UI.FlowCoordinators
             _matchManager.OnLevelIncomplete += OnLevelIncomplete;
         }
 
-        private void OnLevelIncomplete()
+        private void OnLevelIncomplete(string reason)
         {
             PresentFlowCoordinatorSynchronously(_disconnectFlowCoordinator);
+            _disconnectedViewController.SetReason(reason);
         }
 
         private void OnVotingMapSelected(VotingMap votingMap, List<VotingMap> votingMaps)
