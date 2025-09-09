@@ -1,5 +1,6 @@
 ﻿using BeatSaberMarkupLanguage;
 using HMUI;
+using LoungeSaber.Extensions;
 using LoungeSaber.Game;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;
@@ -14,7 +15,7 @@ using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators
 {
-    public class MatchFlowCoordinator : SynchronousFlowCoordinator, IInitializable, IDisposable
+    public class MatchFlowCoordinator : FlowCoordinator, IInitializable, IDisposable
     {
         [Inject] private readonly VotingScreenViewController _votingScreenViewController = null;
         [Inject] private readonly AwaitingMapDecisionViewController _awaitingMapDecisionViewController = null;
@@ -55,7 +56,7 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private void OnLevelIncomplete(string reason)
         {
-            PresentFlowCoordinatorSynchronously(_disconnectFlowCoordinator);
+            this.PresentFlowCoordinatorSynchronously(_disconnectFlowCoordinator);
             _disconnectedViewController.SetReason(reason);
         }
 
@@ -70,7 +71,7 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private void OnMatchResultsReceived(MatchResultsPacket results)
         {
-            ReplaceViewControllerSynchronously(_matchResultsViewController);
+            this.ReplaceViewControllerSynchronously(_matchResultsViewController);
             _matchResultsViewController.PopulateData(results);
         }
 
@@ -81,14 +82,14 @@ namespace LoungeSaber.UI.FlowCoordinators
                 await _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(standardLevelScenesTransitionSetupData.transformedBeatmapData),
                     levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
             });
-            ReplaceViewControllerSynchronously(_awaitMatchEndViewController, immediately: true);
+            this.ReplaceViewControllerSynchronously(_awaitMatchEndViewController, immediately: true);
         }
 
         private async void OnMatchStarting(MatchStarted packet)
         {
             try
             {
-                ReplaceViewControllerSynchronously(_waitingForMatchToStartViewController);
+                this.ReplaceViewControllerSynchronously(_waitingForMatchToStartViewController);
                 await _waitingForMatchToStartViewController.PopulateData(packet.MapSelected, packet.TransitionToGameTime);
                 
                 await Task.Delay(packet.TransitionToGameTime - DateTime.UtcNow);

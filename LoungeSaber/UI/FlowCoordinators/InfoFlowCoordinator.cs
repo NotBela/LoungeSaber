@@ -1,10 +1,11 @@
 ﻿using HMUI;
+using LoungeSaber.Extensions;
 using LoungeSaber.UI.BSML.Info;
 using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators;
 
-public class InfoFlowCoordinator : SynchronousFlowCoordinator
+public class InfoFlowCoordinator : FlowCoordinator
 {
     [Inject] private readonly InfoViewController _infoViewController = null;
     

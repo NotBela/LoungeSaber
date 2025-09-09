@@ -3,6 +3,7 @@ using System.Reflection;
 using HarmonyLib;
 using HMUI;
 using IPA.Utilities;
+using LoungeSaber.Extensions;
 using LoungeSaber.Game;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Server;
@@ -18,7 +19,7 @@ using UnityEngine;
 
 namespace LoungeSaber.UI.FlowCoordinators
 {
-    public class MatchmakingMenuFlowCoordinator : SynchronousFlowCoordinator, IInitializable, IDisposable
+    public class MatchmakingMenuFlowCoordinator : FlowCoordinator, IInitializable, IDisposable
     {
         [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null;
         [Inject] private readonly MatchFlowCoordinator _matchFlowCoordinator = null;
@@ -52,7 +53,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             {
                 _votingScreenViewController.didActivateEvent += OnActivated;
                 
-                PresentFlowCoordinatorSynchronously(_matchFlowCoordinator);
+                this.PresentFlowCoordinatorSynchronously(_matchFlowCoordinator);
 
                 void OnActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
                 {
@@ -88,7 +89,7 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private void OnAboutButtonClicked()
         {
-            PresentFlowCoordinatorSynchronously(_infoFlowCoordinator);
+            this.PresentFlowCoordinatorSynchronously(_infoFlowCoordinator);
             _serverListener.Disconnect();
         }
 

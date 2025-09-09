@@ -1,9 +1,11 @@
-﻿using LoungeSaber.UI.BSML.Disconnect;
+﻿using HMUI;
+using LoungeSaber.Extensions;
+using LoungeSaber.UI.BSML.Disconnect;
 using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators;
 
-public class DisconnectFlowCoordinator : SynchronousFlowCoordinator
+public class DisconnectFlowCoordinator : FlowCoordinator
 {
     [Inject] private readonly DisconnectedViewController _disconnectedViewController = null;
     

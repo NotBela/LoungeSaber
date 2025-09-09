@@ -1,5 +1,6 @@
 ﻿using HMUI;
 using LoungeSaber.Configuration;
+using LoungeSaber.Extensions;
 using LoungeSaber.Game;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Menu;
@@ -9,7 +10,7 @@ using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators;
 
-public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
+public class ServerCheckingFlowCoordinator : FlowCoordinator
 {
     [Inject] private readonly MatchmakingMenuFlowCoordinator _matchmakingMenuFlowCoordinator = null;
     
@@ -55,7 +56,7 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
             return;
         }
         
-        ReplaceViewControllerSynchronously(_missingMapsViewController);
+        this.ReplaceViewControllerSynchronously(_missingMapsViewController);
         _missingMapsViewController.SetMissingMapCount(missingMapHashes.Length);
         
         _missingMapsViewController.UserChoseToDownloadMaps += UserChoseToDownloadMaps;
@@ -80,13 +81,13 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
         }
     }
 
-    private void ServerCheckFinished() => PresentFlowCoordinatorSynchronously(_matchmakingMenuFlowCoordinator);
+    private void ServerCheckFinished() => this.PresentFlowCoordinatorSynchronously(_matchmakingMenuFlowCoordinator);
 
     private void OnServerCheckFailed(string reason)
     {
         _serverChecker.ServerCheckFinished -= ServerCheckFinished;
         
-        ReplaceViewControllerSynchronously(_cantConnectToServerViewController);
+        this.ReplaceViewControllerSynchronously(_cantConnectToServerViewController);
         _cantConnectToServerViewController.SetReasonText(reason);
     }
 
@@ -107,7 +108,7 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
         {
             showBackButton = false;
             
-            ReplaceViewControllerSynchronously(_checkingServerStatusViewController);
+            this.ReplaceViewControllerSynchronously(_checkingServerStatusViewController);
             _checkingServerStatusViewController.SetControllerState(InitialServerChecker.ServerCheckingStates.DownloadingMaps);
 
             await _mapDownloader.DownloadMaps(missingMapHashes);
@@ -118,13 +119,13 @@ public class ServerCheckingFlowCoordinator : SynchronousFlowCoordinator
             while (Loader.AreSongsLoading)
                 await Task.Delay(25);
             
-            PresentFlowCoordinatorSynchronously(_matchmakingMenuFlowCoordinator);
+            this.PresentFlowCoordinatorSynchronously(_matchmakingMenuFlowCoordinator);
         }
         catch (Exception ex)
         {
             _siraLog.Error(ex);
             showBackButton = true;
-            ReplaceViewControllerSynchronously(_cantConnectToServerViewController);
+            this.ReplaceViewControllerSynchronously(_cantConnectToServerViewController);
             _cantConnectToServerViewController.SetReasonText("Unhandled exception downloading beatmaps, please check your logs for more details!");
         }
     }
