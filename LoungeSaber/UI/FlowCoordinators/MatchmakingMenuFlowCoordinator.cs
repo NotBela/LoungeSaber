@@ -96,8 +96,10 @@ namespace LoungeSaber.UI.FlowCoordinators
         protected override void BackButtonWasPressed(ViewController _)
         {
             _serverListener.Disconnect();
-            _mainFlowCoordinator.GetType().GetMethod("DismissChildFlowCoordinatorsRecursively", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(_mainFlowCoordinator,
-                [false]);
+            _mainFlowCoordinator.DismissAllChildFlowCoordinators();
+            
+            // _mainFlowCoordinator.GetType().GetMethod("DismissChildFlowCoordinatorsRecursively", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(_mainFlowCoordinator,
+            //     [false]);
         }
     }
 }  

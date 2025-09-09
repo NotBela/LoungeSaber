@@ -42,4 +42,16 @@ public static class FlowCoordinatorExtensions
         
         parent.PresentFlowCoordinator(flowCoordinator, immediately: immediately);
     }
+    
+    public static void DismissAllChildFlowCoordinators(this FlowCoordinator flowCoordinator)
+    {
+        var parent = flowCoordinator;
+        
+        if (flowCoordinator is not MainFlowCoordinator)
+            parent = (FlowCoordinator) flowCoordinator.GetType()
+                 .GetField("_parentFlowCoordinator", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(flowCoordinator);
+        
+        parent?.GetType().GetMethod("DismissChildFlowCoordinatorsRecursively", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(parent,
+             [false]);
+    }
 }
