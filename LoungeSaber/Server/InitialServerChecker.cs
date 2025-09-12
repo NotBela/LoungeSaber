@@ -2,6 +2,7 @@
 using IPA.Utilities;
 using LoungeSaber.Configuration;
 using LoungeSaber.Game;
+using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Server;
 using LoungeSaber.UI.BSML.Menu;
 using SongCore;
@@ -11,7 +12,7 @@ namespace LoungeSaber.Server;
 
 public class InitialServerChecker
 {
-    [Inject] private readonly LoungeSaberApi _loungeSaberApi = null!;
+    [Inject] private readonly ILoungeSaberApi _loungeSaberApi = null!;
     [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
     
     public event Action<string>? ServerCheckFailed;

@@ -2,13 +2,14 @@
 using System.Net.Http;
 using JetBrains.Annotations;
 using LoungeSaber.Configuration;
+using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Server;
 using Newtonsoft.Json;
 using Zenject;
 
 namespace LoungeSaber.Server
 {
-    public class LoungeSaberApi : IInitializable
+    public class LoungeSaberApi : ILoungeSaberApi, IInitializable
     {
         [Inject] private readonly PluginConfig _config = null!;
         
@@ -19,7 +20,6 @@ namespace LoungeSaber.Server
             _client.BaseAddress = new Uri($"https://{_config.ServerIp}:{_config.ServerApiPort}/");
         }
 
-        [ItemCanBeNull]
         public async Task<Models.UserInfo.UserInfo> GetUserInfo(string id)
         {
             var response = await _client.GetAsync($"/api/user/id/{id}");
@@ -34,14 +34,12 @@ namespace LoungeSaber.Server
             return JsonConvert.DeserializeObject<Models.UserInfo.UserInfo[]>(await response.Content.ReadAsStringAsync());
         }
 
-        [ItemCanBeNull]
         public async Task<Models.UserInfo.UserInfo[]> GetAroundUser(string id)
         {
             var response = await _client.GetAsync($"/api/leaderboard/aroundUser/{id}");
             return response.StatusCode == HttpStatusCode.NotFound ? null : JsonConvert.DeserializeObject<Models.UserInfo.UserInfo[]>(await response.Content.ReadAsStringAsync());
         }
 
-        [ItemCanBeNull]
         public async Task<ServerStatus> GetServerStatus()
         {
             var response = await _client.GetAsync("/api/server/status");

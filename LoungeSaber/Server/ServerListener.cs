@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LoungeSaber_Server.Models.Packets.ServerPackets;
 using LoungeSaber.Configuration;
+using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Packets;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Packets.ServerPackets.Match;
@@ -15,7 +16,7 @@ using Zenject;
 
 namespace LoungeSaber.Server
 {
-    public class ServerListener
+    public class ServerListener : IServerListener
     {
         [Inject] private readonly PluginConfig _config = null;
         [Inject] private readonly SiraLog _siraLog = null;
