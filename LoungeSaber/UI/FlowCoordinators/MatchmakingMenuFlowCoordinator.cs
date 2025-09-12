@@ -5,6 +5,7 @@ using HMUI;
 using IPA.Utilities;
 using LoungeSaber.Extensions;
 using LoungeSaber.Game;
+using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Server;
 using LoungeSaber.Server;
@@ -27,7 +28,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly VotingScreenViewController _votingScreenViewController = null;
         [Inject] private readonly MatchManager _matchManager = null;
         
-        [Inject] private readonly ServerListener _serverListener = null;
+        [Inject] private readonly IServerListener _serverListener = null;
         [Inject] private readonly MatchmakingMenuViewController _matchmakingMenuViewController = null;
         
         [Inject] private readonly MatchResultsViewController _matchResultsViewController = null;

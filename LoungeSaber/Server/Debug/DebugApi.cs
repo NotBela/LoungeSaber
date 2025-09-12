@@ -1,5 +1,6 @@
 ﻿using IPA.Utilities;
 using LoungeSaber.Interfaces;
+using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Server;
 using LoungeSaber.Models.UserInfo;
 using Zenject;
@@ -8,17 +9,30 @@ namespace LoungeSaber.Server.Debug;
 
 public class DebugApi : ILoungeSaberApi
 {
+    public static readonly VotingMap[] Maps =
+    [
+        new("28aef5dabe5581b81a2b5d7452534bfbf32b2722", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Tech), 
+        new("807e71eb310b8aeba98a643c3e8c390e24e89a80", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Balanced),
+        new("980b27527143a47a6a4a0b0446d13979508100a3", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Extreme)
+    ];
+
+    public static readonly Models.UserInfo.UserInfo DebugOpponent = new("debugOpponent", "1", 1000,
+        new DivisionInfo(DivisionInfo.DivisionName.Bronze, 4, "#111111"), new Badge("test", "#111111", false), 2, null,
+        false);
+
+    public static readonly Models.UserInfo.UserInfo Self = new(
+        "self",
+        "0",
+        1000,
+        new DivisionInfo(DivisionInfo.DivisionName.Bronze, 1, "#000000"),
+        null,
+        1,
+        null,
+        false);
+    
     public Task<Models.UserInfo.UserInfo> GetUserInfo(string id)
     {
-        return Task.FromResult(new Models.UserInfo.UserInfo(
-            "self",
-            "0",
-            1000,
-            new DivisionInfo(DivisionInfo.DivisionName.Bronze, 1, "#000000"),
-            null,
-            1,
-            null,
-            false));
+        return Task.FromResult(Self);
     }
 
     public Task<Models.UserInfo.UserInfo[]> GetLeaderboardRange(int start, int range)
@@ -37,8 +51,9 @@ public class DebugApi : ILoungeSaberApi
             ServerStatus.ServerState.Online));
     }
 
-    public Task<string[]> GetMapHashes()
+    public async Task<string[]> GetMapHashes()
     {
-        return Task.FromResult<string[]>(["28aef5dabe5581b81a2b5d7452534bfbf32b2722", "807e71eb310b8aeba98a643c3e8c390e24e89a80", "cdac5e8a2285e74e959f824feb791d85cf825f8c"]);
+        await Task.Delay(1000);
+        return Maps.Select(i => i.Hash).ToArray();
     }
 }

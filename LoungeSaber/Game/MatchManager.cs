@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BeatSaberMarkupLanguage;
 using JetBrains.Annotations;
 using LoungeSaber_Server.Models.Packets.ServerPackets;
+using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Disconnect;
@@ -22,7 +23,7 @@ namespace LoungeSaber.Game
         [Inject] private readonly PlayerDataModel _playerDataModel = null!;
         [Inject] private readonly SiraLog _siraLog = null!;
         
-        [Inject] private readonly ServerListener _serverListener = null!;
+        [Inject] private readonly IServerListener _serverListener = null!;
         
         public bool InMatch { get; private set; } = false;
 

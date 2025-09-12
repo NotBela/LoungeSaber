@@ -1,5 +1,6 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
+using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
@@ -13,7 +14,7 @@ namespace LoungeSaber.UI.BSML.Match
     [ViewDefinition("LoungeSaber.UI.BSML.Match.AwaitingMapDecisionView.bsml")]
     public class AwaitingMapDecisionViewController : BSMLAutomaticViewController, IInitializable, IDisposable
     {
-        [Inject] private readonly ServerListener _serverListener = null;
+        [Inject] private readonly IServerListener _serverListener = null;
         
         private List<VotingMap> _votingMaps = [];
 

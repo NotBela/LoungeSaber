@@ -6,6 +6,7 @@ using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
 using HMUI;
 using IPA.Utilities;
+using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
 using LoungeSaber.UI.FlowCoordinators;
@@ -19,7 +20,7 @@ namespace LoungeSaber.UI.BSML.Menu
     [ViewDefinition("LoungeSaber.UI.BSML.Menu.MatchmakingMenuView.bsml")]
     public class MatchmakingMenuViewController : BSMLAutomaticViewController, ITickable
     {
-        [Inject] private readonly ServerListener _serverListener = null;
+        [Inject] private readonly IServerListener _serverListener = null;
         [Inject] private readonly SiraLog _siraLog = null;
 
         [UIParams] private readonly BSMLParserParams _parserParams = null;

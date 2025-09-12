@@ -2,6 +2,7 @@
 using BeatSaberMarkupLanguage.FloatingScreen;
 using BeatSaberMarkupLanguage.ViewControllers;
 using HMUI;
+using LoungeSaber.Interfaces;
 using LoungeSaber.Server;
 using SiraUtil.Logging;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
     [ViewDefinition("LoungeSaber.UI.BSML.Leaderboard.LeaderboardPanelView.bsml")]
     public class LeaderboardPanelViewController : BSMLAutomaticViewController, IInitializable, IDisposable
     {
-        [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
+        [Inject] private readonly ILoungeSaberApi _loungeSaberApi = null;
         [Inject] private readonly SiraLog _siraLog = null;
         
         [Inject] private readonly LoungeSaberLeaderboardViewController _loungeSaberLeaderboardViewController = null;

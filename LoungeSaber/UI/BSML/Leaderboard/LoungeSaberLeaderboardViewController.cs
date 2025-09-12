@@ -6,6 +6,7 @@ using BGLib.Polyglot;
 using HMUI;
 using IPA.Utilities;
 using LoungeSaber.Extensions;
+using LoungeSaber.Interfaces;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Components;
 using SiraUtil.Logging;
@@ -18,7 +19,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
     public class LoungeSaberLeaderboardViewController : BSMLAutomaticViewController
     {
         [Inject] private readonly PlatformLeaderboardViewController _platformLeaderboardViewController = null;
-        [Inject] private readonly LoungeSaberApi _loungeSaberApi = null;
+        [Inject] private readonly ILoungeSaberApi _loungeSaberApi = null;
         [Inject] private readonly SiraLog _siraLog = null;
 
         [Inject] private readonly IPlatformUserModel _platformUserModel = null;

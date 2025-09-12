@@ -2,6 +2,7 @@
 using HMUI;
 using LoungeSaber.Extensions;
 using LoungeSaber.Game;
+using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Packets.ServerPackets.Match;
@@ -23,7 +24,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly AwaitMatchEndViewController _awaitMatchEndViewController = null;
         [Inject] private readonly MatchResultsViewController _matchResultsViewController = null;
         
-        [Inject] private readonly ServerListener _serverListener = null;
+        [Inject] private readonly IServerListener _serverListener = null;
         [Inject] private readonly MatchManager _matchManager = null;
         
         [Inject] private readonly SiraLog _siraLog = null;

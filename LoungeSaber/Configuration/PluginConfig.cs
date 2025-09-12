@@ -12,5 +12,7 @@ namespace LoungeSaber.Configuration
         public virtual int ServerApiPort { get; set; } = 7198;
         
         public virtual bool DownloadMapsAutomatically { get; set; } = false;
+
+        public virtual bool Debug { get; set; } = false;
     }
 }

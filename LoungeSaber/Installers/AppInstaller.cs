@@ -1,6 +1,8 @@
 using LoungeSaber.Configuration;
 using LoungeSaber.Game;
+using LoungeSaber.Interfaces;
 using LoungeSaber.Server;
+using LoungeSaber.Server.Debug;
 using Zenject;
 
 namespace LoungeSaber.Installers
@@ -17,9 +19,17 @@ namespace LoungeSaber.Installers
         public override void InstallBindings()
         {
             Container.BindInstance(_config);
-
-            Container.BindInterfacesAndSelfTo<ServerListener>().AsSingle();
+            
             Container.BindInterfacesAndSelfTo<MatchManager>().AsSingle();
+
+            if (_config.Debug)
+            {
+                Container.BindInterfacesAndSelfTo<DebugServerListener>().AsSingle();
+                Container.BindInterfacesAndSelfTo<DebugApi>().AsSingle();
+                return;
+            }
+            
+            Container.BindInterfacesAndSelfTo<ServerListener>().AsSingle();
             Container.BindInterfacesAndSelfTo<LoungeSaberApi>().AsSingle();
         }
     }
