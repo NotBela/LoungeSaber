@@ -1,41 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BeatSaberMarkupLanguage;
+﻿using IPA.Loader;
 using JetBrains.Annotations;
-using LoungeSaber_Server.Models.Packets.ServerPackets;
-using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Map;
-using LoungeSaber.Server;
-using LoungeSaber.UI.BSML.Disconnect;
 using LoungeSaber.UI.BSML.PauseMenu;
-using LoungeSaber.UI.FlowCoordinators;
 using SiraUtil.Logging;
-using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace LoungeSaber.Game
 {
-    public class MatchManager : IInitializable, IDisposable
+    public class MatchManager
     {
-        [Inject] private readonly MenuTransitionsHelper _menuTransitionsHelper = null!;
-        [Inject] private readonly PlayerDataModel _playerDataModel = null!;
-        [Inject] private readonly SiraLog _siraLog = null!;
-        
-        [Inject] private readonly IServerListener _serverListener = null!;
+        [Inject] private readonly MenuTransitionsHelper _menuTransitionsHelper = null;
+        [Inject] private readonly PlayerDataModel _playerDataModel = null;
+        [Inject] private readonly SiraLog _siraLog = null;
         
         public bool InMatch { get; private set; } = false;
 
-        [CanBeNull] public Models.UserInfo.UserInfo Opponent { get; private set; }
+        [CanBeNull] public Models.UserInfo.UserInfo Opponent { get; set; }
 
         public event Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> OnLevelCompleted;
-
-        public event Action<string> OnLevelIncomplete;
-
-        private bool _shouldShowDisconnectScreen = false;
-
-        public void SetOpponent(Models.UserInfo.UserInfo opponent) => Opponent = opponent;
+        
+        private Action _menuSwitchCallback = null;
         
         public void StartMatch(VotingMap level, DateTime unpauseTime, bool proMode)
         {
@@ -68,18 +52,24 @@ namespace LoungeSaber.Game
                 );
         }
 
+        public void StopMatch(Action menuSwitchCallback = null)
+        {
+            _menuSwitchCallback = menuSwitchCallback;
+            
+            if (InMatch)
+                _menuTransitionsHelper.StopStandardLevel();
+        }
+
         private void AfterSceneSwitchToMenuCallback(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupDataSo, LevelCompletionResults levelCompletionResults)
         {
             InMatch = false;
             
-            if (_shouldShowDisconnectScreen)
-            {
-                _shouldShowDisconnectScreen = false;
-                
-                OnLevelIncomplete?.Invoke("Disconnected");
-                return;
-            }
+            _menuSwitchCallback?.Invoke();
             
+            if (_menuSwitchCallback != null) 
+                return;
+            
+            _menuSwitchCallback = null;
             OnLevelCompleted?.Invoke(levelCompletionResults, standardLevelScenesTransitionSetupDataSo);
         }
 
@@ -97,37 +87,6 @@ namespace LoungeSaber.Game
             {
                 _siraLog.Error(e);
             }
-        }
-
-        private void StopLevel()
-        {
-            _shouldShowDisconnectScreen = true;
-            
-            if (InMatch && SceneManager.GetActiveScene().name == "GameCore")
-                _menuTransitionsHelper.StopStandardLevel();
-        }
-
-        public void Initialize()
-        {
-            _serverListener.OnDisconnected += OnDisconnect;
-            _serverListener.OnPrematureMatchEnd += OnPrematureMatchEnd;
-        }
-
-        private void OnPrematureMatchEnd(PrematureMatchEnd prematureMatchEnd)
-        {
-            StopLevel();
-            
-            OnLevelIncomplete?.Invoke("Opponent Disconnected");
-        }
-
-        private void OnDisconnect()
-        {
-            StopLevel();
-        }
-
-        public void Dispose()
-        {
-            _serverListener.OnDisconnected -= OnDisconnect;
         }
     }
 }

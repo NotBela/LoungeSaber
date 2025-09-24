@@ -59,7 +59,7 @@ namespace LoungeSaber.UI.FlowCoordinators
                 void OnActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
                 {
                     _votingScreenViewController.didActivateEvent -= OnActivated;
-                    _matchManager.SetOpponent(packet.Opponent);
+                    _matchManager.Opponent = packet.Opponent;
                     
                     _votingScreenViewController.PopulateData(packet);
                 }

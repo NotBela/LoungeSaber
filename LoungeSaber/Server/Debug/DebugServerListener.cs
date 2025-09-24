@@ -20,11 +20,14 @@ public class DebugServerListener : IServerListener
     public event Action OnDisconnected;
     public event Action OnConnected;
     public event Action<PrematureMatchEnd> OnPrematureMatchEnd;
+
+    private bool _isConnected;
     
     public async Task Connect(Action<JoinResponse> onConnectedCallback)
     {
         await Task.Delay(1000);
-        
+
+        _isConnected = true;
         onConnectedCallback?.Invoke(new JoinResponse(true, ""));
         OnConnected?.Invoke();
         _siraLog.Info("connected");
@@ -35,12 +38,18 @@ public class DebugServerListener : IServerListener
 
     public Task SendPacket(UserPacket packet)
     {
+        if (!_isConnected)
+        {
+            _siraLog.Info("tried to send packet when not connected!");
+            return Task.CompletedTask;
+        }
+        
         switch (packet.PacketType)
         {
             case UserPacket.UserPacketTypes.JoinRequest:
-                Task.Run(async () =>
+                Task.Run(() =>
                 {
-                    await Task.Delay(1000);
+                    Task.Delay(1000);
                     OnMatchCreated?.Invoke(new MatchCreatedPacket(DebugApi.Maps, DebugApi.DebugOpponent));
                     _siraLog.Info("join request");
                 });
@@ -53,12 +62,16 @@ public class DebugServerListener : IServerListener
                     OnMatchStarting?.Invoke(new MatchStarted(DebugApi.Maps[0], DateTime.UtcNow.AddSeconds(15),
                         DateTime.UtcNow.AddSeconds(25), DebugApi.DebugOpponent));
                     _siraLog.Info("voted");
+                    
+                    await Task.Delay(5000);
+                    Disconnect();
+                    _siraLog.Info("disconnected");
                 });
                 break;
             case UserPacket.UserPacketTypes.ScoreSubmission:
-                Task.Run(async () =>
+                Task.Run(() =>
                 {
-                    await Task.Delay(1000);
+                    Task.Delay(1000);
                     OnMatchResults?.Invoke(new MatchResultsPacket(new MatchScore(DebugApi.Self, Score.Empty),
                         new MatchScore(DebugApi.DebugOpponent, Score.Empty), 100));
                 });
@@ -72,6 +85,8 @@ public class DebugServerListener : IServerListener
 
     public void Disconnect()
     {
+        if (!_isConnected) return;
+        
         OnDisconnected?.Invoke();
     }
 }

@@ -21,6 +21,7 @@ namespace LoungeSaber.Installers
             Container.BindInstance(_config);
             
             Container.BindInterfacesAndSelfTo<MatchManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<DisconnectHandler>().AsSingle();
 
             if (_config.Debug)
             {

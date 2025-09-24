@@ -31,6 +31,8 @@ namespace LoungeSaber.UI.FlowCoordinators
         
         [Inject] private readonly StandardLevelDetailViewManager _standardLevelDetailViewManager = null;
         [Inject] private readonly GameplaySetupViewManager _gameplaySetupViewManager = null;
+        
+        [Inject] private readonly DisconnectHandler _disconnectHandler = null;
 
         [Inject] private readonly DisconnectFlowCoordinator _disconnectFlowCoordinator = null;
         [Inject] private readonly DisconnectedViewController _disconnectedViewController = null;
@@ -52,11 +54,15 @@ namespace LoungeSaber.UI.FlowCoordinators
             _matchManager.OnLevelCompleted += OnLevelCompleted;
             _serverListener.OnMatchResults += OnMatchResultsReceived;
             _standardLevelDetailViewManager.OnMapVoteButtonPressed += OnMapVotedFor;
-            _matchManager.OnLevelIncomplete += OnLevelIncomplete;
+            _disconnectHandler.ShouldShowDisconnectScreen += OnShouldShowDisconnectScreen;
         }
 
-        private void OnLevelIncomplete(string reason)
+        private void OnShouldShowDisconnectScreen(string reason)
         {
+            while (!isActivated);
+            
+            _siraLog.Info(reason);
+            
             this.PresentFlowCoordinatorSynchronously(_disconnectFlowCoordinator);
             _disconnectedViewController.SetReason(reason);
         }
@@ -78,6 +84,11 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private void OnLevelCompleted(LevelCompletionResults levelCompletionResults, StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupData)
         {
+            if (_disconnectHandler.WillShowDisconnectScreen) 
+                return;
+            
+            _siraLog.Info("got to here");
+            
             Task.Run(async () =>
             {
                 await _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(standardLevelScenesTransitionSetupData.transformedBeatmapData),
@@ -138,7 +149,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             _matchManager.OnLevelCompleted -= OnLevelCompleted;
             _serverListener.OnMatchResults -= OnMatchResultsReceived;
             _standardLevelDetailViewManager.OnMapVoteButtonPressed -= OnMapVotedFor;
-            _matchManager.OnLevelIncomplete -= OnLevelIncomplete;
+            _disconnectHandler.ShouldShowDisconnectScreen -= OnShouldShowDisconnectScreen;
         }
 
         public void Initialize()
