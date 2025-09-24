@@ -65,12 +65,14 @@ namespace LoungeSaber.Game
             InMatch = false;
             
             _menuSwitchCallback?.Invoke();
-            
-            if (_menuSwitchCallback != null) 
+
+            if (_menuSwitchCallback == null)
+            {
+                OnLevelCompleted?.Invoke(levelCompletionResults, standardLevelScenesTransitionSetupDataSo);
                 return;
+            }
             
             _menuSwitchCallback = null;
-            OnLevelCompleted?.Invoke(levelCompletionResults, standardLevelScenesTransitionSetupDataSo);
         }
 
         private async void AfterSceneSwitchToGameplayCallback(DiContainer diContainer, DateTime unpauseTime)

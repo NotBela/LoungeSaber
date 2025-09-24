@@ -63,7 +63,7 @@ public class DebugServerListener : IServerListener
                         DateTime.UtcNow.AddSeconds(25), DebugApi.DebugOpponent));
                     _siraLog.Info("voted");
                     
-                    await Task.Delay(5000);
+                    await Task.Delay(30000);
                     Disconnect();
                     _siraLog.Info("disconnected");
                 });
