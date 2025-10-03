@@ -22,10 +22,7 @@ public class VotingScreenViewController : BSMLAutomaticViewController
 {
     public event Action<VotingMap, List<VotingMap>> MapSelected;
         
-    [UIValue("opponentText")] private string OpponentText { get; set; }
-        
     [UIComponent("mapList")] private readonly CustomListTableData _mapListTableData = null;
-        
     private VotingListDataSource _votingListDataSource = null!;
 
     [UIAction("#post-parse")]
@@ -46,8 +43,6 @@ public class VotingScreenViewController : BSMLAutomaticViewController
     public void PopulateData(MatchCreatedPacket packet)
     {
         _votingListDataSource.SetData(packet.Maps.ToList());
-        
-        OpponentText = $"{packet.Opponent.GetFormattedUserName()} - {packet.Opponent.Mmr} MMR";
         
         NotifyPropertyChanged(null);
     }

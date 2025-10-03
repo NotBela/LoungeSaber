@@ -1,0 +1,9 @@
+<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+    <vertical anchor-pos-y="15">
+        <text text="Your Opponent:" align="Center" italics="true" font-size="5"/>
+    </vertical>
+    <vertical anchor-pos-y="8">
+        <text text="~opponentText" align="Center" font-size="7" italics="true"/>
+    </vertical>
+</bg>

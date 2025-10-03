@@ -23,6 +23,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly WaitingForMatchToStartViewController _waitingForMatchToStartViewController = null;
         [Inject] private readonly AwaitMatchEndViewController _awaitMatchEndViewController = null;
         [Inject] private readonly MatchResultsViewController _matchResultsViewController = null;
+        [Inject] private readonly OpponentViewController _opponentViewController = null;
         
         [Inject] private readonly IServerListener _serverListener = null;
         [Inject] private readonly MatchManager _matchManager = null;
@@ -46,7 +47,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             
             _votingScreenNavigationController = BeatSaberUI.CreateViewController<NavigationController>();
             
-            ProvideInitialViewControllers(_votingScreenNavigationController, _gameplaySetupViewManager.ManagedController);
+            ProvideInitialViewControllers(_votingScreenNavigationController, _gameplaySetupViewManager.ManagedController, bottomScreenViewController: _opponentViewController);
             _votingScreenNavigationController.PushViewController(_votingScreenViewController, null);
 
             _votingScreenViewController.MapSelected += OnVotingMapSelected;
