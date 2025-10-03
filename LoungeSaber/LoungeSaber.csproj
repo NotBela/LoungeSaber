@@ -185,7 +185,6 @@
       <None Remove="UI\BSML\UnhandledExceptionView.bsml" />
       <None Remove="UI\BSML\MatchResultsView.bsml" />
       <None Remove="UI\BSML\Leaderboard\LeaderboardPanelView.bsml" />
-      <EmbeddedResource Include="UI\BSML\Leaderboard\LeaderboardPanelView.bsml" />
       <None Remove="UI\BSML\Leaderboard\LoungeSaberLeaderboardView.bsml" />
       <EmbeddedResource Include="UI\BSML\Leaderboard\LoungeSaberLeaderboardView.bsml" />
       <None Remove="UI\BSML\Menu\CheckingServerStatusView.bsml" />

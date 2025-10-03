@@ -35,8 +35,6 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<InfoViewController>().FromNewComponentAsViewController().AsSingle();
             Container.BindInterfacesAndSelfTo<MatchResultsViewController>().FromNewComponentAsViewController()
                 .AsSingle();
-            Container.BindInterfacesAndSelfTo<LeaderboardPanelViewController>().FromNewComponentAsViewController()
-                .AsSingle();
             Container.BindInterfacesAndSelfTo<LoungeSaberSettingsViewController>().FromNewComponentAsViewController()
                 .AsSingle();
             Container.BindInterfacesAndSelfTo<LoungeSaberLeaderboardViewController>().FromNewComponentAsViewController().AsSingle();
