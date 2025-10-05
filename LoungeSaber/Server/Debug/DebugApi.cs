@@ -11,9 +11,9 @@ public class DebugApi : ILoungeSaberApi
 {
     public static readonly VotingMap[] Maps =
     [
-        new("28aef5dabe5581b81a2b5d7452534bfbf32b2722", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Tech), 
-        new("807e71eb310b8aeba98a643c3e8c390e24e89a80", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Balanced),
-        new("980b27527143a47a6a4a0b0446d13979508100a3", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Extreme)
+        new("44d8d1c7c5821a7f1929542cab49c906c9e585e4", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Tech), 
+        new("44d8d1c7c5821a7f1929542cab49c906c9e585e4", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Balanced),
+        new("44d8d1c7c5821a7f1929542cab49c906c9e585e4", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Extreme)
     ];
 
     public static readonly Models.UserInfo.UserInfo DebugOpponent = new("debugOpponent", "1", 1000,

@@ -6,6 +6,7 @@ using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
 using HMUI;
 using IPA.Utilities;
+using LoungeSaber.Configuration;
 using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Server;
@@ -20,6 +21,7 @@ namespace LoungeSaber.UI.BSML.Menu
     [ViewDefinition("LoungeSaber.UI.BSML.Menu.MatchmakingMenuView.bsml")]
     public class MatchmakingMenuViewController : BSMLAutomaticViewController, ITickable
     {
+        [Inject] private readonly PluginConfig _config = null;
         [Inject] private readonly IServerListener _serverListener = null;
         [Inject] private readonly SiraLog _siraLog = null;
 
@@ -89,7 +91,7 @@ namespace LoungeSaber.UI.BSML.Menu
                 _matchmakingTimeStopwatch.Stop();
                 _joinMatchmakingPoolButton.SetButtonText("Finding Match (Joining Pool...)");
 
-                await _serverListener.Connect(OnConnectedCallback);
+                await _serverListener.Connect(_config.ConnectToDebugQueue ? "debug" : "standard", OnConnectedCallback);
             }
             catch (Exception e)
             {

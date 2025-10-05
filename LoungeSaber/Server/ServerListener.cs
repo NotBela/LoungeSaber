@@ -54,7 +54,7 @@ namespace LoungeSaber.Server
             }
         }
 
-        public async Task Connect(Action<JoinResponse> onConnectedCallBack)
+        public async Task Connect(string queue, Action<JoinResponse> onConnectedCallBack)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace LoungeSaber.Server
 
                 var userPlatformData = await _platformUserModel.GetUserInfo(CancellationToken.None);
                 
-                await SendPacket(new JoinRequestPacket(userPlatformData.userName, userPlatformData.platformUserId));
+                await SendPacket(new JoinRequestPacket(userPlatformData.userName, userPlatformData.platformUserId, ""));
 
                 while (!_client.GetStream().DataAvailable)
                     await Task.Delay(25);

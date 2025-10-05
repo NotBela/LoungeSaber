@@ -23,7 +23,7 @@ public class DebugServerListener : IServerListener
 
     private bool _isConnected;
     
-    public async Task Connect(Action<JoinResponse> onConnectedCallback)
+    public async Task Connect(string queue, Action<JoinResponse> onConnectedCallback)
     {
         await Task.Delay(1000);
 
@@ -33,7 +33,7 @@ public class DebugServerListener : IServerListener
         _siraLog.Info("connected");
 
         await Task.Delay(1000);
-        await SendPacket(new JoinRequestPacket(DebugApi.Self.Username, DebugApi.Self.UserId));
+        await SendPacket(new JoinRequestPacket(DebugApi.Self.Username, DebugApi.Self.UserId, queue));
     }
 
     public Task SendPacket(UserPacket packet)

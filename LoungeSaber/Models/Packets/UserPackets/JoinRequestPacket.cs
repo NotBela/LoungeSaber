@@ -11,12 +11,16 @@ namespace LoungeSaber.Models.Packets.UserPackets
     
         [JsonProperty("userId")]
         public string UserId { get; private set; }
+        
+        [JsonProperty("queue")]
+        public string Queue { get; private set; }
 
         [JsonConstructor]
-        public JoinRequestPacket(string userName, string userId)
+        public JoinRequestPacket(string userName, string userId, string queue)
         {
-            this.UserName = userName;
-            this.UserId = userId;
+            UserName = userName;
+            UserId = userId;
+            Queue = queue;
         }
     }
 }

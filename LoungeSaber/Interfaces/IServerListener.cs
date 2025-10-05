@@ -16,7 +16,7 @@ public interface IServerListener
     public event Action OnConnected;
     public event Action<PrematureMatchEnd> OnPrematureMatchEnd;
 
-    public Task Connect(Action<JoinResponse> onConnectedCallback);
+    public Task Connect(string queue, Action<JoinResponse> onConnectedCallback);
 
     public Task SendPacket(UserPacket packet);
 

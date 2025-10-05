@@ -23,7 +23,7 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<MatchManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<DisconnectHandler>().AsSingle();
 
-            if (_config.Debug)
+            if (_config.ConnectToDebugQueue)
             {
                 Container.BindInterfacesAndSelfTo<DebugServerListener>().AsSingle();
                 Container.BindInterfacesAndSelfTo<DebugApi>().AsSingle();
