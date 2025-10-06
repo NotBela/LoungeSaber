@@ -16,7 +16,7 @@ using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators
 {
-    public class MatchFlowCoordinator : FlowCoordinator, IInitializable, IDisposable
+    public class MatchFlowCoordinator : FlowCoordinator
     {
         [Inject] private readonly VotingScreenViewController _votingScreenViewController = null;
         [Inject] private readonly AwaitingMapDecisionViewController _awaitingMapDecisionViewController = null;
@@ -65,7 +65,17 @@ namespace LoungeSaber.UI.FlowCoordinators
             _siraLog.Info(reason);
             
             this.PresentFlowCoordinatorSynchronously(_disconnectFlowCoordinator);
-            _disconnectedViewController.SetReason(reason);
+            _disconnectedViewController.SetReason(reason, async void () =>
+            {
+                try
+                {
+                    await DismissChildFlowCoordinatorsRecursively();
+                }
+                catch (Exception e)
+                {
+                    _siraLog.Error(e);
+                }
+            });
         }
 
         private void OnVotingMapSelected(VotingMap votingMap, List<VotingMap> votingMaps)
@@ -131,18 +141,6 @@ namespace LoungeSaber.UI.FlowCoordinators
             }
         }
         
-        private async void OnDisconnectedViewOkButtonClicked()
-        {
-            try
-            {
-                await DismissChildFlowCoordinatorsRecursively();
-            }
-            catch (Exception e)
-            {
-                _siraLog.Error(e);
-            }
-        }
-        
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
         {
             _votingScreenViewController.MapSelected -= OnVotingMapSelected;
@@ -151,16 +149,6 @@ namespace LoungeSaber.UI.FlowCoordinators
             _serverListener.OnMatchResults -= OnMatchResultsReceived;
             _standardLevelDetailViewManager.OnMapVoteButtonPressed -= OnMapVotedFor;
             _disconnectHandler.ShouldShowDisconnectScreen -= OnShouldShowDisconnectScreen;
-        }
-
-        public void Initialize()
-        {
-            _disconnectedViewController.OnOkButtonClicked += OnDisconnectedViewOkButtonClicked;
-        }
-
-        public void Dispose()
-        {
-            _disconnectedViewController.OnOkButtonClicked -= OnDisconnectedViewOkButtonClicked;
         }
     }
 }

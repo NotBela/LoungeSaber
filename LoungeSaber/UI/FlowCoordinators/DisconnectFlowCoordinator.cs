@@ -15,4 +15,9 @@ public class DisconnectFlowCoordinator : FlowCoordinator
         showBackButton = false;
         ProvideInitialViewControllers(_disconnectedViewController);
     }
+
+    protected override void BackButtonWasPressed(ViewController _)
+    {
+        
+    }
 }

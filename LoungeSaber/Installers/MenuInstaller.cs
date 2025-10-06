@@ -62,6 +62,10 @@ namespace LoungeSaber.Installers
             
             Container.BindInterfacesAndSelfTo<MapDownloader>().AsSingle();
             Container.BindInterfacesAndSelfTo<InitialServerChecker>().AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<EventWaitingOnNextMatchViewController>().FromNewComponentAsViewController().AsSingle();
+            Container.BindInterfacesAndSelfTo<WaitingForEventMatchFlowCoordinator>().FromNewComponentOnNewGameObject()
+                .AsSingle();
 
             Container.Bind<BSMLTag>().To<LevelBarTag>().AsSingle();
             Container.Bind<TypeHandler<CustomLevelBar>>().To<LevelBarHandler>().AsSingle();
