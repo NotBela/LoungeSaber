@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using LoungeSaber.Models.Events;
 using LoungeSaber.Models.Server;
 
 namespace LoungeSaber.Interfaces;
@@ -18,4 +19,6 @@ public interface ILoungeSaberApi
     public Task<ServerStatus> GetServerStatus();
 
     public Task<string[]> GetMapHashes();
+    
+    public Task<EventData[]> GetEvents();
 }

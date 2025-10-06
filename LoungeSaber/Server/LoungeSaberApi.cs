@@ -3,6 +3,7 @@ using System.Net.Http;
 using JetBrains.Annotations;
 using LoungeSaber.Configuration;
 using LoungeSaber.Interfaces;
+using LoungeSaber.Models.Events;
 using LoungeSaber.Models.Server;
 using Newtonsoft.Json;
 using Zenject;
@@ -50,6 +51,12 @@ namespace LoungeSaber.Server
         {
             var response = await _client.GetAsync("/api/maps/hashes");
             return JsonConvert.DeserializeObject<string[]>(await response.Content.ReadAsStringAsync());
+        }
+
+        public async Task<EventData[]> GetEvents()
+        {
+            var response = await _client.GetAsync("/api/events/events");
+            return JsonConvert.DeserializeObject<EventData[]>(await response.Content.ReadAsStringAsync());
         }
     }
 }

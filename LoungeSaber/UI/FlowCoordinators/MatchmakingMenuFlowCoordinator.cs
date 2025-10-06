@@ -13,6 +13,7 @@ using LoungeSaber.UI.BSML.Disconnect;
 using LoungeSaber.UI.BSML.Leaderboard;
 using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.BSML.Menu;
+using LoungeSaber.UI.FlowCoordinators.Events;
 using SiraUtil.Logging;
 using SongCore;
 using Zenject;
@@ -36,6 +37,9 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly LoungeSaberLeaderboardViewController _leaderboardViewController = null;
 
         [Inject] private readonly SiraLog _siraLog = null;
+        
+        
+        [Inject] private readonly EventsFlowCoordinator _eventsFlowCoordinator = null;
         
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
@@ -76,6 +80,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             _matchResultsViewController.ContinueButtonPressed -= OnContinueButtonPressed;
             _matchmakingMenuViewController.AboutButtonClicked -= OnAboutButtonClicked;
             _infoFlowCoordinator.OnBackButtonPressed -= OnInfoFlowCoordinatorBackButtonPressed;
+            _matchmakingMenuViewController.EventsButtonClicked += OnEventsButtonClicked;
         }
         
         public void Initialize()
@@ -84,14 +89,19 @@ namespace LoungeSaber.UI.FlowCoordinators
             _matchResultsViewController.ContinueButtonPressed += OnContinueButtonPressed;
             _matchmakingMenuViewController.AboutButtonClicked += OnAboutButtonClicked;
             _infoFlowCoordinator.OnBackButtonPressed += OnInfoFlowCoordinatorBackButtonPressed;
+            _matchmakingMenuViewController.EventsButtonClicked += OnEventsButtonClicked;
+            _eventsFlowCoordinator.OnBackButtonPressed += EventsFlowCoordinatorOnBackButtonPressed;
         }
+
+        private void EventsFlowCoordinatorOnBackButtonPressed() => DismissFlowCoordinator(_eventsFlowCoordinator);
+
+        private void OnEventsButtonClicked() => this.PresentFlowCoordinatorSynchronously(_eventsFlowCoordinator);
 
         private void OnInfoFlowCoordinatorBackButtonPressed() => DismissFlowCoordinator(_infoFlowCoordinator);
 
         private void OnAboutButtonClicked()
         {
             this.PresentFlowCoordinatorSynchronously(_infoFlowCoordinator);
-            _serverListener.Disconnect();
         }
 
         protected override void BackButtonWasPressed(ViewController _)

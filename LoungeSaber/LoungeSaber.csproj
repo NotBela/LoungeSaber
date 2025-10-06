@@ -206,5 +206,7 @@
       <EmbeddedResource Include="UI\BSML\Disconnect\DisconnectedView.bsml" />
       <None Remove="UI\BSML\Match\OpponentView.bsml" />
       <EmbeddedResource Include="UI\BSML\Match\OpponentView.bsml" />
+      <None Remove="UI\BSML\Events\EventsListView.bsml" />
+      <EmbeddedResource Include="UI\BSML\Events\EventsListView.bsml" />
     </ItemGroup>
 </Project>

@@ -12,9 +12,8 @@
         <button text="About" on-click="aboutButtonOnClick" id="aboutButton"/>
     </vertical>
     
-    <vertical pref-width="90" pref-height="12" anchor-pos-y="-20" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" background="panel-top" bg-color="#5865F2" anchor-pos-x="0" active="~showDiscordLinkModal">
-        <clickable-text text="It looks like you haven't linked your discord profile yet!" align="Midline" font-size="4"/>
-        <clickable-text text="other join text" align="Midline" font-size="4"/>
+    <vertical anchor-pos-y="-15" pref-width="5" pref-height="5">
+        <button text="Events" on-click="eventsButtonOnClick" id="eventsButton"/>
     </vertical>
     
     <modal move-to-center="true" click-off-closes="true" show-event="disconnectModalShowEvent" hide-event="disconnectModalHideEvent" size-delta-x="70" size-delta-y="40">

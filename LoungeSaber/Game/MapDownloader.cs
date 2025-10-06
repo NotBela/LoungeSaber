@@ -2,6 +2,7 @@
 using BeatSaverSharp;
 using IPA.Utilities;
 using SiraUtil.Logging;
+using SongCore;
 using Zenject;
 
 namespace LoungeSaber.Game;
@@ -20,6 +21,9 @@ public class MapDownloader
         
         foreach (var mapHash in mapHashes)
         {
+            if (Loader.GetLevelByHash(mapHash) != null)
+                continue;
+            
             var map = await _beatSaver.BeatmapByHash(mapHash);
             if (map == null)
             {

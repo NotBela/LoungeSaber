@@ -1,5 +1,6 @@
 ﻿using IPA.Utilities;
 using LoungeSaber.Interfaces;
+using LoungeSaber.Models.Events;
 using LoungeSaber.Models.Map;
 using LoungeSaber.Models.Server;
 using LoungeSaber.Models.UserInfo;
@@ -55,5 +56,11 @@ public class DebugApi : ILoungeSaberApi
     {
         await Task.Delay(1000);
         return Maps.Select(i => i.Hash).ToArray();
+    }
+
+    public async Task<EventData[]> GetEvents()
+    {
+        await Task.Delay(500);
+        return [new EventData("test", "test event", "test desc")];
     }
 }

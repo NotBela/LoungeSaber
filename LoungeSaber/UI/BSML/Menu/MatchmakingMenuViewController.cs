@@ -28,6 +28,8 @@ namespace LoungeSaber.UI.BSML.Menu
         [UIParams] private readonly BSMLParserParams _parserParams = null;
 
         public event Action AboutButtonClicked;
+
+        public event Action EventsButtonClicked;
         
         protected override void DidDeactivate(bool firstActivation, bool addedToHierarchy)
         {
@@ -41,7 +43,10 @@ namespace LoungeSaber.UI.BSML.Menu
 
         [UIComponent("aboutButton")] private readonly Button _aboutButton = null;
 
-        [UIValue("showDiscordLinkModal")] private bool ShowDiscordLinkModal => false;
+        [UIComponent("eventsButton")] private readonly Button _eventsButton = null;
+
+        [UIAction("eventsButtonOnClick")]
+        private void EventsButtonOnClick() => EventsButtonClicked?.Invoke();
 
         private void ChangeButtonState(bool inMatch)
         {
@@ -49,6 +54,7 @@ namespace LoungeSaber.UI.BSML.Menu
             _leaveMatchmakingPoolButton.gameObject.SetActive(inMatch);
             _joinMatchmakingPoolButton.interactable = !inMatch;
             _leaveMatchmakingPoolButton.gameObject.SetActive(inMatch);
+            _eventsButton.interactable = !inMatch;
         }
 
         #region Queue Control

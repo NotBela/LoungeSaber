@@ -1,0 +1,22 @@
+<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+    <vertical>
+        <custom-list visible-cells="3" clickable-cells="false" show-scrollbar="true" align-to-center="false" id="eventsList">
+            <vertical bg="panel-top">
+                <vertical pref-width="20" child-align="MiddleLeft">
+                    <text text="~displayName" align="MidlineLeft"/>
+                    <text text="~description" align="MidlineLeft"/>
+                </vertical>
+                
+                <horizontal>
+                    <button text="Join" on-click="joinButtonOnClick" id="joinButton"/>
+                </horizontal>
+            </vertical>
+        </custom-list>
+    </vertical>
+    
+    <modal click-off-closes="false" show-event="loadingModalShow" move-to-center="true" hide-event="loadingModalHide">
+        <vertical>
+            <loading preserve-aspect="true"/>
+        </vertical>
+    </modal>
+</bg>
