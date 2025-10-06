@@ -10,7 +10,7 @@ using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators.Events;
 
-public class EventsFlowCoordinator : FlowCoordinator
+public class EventsFlowCoordinator : FlowCoordinator, IInitializable, IDisposable
 {
     [Inject] private readonly EventsListViewController _eventsListViewController = null;
     [Inject] private readonly SiraLog _siraLog = null;
@@ -22,7 +22,7 @@ public class EventsFlowCoordinator : FlowCoordinator
     
     [Inject] private readonly WaitingForEventMatchFlowCoordinator _waitingForEventMatchFlowCoordinator = null;
     
-    public event Action OnBackButtonPressed; 
+    public event Action OnBackButtonPressed;
     
     protected override async void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
@@ -31,9 +31,6 @@ public class EventsFlowCoordinator : FlowCoordinator
             SetTitle("Events");
             showBackButton = true;
             ProvideInitialViewControllers(_eventsListViewController);
-            
-            _eventsListViewController.OnEventJoinRequested += OnEventJoinRequested;
-            _waitingForEventMatchFlowCoordinator.OnBackButtonPressed += WaitingForEventFlowCoordinatorOnBackButtonPressed;
 
             while (!_eventsListViewController.Parsed)
                 await Task.Delay(25);
@@ -48,24 +45,42 @@ public class EventsFlowCoordinator : FlowCoordinator
 
     private void WaitingForEventFlowCoordinatorOnBackButtonPressed() => DismissFlowCoordinator(_waitingForEventMatchFlowCoordinator);
 
-    private void OnEventJoinRequested(EventData data)
+    private async void OnEventJoinRequested(EventData data)
     {
-        _serverListener.Connect(data.Name, response =>
+        try
         {
-            if (response.Successful)
+            await _serverListener.Connect(data.Name, response =>
             {
-                this.PresentFlowCoordinatorSynchronously(_waitingForEventMatchFlowCoordinator);
-                return;
-            }
+                if (response.Successful)
+                {
+                    this.PresentFlowCoordinatorSynchronously(_waitingForEventMatchFlowCoordinator);
+                    return;
+                }
             
-            this.PresentFlowCoordinatorSynchronously(_disconnectFlowCoordinator);
+                this.PresentFlowCoordinatorSynchronously(_disconnectFlowCoordinator);
             
-            _disconnectedViewController.SetReason(response.Message, () =>
-            {
-                DismissFlowCoordinator(_disconnectFlowCoordinator);
+                _disconnectedViewController.SetReason(response.Message, () =>
+                {
+                    DismissFlowCoordinator(_disconnectFlowCoordinator);
+                });
             });
-        });
+        }
+        catch (Exception e)
+        {
+            _siraLog.Error(e);
+        }
     }
 
     protected override void BackButtonWasPressed(ViewController _) => OnBackButtonPressed?.Invoke();
+    public void Initialize()
+    {
+        _eventsListViewController.OnEventJoinRequested += OnEventJoinRequested;
+        _waitingForEventMatchFlowCoordinator.OnBackButtonPressed += WaitingForEventFlowCoordinatorOnBackButtonPressed;
+    }
+
+    public void Dispose()
+    {
+        _eventsListViewController.OnEventJoinRequested -= OnEventJoinRequested;
+        _waitingForEventMatchFlowCoordinator.OnBackButtonPressed -= WaitingForEventFlowCoordinatorOnBackButtonPressed;
+    }
 }

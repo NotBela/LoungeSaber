@@ -4,6 +4,7 @@ using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
+using HarmonyLib;
 using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Events;
 using LoungeSaber.UI.BSML.Components;
@@ -49,5 +50,12 @@ public class EventsListViewController : BSMLAutomaticViewController
         _parserParams.EmitEvent("loadingModalShow");
         
         OnEventJoinRequested?.Invoke(data);
+    }
+
+    protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
+    {
+        base.DidDeactivate(removedFromHierarchy, screenSystemDisabling);
+
+        _eventsList.Data.Cast<EventSlot>().Do(i => i.OnJoinButtonClicked -= OnSlotJoinButtonClicked);
     }
 }

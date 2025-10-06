@@ -8,7 +8,7 @@
                 </vertical>
                 
                 <horizontal>
-                    <button text="Join" on-click="joinButtonOnClick" id="joinButton" pref-height="10" pref-width="14"/>
+                    <button text="Join" on-click="joinButtonOnClick" pref-height="10" pref-width="14"/>
                 </horizontal>
             </horizontal>
         </custom-list>

@@ -6,8 +6,6 @@ namespace LoungeSaber.UI.BSML.Components;
 
 public class EventSlot(EventData eventData)
 {
-    [UIComponent("joinButton")] private readonly Button _joinButton = null;
-    
     [UIValue("displayName")] private string _displayName = eventData.DisplayName;
     [UIValue("description")] private string _description = eventData.Description;
     
