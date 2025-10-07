@@ -3,8 +3,8 @@
         <custom-list visible-cells="3" clickable-cells="false" show-scrollbar="true" align-to-center="false" id="eventsList" cell-size="17.5">
             <horizontal bg="panel-top" pref-width="65" pref-height="17.5">
                 <vertical pref-width="40">
-                    <text text="~displayName" align="MidlineLeft" font-size="5"/>
-                    <text text="~description" align="MidlineLeft" color="#CCC"/>
+                    <text text="~displayName" align="MidlineLeft" font-size="5" italics="true"/>
+                    <text text="~description" align="MidlineLeft" color="#CCC" italics="true"/>
                 </vertical>
                 
                 <horizontal>

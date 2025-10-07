@@ -1,5 +1,5 @@
 <bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
-    <vertical bg="panel-top">
-        <text text="~centerText" italics="true" font-size="5"/>
+    <vertical bg="panel-top" anchor-pos-y="0" vertical-fit="PreferredSize" pad="5">
+        <text text="~centerText" italics="true" font-size="5" align="Midline"/>
     </vertical>
 </bg>

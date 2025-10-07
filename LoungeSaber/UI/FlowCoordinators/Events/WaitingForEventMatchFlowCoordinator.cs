@@ -2,6 +2,7 @@
 using LoungeSaber.Game;
 using LoungeSaber.Interfaces;
 using LoungeSaber.UI.BSML.Events;
+using LoungeSaber.UI.ViewManagers;
 using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators.Events;
