@@ -32,8 +32,6 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly IServerListener _serverListener = null;
         [Inject] private readonly MatchmakingMenuViewController _matchmakingMenuViewController = null;
         
-        [Inject] private readonly MatchResultsViewController _matchResultsViewController = null;
-        
         [Inject] private readonly LoungeSaberLeaderboardViewController _leaderboardViewController = null;
 
         [Inject] private readonly SiraLog _siraLog = null;
@@ -50,7 +48,7 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) => showBackButton = true;
 
-        private void OnContinueButtonPressed() => DismissFlowCoordinator(_matchFlowCoordinator);
+        private void OnMatchEnded() => DismissFlowCoordinator(_matchFlowCoordinator);
 
         private void OnMatchCreated(MatchCreatedPacket packet)
         {
@@ -77,7 +75,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         public void Dispose()
         {
             _serverListener.OnMatchCreated -= OnMatchCreated;
-            _matchResultsViewController.ContinueButtonPressed -= OnContinueButtonPressed;
+            _matchFlowCoordinator.OnMatchFinished -= OnMatchEnded;
             _matchmakingMenuViewController.AboutButtonClicked -= OnAboutButtonClicked;
             _infoFlowCoordinator.OnBackButtonPressed -= OnInfoFlowCoordinatorBackButtonPressed;
             _matchmakingMenuViewController.EventsButtonClicked += OnEventsButtonClicked;
@@ -86,7 +84,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         public void Initialize()
         {
             _serverListener.OnMatchCreated += OnMatchCreated;
-            _matchResultsViewController.ContinueButtonPressed += OnContinueButtonPressed;
+            _matchFlowCoordinator.OnMatchFinished += OnMatchEnded;
             _matchmakingMenuViewController.AboutButtonClicked += OnAboutButtonClicked;
             _infoFlowCoordinator.OnBackButtonPressed += OnInfoFlowCoordinatorBackButtonPressed;
             _matchmakingMenuViewController.EventsButtonClicked += OnEventsButtonClicked;

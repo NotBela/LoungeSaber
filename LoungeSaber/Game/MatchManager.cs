@@ -17,14 +17,16 @@ namespace LoungeSaber.Game
 
         [CanBeNull] public Models.UserInfo.UserInfo Opponent { get; set; }
 
-        public event Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> OnLevelCompleted;
+        private Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> _onLevelCompletedCallback;
         
         private Action _menuSwitchCallback = null;
         
-        public void StartMatch(VotingMap level, DateTime unpauseTime, bool proMode)
+        public void StartMatch(VotingMap level, DateTime unpauseTime, bool proMode, Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> onLevelCompletedCallback)
         {
             if (InMatch) 
                 return;
+            
+            _onLevelCompletedCallback = onLevelCompletedCallback;
             
             InMatch = true;
             
@@ -68,7 +70,8 @@ namespace LoungeSaber.Game
 
             if (_menuSwitchCallback == null)
             {
-                OnLevelCompleted?.Invoke(levelCompletionResults, standardLevelScenesTransitionSetupDataSo);
+                _onLevelCompletedCallback?.Invoke(levelCompletionResults, standardLevelScenesTransitionSetupDataSo);
+                _onLevelCompletedCallback = null;
                 return;
             }
             

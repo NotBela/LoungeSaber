@@ -51,6 +51,7 @@ public class DebugServerListener : IServerListener
                 {
                     if (((JoinRequestPacket) packet).Queue == "test")
                         return;
+                    
                     Task.Delay(1000);
                     OnMatchCreated?.Invoke(new MatchCreatedPacket(DebugApi.Maps, DebugApi.DebugOpponent));
                     _siraLog.Info("join request");

@@ -48,7 +48,8 @@ namespace LoungeSaber.Models.Packets
             OpponentVoted,
             MatchStarted,
             MatchResults,
-            PrematureMatchEnd
+            PrematureMatchEnd,
+            EventStarted
         }
     }
 }

@@ -39,6 +39,8 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly DisconnectedViewController _disconnectedViewController = null;
 
         private NavigationController _votingScreenNavigationController;
+
+        public event Action OnMatchFinished;
          
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
@@ -52,7 +54,6 @@ namespace LoungeSaber.UI.FlowCoordinators
 
             _votingScreenViewController.MapSelected += OnVotingMapSelected;
             _serverListener.OnMatchStarting += OnMatchStarting;
-            _matchManager.OnLevelCompleted += OnLevelCompleted;
             _serverListener.OnMatchResults += OnMatchResultsReceived;
             _standardLevelDetailViewManager.OnMapVoteButtonPressed += OnMapVotedFor;
             _disconnectHandler.ShouldShowDisconnectScreen += OnShouldShowDisconnectScreen;
@@ -90,22 +91,10 @@ namespace LoungeSaber.UI.FlowCoordinators
         private void OnMatchResultsReceived(MatchResultsPacket results)
         {
             this.ReplaceViewControllerSynchronously(_matchResultsViewController);
-            _matchResultsViewController.PopulateData(results);
-        }
-
-        private void OnLevelCompleted(LevelCompletionResults levelCompletionResults, StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupData)
-        {
-            if (_disconnectHandler.WillShowDisconnectScreen) 
-                return;
-            
-            _siraLog.Info("got to here");
-            
-            Task.Run(async () =>
+            _matchResultsViewController.PopulateData(results, () =>
             {
-                await _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(standardLevelScenesTransitionSetupData.transformedBeatmapData),
-                    levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
+                OnMatchFinished?.Invoke();
             });
-            this.ReplaceViewControllerSynchronously(_awaitMatchEndViewController, immediately: true);
         }
 
         private async void OnMatchStarting(MatchStarted packet)
@@ -116,7 +105,17 @@ namespace LoungeSaber.UI.FlowCoordinators
                 await _waitingForMatchToStartViewController.PopulateData(packet.MapSelected, packet.TransitionToGameTime);
                 
                 await Task.Delay(packet.TransitionToGameTime - DateTime.UtcNow);
-                _matchManager.StartMatch(packet.MapSelected, packet.StartingTime, _gameplaySetupViewManager.ProMode);
+                _matchManager.StartMatch(packet.MapSelected, packet.StartingTime, _gameplaySetupViewManager.ProMode,
+                    (levelCompletionResults, standardLevelScenesTransitionSetupData) =>
+                    {
+                        if (_disconnectHandler.WillShowDisconnectScreen) 
+                            return;
+                        
+                        _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(standardLevelScenesTransitionSetupData.transformedBeatmapData),
+                            levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
+                        
+                        this.ReplaceViewControllerSynchronously(_awaitMatchEndViewController, immediately: true);
+                    });
             }
             catch (Exception e)
             {
@@ -145,7 +144,6 @@ namespace LoungeSaber.UI.FlowCoordinators
         {
             _votingScreenViewController.MapSelected -= OnVotingMapSelected;
             _serverListener.OnMatchStarting -= OnMatchStarting;
-            _matchManager.OnLevelCompleted -= OnLevelCompleted;
             _serverListener.OnMatchResults -= OnMatchResultsReceived;
             _standardLevelDetailViewManager.OnMapVoteButtonPressed -= OnMapVotedFor;
             _disconnectHandler.ShouldShowDisconnectScreen -= OnShouldShowDisconnectScreen;

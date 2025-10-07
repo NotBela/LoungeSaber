@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
+using JetBrains.Annotations;
 using LoungeSaber.Extensions;
 using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Packets.ServerPackets.Match;
@@ -14,7 +15,7 @@ namespace LoungeSaber.UI.BSML.Match
     {
         [Inject] private readonly IPlatformUserModel _platformUserModel = null;
         
-        public event Action ContinueButtonPressed;
+        [CanBeNull] private Action _onContinueButtonPressedCallback = null;
         
         [UIValue("titleBgColor")] private string TitleBgColor { get; set; } = "#0000FF";
         [UIValue("titleText")] private string TitleText { get; set; } = "You Win";
@@ -25,8 +26,10 @@ namespace LoungeSaber.UI.BSML.Match
         
         [UIValue("mmrChangeText")] private string MmrChangeText { get; set; }
         
-        public void PopulateData(MatchResultsPacket results)
+        public void PopulateData(MatchResultsPacket results, Action onContinueButtonPressedCallback)
         {
+            _onContinueButtonPressedCallback = onContinueButtonPressedCallback;
+            
             WinnerScoreText = FormatScore(results.WinnerScore, true);
             LoserScoreText = FormatScore(results.LoserScore, false);
 
@@ -47,8 +50,12 @@ namespace LoungeSaber.UI.BSML.Match
             $"{(score.Score.RelativeScore * 100):F}% " +
             $"{(score.Score.FullCombo ? "FC".FormatWithHtmlColor("#90EE90") : $"{score.Score.Misses}x".FormatWithHtmlColor("#FF7F7F"))}" +
             $"{(score.Score.ProMode ? " (PM)" : "")}";
-        
+
         [UIAction("continueButtonClicked")]
-        private void ContinueButtonClicked() => ContinueButtonPressed?.Invoke();
+        private void ContinueButtonClicked()
+        {
+            _onContinueButtonPressedCallback?.Invoke();
+            _onContinueButtonPressedCallback = null;
+        }
     }
 }
