@@ -54,6 +54,8 @@ namespace LoungeSaber.Installers
             
             Container.BindInterfacesAndSelfTo<EventsFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
             Container.BindInterfacesAndSelfTo<EventsListViewController>().FromNewComponentAsViewController().AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<EventMatchFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
 
             Container.BindInterfacesAndSelfTo<GameplaySetupViewManager>().FromNewComponentOnNewGameObject().AsSingle();
             Container.BindInterfacesAndSelfTo<StandardLevelDetailViewManager>().FromNewComponentOnNewGameObject().AsSingle();

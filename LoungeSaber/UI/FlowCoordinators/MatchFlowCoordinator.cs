@@ -40,8 +40,7 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private NavigationController _votingScreenNavigationController;
 
-        public event Action OnMatchFinished;
-         
+        private Action _onMatchFinishedCallback = null;
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             SetTitle("Match Room");
@@ -51,12 +50,22 @@ namespace LoungeSaber.UI.FlowCoordinators
             
             ProvideInitialViewControllers(_votingScreenNavigationController, _gameplaySetupViewManager.ManagedController, bottomScreenViewController: _opponentViewController);
             _votingScreenNavigationController.PushViewController(_votingScreenViewController, null);
-
+            
             _votingScreenViewController.MapSelected += OnVotingMapSelected;
             _serverListener.OnMatchStarting += OnMatchStarting;
             _serverListener.OnMatchResults += OnMatchResultsReceived;
             _standardLevelDetailViewManager.OnMapVoteButtonPressed += OnMapVotedFor;
             _disconnectHandler.ShouldShowDisconnectScreen += OnShouldShowDisconnectScreen;
+        }
+
+        public void StartMatch(MatchCreatedPacket packet, Action matchFinishedCallback)
+        {
+            _onMatchFinishedCallback = matchFinishedCallback;
+            
+            _votingScreenViewController.SetActivationCallback(() =>
+            {
+                _votingScreenViewController.PopulateData(packet);
+            });
         }
 
         private void OnShouldShowDisconnectScreen(string reason)
@@ -90,10 +99,12 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private void OnMatchResultsReceived(MatchResultsPacket results)
         {
+            _siraLog.Info("this method executed!");
             this.ReplaceViewControllerSynchronously(_matchResultsViewController);
             _matchResultsViewController.PopulateData(results, () =>
             {
-                OnMatchFinished?.Invoke();
+                _onMatchFinishedCallback?.Invoke();
+                _onMatchFinishedCallback = null;
             });
         }
 
@@ -114,7 +125,7 @@ namespace LoungeSaber.UI.FlowCoordinators
                         _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(standardLevelScenesTransitionSetupData.transformedBeatmapData),
                             levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
                         
-                        this.ReplaceViewControllerSynchronously(_awaitMatchEndViewController, immediately: true);
+                        this.ReplaceViewControllerSynchronously(_awaitMatchEndViewController, true);
                     });
             }
             catch (Exception e)

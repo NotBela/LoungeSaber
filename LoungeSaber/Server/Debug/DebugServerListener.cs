@@ -65,18 +65,17 @@ public class DebugServerListener : IServerListener
                     OnMatchStarting?.Invoke(new MatchStarted(DebugApi.Maps[0], DateTime.UtcNow.AddSeconds(15),
                         DateTime.UtcNow.AddSeconds(25), DebugApi.DebugOpponent));
                     _siraLog.Info("voted");
-                    
-                    await Task.Delay(30000);
-                    Disconnect();
-                    _siraLog.Info("disconnected");
                 });
                 break;
             case UserPacket.UserPacketTypes.ScoreSubmission:
                 Task.Run(() =>
                 {
+                    _siraLog.Info("score submitted");
                     Task.Delay(1000);
                     OnMatchResults?.Invoke(new MatchResultsPacket(new MatchScore(DebugApi.Self, Score.Empty),
                         new MatchScore(DebugApi.DebugOpponent, Score.Empty), 100));
+                    
+                    _siraLog.Info("match results invoked");
                 });
                 break;
             default:

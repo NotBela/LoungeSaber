@@ -1,6 +1,7 @@
 ﻿using BeatSaberMarkupLanguage;
 using HMUI;
 using LoungeSaber.UI.FlowCoordinators;
+using LoungeSaber.UI.FlowCoordinators.Events;
 using UnityEngine;
 using Zenject;
 
@@ -12,6 +13,7 @@ public abstract class ViewManager : MonoBehaviour, IInitializable, IDisposable
     
     [Inject] private readonly MatchFlowCoordinator _matchFlowCoordinator = null;
     [Inject] private readonly MatchmakingMenuFlowCoordinator _matchmakingMenuFlowCoordinator = null;
+    [Inject] private readonly EventMatchFlowCoordinator _eventMatchFlowCoordinator = null;
 
     public void Initialize()
     {
@@ -27,10 +29,10 @@ public abstract class ViewManager : MonoBehaviour, IInitializable, IDisposable
 
     private void OnManagedControllerActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
-        if (!_matchFlowCoordinator.isActivated && !_matchFlowCoordinator.isActivated)
+        if (!_matchFlowCoordinator.isActivated && !_eventMatchFlowCoordinator.isActivated)
             return;
         
-        FlowCoordinator activeFlowCoordinator = _matchFlowCoordinator.isActivated ? _matchFlowCoordinator : _matchmakingMenuFlowCoordinator;
+        FlowCoordinator activeFlowCoordinator = _matchFlowCoordinator.isActivated ? _matchFlowCoordinator : _eventMatchFlowCoordinator;
         
         SetupManagedController(activeFlowCoordinator);
     }

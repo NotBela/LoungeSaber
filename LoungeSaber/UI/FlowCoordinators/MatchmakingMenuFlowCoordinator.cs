@@ -26,15 +26,11 @@ namespace LoungeSaber.UI.FlowCoordinators
         [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null;
         [Inject] private readonly MatchFlowCoordinator _matchFlowCoordinator = null;
         [Inject] private readonly InfoFlowCoordinator _infoFlowCoordinator = null;
-        [Inject] private readonly VotingScreenViewController _votingScreenViewController = null;
-        [Inject] private readonly MatchManager _matchManager = null;
         
         [Inject] private readonly IServerListener _serverListener = null;
         [Inject] private readonly MatchmakingMenuViewController _matchmakingMenuViewController = null;
         
         [Inject] private readonly LoungeSaberLeaderboardViewController _leaderboardViewController = null;
-
-        [Inject] private readonly SiraLog _siraLog = null;
         
         
         [Inject] private readonly EventsFlowCoordinator _eventsFlowCoordinator = null;
@@ -46,36 +42,19 @@ namespace LoungeSaber.UI.FlowCoordinators
             ProvideInitialViewControllers(_matchmakingMenuViewController, rightScreenViewController: _leaderboardViewController);
         }
 
-        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling) => showBackButton = true;
-
-        private void OnMatchEnded() => DismissFlowCoordinator(_matchFlowCoordinator);
-
         private void OnMatchCreated(MatchCreatedPacket packet)
         {
-            try
-            {
-                _votingScreenViewController.didActivateEvent += OnActivated;
-                
-                this.PresentFlowCoordinatorSynchronously(_matchFlowCoordinator);
+            this.PresentFlowCoordinatorSynchronously(_matchFlowCoordinator);
 
-                void OnActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
-                {
-                    _votingScreenViewController.didActivateEvent -= OnActivated;
-                    _matchManager.Opponent = packet.Opponent;
-                    
-                    _votingScreenViewController.PopulateData(packet);
-                }
-            }
-            catch (Exception e)
+            _matchFlowCoordinator.StartMatch(packet, () =>
             {
-                _siraLog.Error(e);
-            }
+                DismissFlowCoordinator(_matchFlowCoordinator);
+            });
         }
 
         public void Dispose()
         {
             _serverListener.OnMatchCreated -= OnMatchCreated;
-            _matchFlowCoordinator.OnMatchFinished -= OnMatchEnded;
             _matchmakingMenuViewController.AboutButtonClicked -= OnAboutButtonClicked;
             _infoFlowCoordinator.OnBackButtonPressed -= OnInfoFlowCoordinatorBackButtonPressed;
             _matchmakingMenuViewController.EventsButtonClicked += OnEventsButtonClicked;
@@ -84,7 +63,6 @@ namespace LoungeSaber.UI.FlowCoordinators
         public void Initialize()
         {
             _serverListener.OnMatchCreated += OnMatchCreated;
-            _matchFlowCoordinator.OnMatchFinished += OnMatchEnded;
             _matchmakingMenuViewController.AboutButtonClicked += OnAboutButtonClicked;
             _infoFlowCoordinator.OnBackButtonPressed += OnInfoFlowCoordinatorBackButtonPressed;
             _matchmakingMenuViewController.EventsButtonClicked += OnEventsButtonClicked;

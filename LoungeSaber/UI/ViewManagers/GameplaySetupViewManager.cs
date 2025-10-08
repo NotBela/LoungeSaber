@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using HMUI;
 using LoungeSaber.UI.FlowCoordinators;
+using LoungeSaber.UI.FlowCoordinators.Events;
 using Zenject;
 
 namespace LoungeSaber.UI.ViewManagers;
@@ -15,9 +16,6 @@ public class GameplaySetupViewManager : ViewManager
 
     protected override void SetupManagedController(FlowCoordinator parentFlowCoordinator)
     {
-        if (parentFlowCoordinator is not MatchFlowCoordinator)
-            return;
-        
         _gameplaySetupViewController.Setup(true, true,true, false, PlayerSettingsPanelController.PlayerSettingsPanelLayout.Singleplayer);
         
         _gameplaySetupViewController._gameplayModifiersPanelController._gameplayModifierToggles

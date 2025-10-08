@@ -24,6 +24,21 @@ public class VotingScreenViewController : BSMLAutomaticViewController
         
     [UIComponent("mapList")] private readonly CustomListTableData _mapListTableData = null;
     private VotingListDataSource _votingListDataSource = null!;
+    
+    [CanBeNull] private Action _activationCallback = null;
+
+    protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+    {
+        base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
+        
+        _activationCallback?.Invoke();
+        _activationCallback = null;
+    }
+
+    public void SetActivationCallback(Action callback)
+    {
+        _activationCallback = callback;
+    }
 
     [UIAction("#post-parse")]
     void PostParse()
