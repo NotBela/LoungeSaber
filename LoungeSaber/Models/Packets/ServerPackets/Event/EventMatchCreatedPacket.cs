@@ -3,7 +3,7 @@
 namespace LoungeSaber.Models.Packets.ServerPackets.Event;
 
 [method: JsonConstructor]
-public class EventMatchStartedPacket(MatchStarted matchData, UserInfo.UserInfo opponent) : ServerPacket
+public class EventMatchCreatedPacket(MatchStarted matchData, UserInfo.UserInfo opponent) : ServerPacket
 {
     public override ServerPacketTypes PacketType => ServerPacketTypes.EventMatchCreated;
     

@@ -9,6 +9,7 @@ using LoungeSaber.Configuration;
 using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Packets;
 using LoungeSaber.Models.Packets.ServerPackets;
+using LoungeSaber.Models.Packets.ServerPackets.Event;
 using LoungeSaber.Models.Packets.ServerPackets.Match;
 using LoungeSaber.Models.Packets.UserPackets;
 using SiraUtil.Logging;
@@ -35,6 +36,9 @@ namespace LoungeSaber.Server
         public event Action OnConnected;
         public event Action<PrematureMatchEnd> OnPrematureMatchEnd;
         
+        public event Action<EventMatchCreatedPacket> OnEventMatchStarted;
+        public event Action<EventStartedPacket> OnEventStarted;
+
         [Inject] private readonly IPlatformUserModel _platformUserModel = null;
 
         private bool Connected
@@ -148,6 +152,12 @@ namespace LoungeSaber.Server
                             break;
                         case ServerPacket.ServerPacketTypes.PrematureMatchEnd:
                             OnPrematureMatchEnd?.Invoke(packet as PrematureMatchEnd);
+                            break;
+                        case ServerPacket.ServerPacketTypes.EventStarted:
+                            OnEventStarted?.Invoke(packet as EventStartedPacket);
+                            break;
+                        case ServerPacket.ServerPacketTypes.EventMatchCreated:
+                            OnEventMatchStarted?.Invoke(packet as EventMatchCreatedPacket);
                             break;
                         default:
                             throw new Exception("Could not get packet type!");

@@ -2,6 +2,7 @@
 using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Packets;
 using LoungeSaber.Models.Packets.ServerPackets;
+using LoungeSaber.Models.Packets.ServerPackets.Event;
 using LoungeSaber.Models.Packets.ServerPackets.Match;
 using LoungeSaber.Models.Packets.UserPackets;
 using SiraUtil.Logging;
@@ -20,6 +21,9 @@ public class DebugServerListener : IServerListener
     public event Action OnDisconnected;
     public event Action OnConnected;
     public event Action<PrematureMatchEnd> OnPrematureMatchEnd;
+    
+    public event Action<EventMatchCreatedPacket> OnEventMatchStarted;
+    public event Action<EventStartedPacket> OnEventStarted;
 
     private bool _isConnected;
     

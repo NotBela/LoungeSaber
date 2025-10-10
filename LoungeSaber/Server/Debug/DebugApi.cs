@@ -18,14 +18,14 @@ public class DebugApi : ILoungeSaberApi
     ];
 
     public static readonly Models.UserInfo.UserInfo DebugOpponent = new("debugOpponent", "1", 1000,
-        new DivisionInfo(DivisionInfo.DivisionName.Bronze, 4, "#111111"), new Badge("test", "#111111", false), 2, null,
+        new DivisionInfo("Iron", 4, "#111111"), new Badge("test", "#111111", false), 2, null,
         false);
 
     public static readonly Models.UserInfo.UserInfo Self = new(
         "self",
         "0",
         1000,
-        new DivisionInfo(DivisionInfo.DivisionName.Bronze, 1, "#000000"),
+        new DivisionInfo("Iron", 1, "#000000"),
         null,
         1,
         null,

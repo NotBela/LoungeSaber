@@ -13,8 +13,10 @@ namespace LoungeSaber.Models.Map
         [JsonProperty("difficulty")]
         public readonly DifficultyType Difficulty;
 
-        [JsonProperty("category")]
+        [JsonIgnore]
         public readonly CategoryType Category;
+        
+        [JsonProperty("category")] public string CategoryName => Category.ToString();
 
         [JsonConstructor]
         public VotingMap(string hash, DifficultyType difficulty, CategoryType category)
