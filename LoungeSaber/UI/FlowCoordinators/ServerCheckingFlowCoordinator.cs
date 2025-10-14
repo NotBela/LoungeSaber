@@ -52,32 +52,32 @@ public class ServerCheckingFlowCoordinator : FlowCoordinator
     {
         if (_config.DownloadMapsAutomatically)
         {
-            UserChoseToDownloadMaps(true);
+            UserChoseToDownloadMaps(true, missingMapHashes);
             return;
         }
         
         this.ReplaceViewControllerSynchronously(_missingMapsViewController);
-        _missingMapsViewController.SetMissingMapCount(missingMapHashes.Length);
-        
-        _missingMapsViewController.UserChoseToDownloadMaps += UserChoseToDownloadMaps;
-        return;
-
-        async void UserChoseToDownloadMaps(bool choice)
+        _missingMapsViewController.SetMissingMapCount(missingMapHashes.Length, (choice) =>
         {
-            try
+            UserChoseToDownloadMaps(choice, missingMapHashes);
+        });
+    }
+    
+    private async void UserChoseToDownloadMaps(bool choice, string[] hashes)
+    {
+        try
+        {
+            if (choice)
             {
-                if (choice)
-                {
-                    await DownloadMaps(missingMapHashes);
-                    return;
-                }
+                await DownloadMaps(hashes);
+                return;
+            }
                 
-                _mainFlowCoordinator.DismissFlowCoordinator(this);
-            }
-            catch(Exception e)
-            {
-                _siraLog.Error(e);
-            }
+            _mainFlowCoordinator.DismissFlowCoordinator(this);
+        }
+        catch(Exception e)
+        {
+            _siraLog.Error(e);
         }
     }
 
@@ -94,7 +94,6 @@ public class ServerCheckingFlowCoordinator : FlowCoordinator
     protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
     {
         _cantConnectToServerViewController.OnContinueButtonPressed -= OnContinueButtonPressed;
-        
         _serverChecker.ServerCheckFailed -= OnServerCheckFailed;
         _serverChecker.ServerCheckFinished -= ServerCheckFinished;
         _serverChecker.StartMapDownload -= OnStartMapDownload;

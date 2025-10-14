@@ -69,7 +69,7 @@ namespace LoungeSaber.UI.FlowCoordinators
             });
         }
 
-        private void OnShouldShowDisconnectScreen(string reason)
+        private void OnShouldShowDisconnectScreen(string reason, bool matchOnly)
         {
             while (!isActivated);
             

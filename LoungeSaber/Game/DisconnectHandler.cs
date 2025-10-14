@@ -15,9 +15,7 @@ public class DisconnectHandler : IInitializable, IDisposable
     [Inject] private readonly IServerListener _serverListener = null;
     [Inject] private readonly MatchManager _matchManager = null;
     
-    [Inject] private readonly SiraLog _siraLog = null;
-    
-    [CanBeNull] public event Action<string> ShouldShowDisconnectScreen;
+    [CanBeNull] public event Action<string, bool> ShouldShowDisconnectScreen;
 
     public bool WillShowDisconnectScreen { get; private set; } = false;
     
@@ -27,32 +25,32 @@ public class DisconnectHandler : IInitializable, IDisposable
         _serverListener.OnPrematureMatchEnd += OnPrematureMatchEnd;
     }
 
-    private void EndLevelAndShowDisconnectScreen(string reason)
+    private void EndLevelAndShowDisconnectScreen(string reason, bool matchOnly)
     {
         WillShowDisconnectScreen = true;
 
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            ShouldShowDisconnectScreen?.Invoke(reason);
+            ShouldShowDisconnectScreen?.Invoke(reason, matchOnly);
             WillShowDisconnectScreen = false;
             return;
         }
         
         _matchManager.StopMatch(() =>
         {
-            ShouldShowDisconnectScreen?.Invoke(reason);
+            ShouldShowDisconnectScreen?.Invoke(reason, matchOnly);
             WillShowDisconnectScreen = false;
         });
     }
 
     private void OnPrematureMatchEnd(PrematureMatchEnd packet)
     {
-        EndLevelAndShowDisconnectScreen(packet.Reason);
+        EndLevelAndShowDisconnectScreen(packet.Reason, true);
     }
 
     private void OnDisconnect()
     {
-        EndLevelAndShowDisconnectScreen("Disconnected");
+        EndLevelAndShowDisconnectScreen("Disconnected", false);
     }
 
     public void Dispose()

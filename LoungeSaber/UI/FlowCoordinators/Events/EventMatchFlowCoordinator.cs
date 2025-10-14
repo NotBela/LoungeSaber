@@ -1,9 +1,19 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections;
+using System.Text.RegularExpressions;
 using HMUI;
 using JetBrains.Annotations;
+using LoungeSaber_Server.Models.Packets.ServerPackets;
+using LoungeSaber.Extensions;
+using LoungeSaber.Game;
+using LoungeSaber.Interfaces;
+using LoungeSaber.Models.Packets.ServerPackets;
 using LoungeSaber.Models.Packets.ServerPackets.Event;
+using LoungeSaber.Models.Packets.ServerPackets.Match;
+using LoungeSaber.Models.Packets.UserPackets;
 using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.ViewManagers;
+using SiraUtil.Logging;
+using UnityEngine;
 using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators.Events;
@@ -13,26 +23,104 @@ public class EventMatchFlowCoordinator : FlowCoordinator
     [Inject] private readonly WaitingForMatchToStartViewController _waitingForMatchToStartViewController = null;
     [Inject] private readonly GameplaySetupViewManager _gameplaySetupViewManager = null;
     [Inject] private readonly OpponentViewController _opponentViewController = null;
+    [Inject] private readonly MatchResultsViewController _resultsViewController = null;
+    
+    [Inject] private readonly AwaitMatchEndViewController _awaitMatchEndViewController = null;
+    
+    [Inject] private readonly IServerListener _serverListener = null;
+    
+    [Inject] private readonly DisconnectHandler _disconnectHandler = null;
+    
+    [Inject] private readonly DisconnectFlowCoordinator _disconnectFlowCoordinator = null;
+    [Inject] private  readonly MatchmakingMenuFlowCoordinator _matchmakingMenuFlowCoordinator = null;
+    
+    [Inject] private readonly MatchManager _matchManager = null;
     
     [CanBeNull] private Action _matchEndedCallback;
+    
+    [Inject] private readonly SiraLog _siraLog = null;
      
     protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
-        SetTitle("Match Room");
+        SetTitle("Event Room");
         showBackButton = false;
         
         ProvideInitialViewControllers(_waitingForMatchToStartViewController, _gameplaySetupViewManager.ManagedController, bottomScreenViewController: _opponentViewController);
+        
+        _disconnectHandler.ShouldShowDisconnectScreen += ShouldShowDisconnectScreen;
+        _serverListener.OnMatchResults += OnMatchResults;
     }
 
-    public void Setup(EventMatchCreatedPacket eventMatchCreatedPacket, Action matchEndedCallback)
+    private void OnMatchResults(MatchResultsPacket results)
     {
-        _matchEndedCallback = matchEndedCallback;
-        
-        _opponentViewController.PopulateData(eventMatchCreatedPacket.Opponent);
-        
-        Task.Run(async () =>
+        this.ReplaceViewControllerSynchronously(_resultsViewController);
+        _resultsViewController.PopulateData(results, _matchEndedCallback);
+
+        _matchEndedCallback = null;
+    }
+
+    protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
+    {
+        _disconnectHandler.ShouldShowDisconnectScreen -= ShouldShowDisconnectScreen;
+        _serverListener.OnMatchResults -= OnMatchResults;
+    }
+
+    private void ShouldShowDisconnectScreen(string reason, bool matchOnly)
+    {
+        var callback = () =>
         {
-            await _waitingForMatchToStartViewController.PopulateData(eventMatchCreatedPacket.MatchData.MapSelected, eventMatchCreatedPacket.MatchData.StartingTime);
-        });
+            _matchmakingMenuFlowCoordinator.DismissAllChildFlowCoordinators();
+        };
+
+        if (matchOnly)
+            callback = () =>
+            {
+                _matchEndedCallback?.Invoke();
+                _matchEndedCallback = null;
+            };
+        
+        this.PresentFlowCoordinatorSynchronously(_disconnectFlowCoordinator);
+        _disconnectFlowCoordinator.Setup(reason, callback);
+    }
+
+    public async void Setup(MatchStarted eventMatchCreatedPacket, Action matchEndedCallback)
+    {
+        try
+        {
+            _matchEndedCallback = matchEndedCallback;
+        
+            _opponentViewController.PopulateData(eventMatchCreatedPacket.Opponent);
+
+            StartCoroutine(PopulateWaitingScreen());
+
+            while (eventMatchCreatedPacket.TransitionToGameTime > DateTime.UtcNow)
+                await Task.Delay(25);
+            
+            _matchManager.StartMatch(eventMatchCreatedPacket.MapSelected, eventMatchCreatedPacket.StartingTime, _gameplaySetupViewManager.ProMode,
+                OnLevelCompletedCallback);
+
+            return;
+            
+            IEnumerator PopulateWaitingScreen()
+            {
+                yield return new WaitForEndOfFrame();
+            
+                _ = _waitingForMatchToStartViewController.PopulateData(eventMatchCreatedPacket.MapSelected, eventMatchCreatedPacket.TransitionToGameTime);
+            }
+        }
+        catch (Exception e)
+        {
+            _siraLog.Error(e);
+        }
+    }
+    
+    private void OnLevelCompletedCallback(LevelCompletionResults levelCompletionResults, StandardLevelScenesTransitionSetupDataSO sceneTransitionSetupDataSo)
+    {
+        if (_disconnectHandler.WillShowDisconnectScreen) 
+            return;
+
+        _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(sceneTransitionSetupDataSo.transformedBeatmapData), levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
+
+        this.ReplaceViewControllerSynchronously(_awaitMatchEndViewController, true);
     }
 }

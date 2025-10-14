@@ -16,8 +16,6 @@ public interface IServerListener
     public event Action OnDisconnected;
     public event Action OnConnected;
     public event Action<PrematureMatchEnd> OnPrematureMatchEnd;
-
-    public event Action<EventMatchCreatedPacket> OnEventMatchStarted;
     
     public event Action<EventStartedPacket> OnEventStarted;
 

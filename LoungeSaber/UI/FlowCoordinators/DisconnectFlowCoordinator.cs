@@ -16,8 +16,8 @@ public class DisconnectFlowCoordinator : FlowCoordinator
         ProvideInitialViewControllers(_disconnectedViewController);
     }
 
-    protected override void BackButtonWasPressed(ViewController _)
+    public void Setup(string reason, Action callback)
     {
-        
+        _disconnectedViewController.SetReason(reason, callback);
     }
 }

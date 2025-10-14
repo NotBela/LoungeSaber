@@ -36,7 +36,6 @@ namespace LoungeSaber.Server
         public event Action OnConnected;
         public event Action<PrematureMatchEnd> OnPrematureMatchEnd;
         
-        public event Action<EventMatchCreatedPacket> OnEventMatchStarted;
         public event Action<EventStartedPacket> OnEventStarted;
 
         [Inject] private readonly IPlatformUserModel _platformUserModel = null;
@@ -155,9 +154,6 @@ namespace LoungeSaber.Server
                             break;
                         case ServerPacket.ServerPacketTypes.EventStarted:
                             OnEventStarted?.Invoke(packet as EventStartedPacket);
-                            break;
-                        case ServerPacket.ServerPacketTypes.EventMatchCreated:
-                            OnEventMatchStarted?.Invoke(packet as EventMatchCreatedPacket);
                             break;
                         default:
                             throw new Exception("Could not get packet type!");
