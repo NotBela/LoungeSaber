@@ -34,7 +34,7 @@ public class WaitingForEventMatchFlowCoordinator : FlowCoordinator
     {
         _waitingOnNextMatchViewController.SetText("Waiting for match to start...");
         
-        
+        this.SetBackButtonInteractivity(false);
     }
 
     private void OnEventMatchStarted(MatchStarted packet)

@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Reflection;
 using HMUI;
+using IPA.Utilities;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LoungeSaber.Extensions;
 
@@ -27,6 +29,12 @@ public static class FlowCoordinatorExtensions
         flowCoordinator.GetType().GetMethod("ReplaceTopViewController", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(flowCoordinator,
             [viewController, null, immediately ? ViewController.AnimationType.None : ViewController.AnimationType.In, ViewController.AnimationDirection.Horizontal]);
         // flowCoordinator.ReplaceTopViewController(viewController, animationType: immediately ? ViewController.AnimationType.None : ViewController.AnimationType.In);
+    }
+
+    public static void SetBackButtonInteractivity(this FlowCoordinator flowCoordinator, bool interactable)
+    {
+        var screenSystem = flowCoordinator.GetField<ScreenSystem, FlowCoordinator>("_screenSystem");
+        screenSystem.GetField<Button, ScreenSystem>("_backButton").interactable = interactable;
     }
 
     public static void PresentFlowCoordinatorSynchronously(this FlowCoordinator parent, FlowCoordinator flowCoordinator, bool immediately = false)
