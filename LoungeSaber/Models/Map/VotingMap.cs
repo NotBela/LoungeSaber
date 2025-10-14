@@ -12,14 +12,12 @@ namespace LoungeSaber.Models.Map
 
         [JsonProperty("difficulty")]
         public readonly DifficultyType Difficulty;
-
-        [JsonIgnore]
-        public readonly CategoryType Category;
         
-        [JsonProperty("category")] public string CategoryName => Category.ToString();
+        
+        [JsonProperty("category")] public readonly string Category;
 
         [JsonConstructor]
-        public VotingMap(string hash, DifficultyType difficulty, CategoryType category)
+        public VotingMap(string hash, DifficultyType difficulty, string category)
         {
             Hash = hash;
             Difficulty = difficulty;
@@ -50,16 +48,6 @@ namespace LoungeSaber.Models.Map
 
         public BeatmapKey GetBeatmapKey() => GetBeatmapLevel()?.GetBeatmapKeys().First(i =>
             i.beatmapCharacteristic.serializedName == "Standard" && i.difficulty == GetBaseGameDifficultyType()) ?? throw new Exception("Could not find beatmap key!");
-
-        public enum CategoryType
-        {
-            Acc,
-            MidSpeed,
-            Tech,
-            Balanced,
-            Speed,
-            Extreme
-        }
     
         public enum DifficultyType
         {

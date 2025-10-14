@@ -12,9 +12,9 @@ public class DebugApi : ILoungeSaberApi
 {
     public static readonly VotingMap[] Maps =
     [
-        new("44d8d1c7c5821a7f1929542cab49c906c9e585e4", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Tech), 
-        new("44d8d1c7c5821a7f1929542cab49c906c9e585e4", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Balanced),
-        new("44d8d1c7c5821a7f1929542cab49c906c9e585e4", VotingMap.DifficultyType.ExpertPlus, VotingMap.CategoryType.Extreme)
+        new("44d8d1c7c5821a7f1929542cab49c906c9e585e4", VotingMap.DifficultyType.ExpertPlus, "Tech"), 
+        new("44d8d1c7c5821a7f1929542cab49c906c9e585e4", VotingMap.DifficultyType.ExpertPlus, "Balanced"),
+        new("44d8d1c7c5821a7f1929542cab49c906c9e585e4", VotingMap.DifficultyType.ExpertPlus, "Extreme")
     ];
 
     public static readonly Models.UserInfo.UserInfo DebugOpponent = new("debugOpponent", "1", 1000,
