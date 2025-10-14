@@ -122,5 +122,7 @@ public class EventMatchFlowCoordinator : FlowCoordinator
         _serverListener.SendPacket(new ScoreSubmissionPacket(levelCompletionResults.multipliedScore, ScoreModel.ComputeMaxMultipliedScoreForBeatmap(sceneTransitionSetupDataSo.transformedBeatmapData), levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
 
         this.ReplaceViewControllerSynchronously(_awaitMatchEndViewController, true);
+        SetLeftScreenViewController(null, ViewController.AnimationType.None);
+        SetBottomScreenViewController(null, ViewController.AnimationType.None);
     }
 }

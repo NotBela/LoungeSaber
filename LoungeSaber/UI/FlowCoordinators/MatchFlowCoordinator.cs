@@ -126,6 +126,8 @@ namespace LoungeSaber.UI.FlowCoordinators
                             levelCompletionResults.gameplayModifiers.proMode, levelCompletionResults.notGoodCount, levelCompletionResults.fullCombo));
                         
                         this.ReplaceViewControllerSynchronously(_awaitMatchEndViewController, true);
+                        SetLeftScreenViewController(null, ViewController.AnimationType.None);
+                        SetBottomScreenViewController(null, ViewController.AnimationType.None);
                     });
             }
             catch (Exception e)
