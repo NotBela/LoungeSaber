@@ -12,7 +12,6 @@ namespace LoungeSaber.UI.BSML.PauseMenu;
 public class PauseMenuViewController : BSMLAutomaticViewController, IInitializable, IDisposable, ITickable
 {
     [Inject] private readonly PauseController _pauseController = null;
-    [Inject] private readonly MatchManager _matchManager = null;
     
     private readonly FloatingScreen _floatingScreen = FloatingScreen.CreateFloatingScreen(new Vector2(50f, 50f), false, Vector3.zero, Quaternion.identity);
     
@@ -37,14 +36,17 @@ public class PauseMenuViewController : BSMLAutomaticViewController, IInitializab
         _floatingScreen.transform.localPosition = new Vector3(0f, -20f, 0f);
         
         _floatingScreen.gameObject.SetActive(true);
-
-        OpponentText = $"{_matchManager.Opponent?.GetFormattedUserName()} - {_matchManager.Opponent?.Mmr.ToString().FormatWithHtmlColor(_matchManager.Opponent.Division.Color)} MMR";
-        NotifyPropertyChanged(nameof(OpponentText));
     }
 
     private void Resumed() => _floatingScreen.gameObject.SetActive(false);
 
-    public void SetMatchStartingTime(DateTime time) => _matchStartingTime = time;
+    public void PopulateData(DateTime time, Models.UserInfo.UserInfo opponent)
+    {
+        _matchStartingTime = time;
+        
+        OpponentText = $"{opponent.GetFormattedUserName()} - {opponent.Mmr.ToString().FormatWithHtmlColor(opponent.Division.Color)} MMR";
+        NotifyPropertyChanged(nameof(OpponentText));
+    }
 
     public void Dispose()
     {

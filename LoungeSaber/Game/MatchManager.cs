@@ -15,13 +15,11 @@ namespace LoungeSaber.Game
         
         public bool InMatch { get; private set; } = false;
 
-        [CanBeNull] public Models.UserInfo.UserInfo Opponent { get; set; }
-
         private Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> _onLevelCompletedCallback;
         
         private Action _menuSwitchCallback = null;
         
-        public void StartMatch(VotingMap level, DateTime unpauseTime, bool proMode, Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> onLevelCompletedCallback)
+        public void StartMatch(VotingMap level, DateTime unpauseTime, bool proMode, Models.UserInfo.UserInfo opponent, Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> onLevelCompletedCallback)
         {
             if (InMatch) 
                 return;
@@ -48,7 +46,7 @@ namespace LoungeSaber.Game
                 false,
                 true,
                 null,
-                diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime),
+                diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime, opponent),
                 AfterSceneSwitchToMenuCallback,
                 null
                 );
@@ -78,14 +76,14 @@ namespace LoungeSaber.Game
             _menuSwitchCallback = null;
         }
 
-        private async void AfterSceneSwitchToGameplayCallback(DiContainer diContainer, DateTime unpauseTime)
+        private async void AfterSceneSwitchToGameplayCallback(DiContainer diContainer, DateTime unpauseTime, Models.UserInfo.UserInfo opponent)
         {
             try
             {
-                diContainer.Resolve<PauseMenuViewController>().SetMatchStartingTime(unpauseTime);
+                diContainer.Resolve<PauseMenuViewController>().PopulateData(unpauseTime, opponent);
                 
                 var startingMenuController = diContainer.TryResolve<MatchStartUnpauseController>() ?? throw new Exception("Could not resolve StartingPauseMenuController");
-
+                
                 await startingMenuController.UnpauseLevelAtTime(unpauseTime);
             }
             catch (Exception e)

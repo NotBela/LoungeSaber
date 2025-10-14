@@ -96,7 +96,7 @@ public class EventMatchFlowCoordinator : FlowCoordinator
             while (eventMatchCreatedPacket.TransitionToGameTime > DateTime.UtcNow)
                 await Task.Delay(25);
             
-            _matchManager.StartMatch(eventMatchCreatedPacket.MapSelected, eventMatchCreatedPacket.StartingTime, _gameplaySetupViewManager.ProMode,
+            _matchManager.StartMatch(eventMatchCreatedPacket.MapSelected, eventMatchCreatedPacket.StartingTime, _gameplaySetupViewManager.ProMode, eventMatchCreatedPacket.Opponent, 
                 OnLevelCompletedCallback);
 
             return;

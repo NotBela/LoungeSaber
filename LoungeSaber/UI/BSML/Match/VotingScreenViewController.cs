@@ -58,6 +58,7 @@ public class VotingScreenViewController : BSMLAutomaticViewController
     public void PopulateData(MatchCreatedPacket packet)
     {
         _votingListDataSource.SetData(packet.Maps.ToList());
+        _votingListDataSource.TableView.ClearSelection();
         
         NotifyPropertyChanged(null);
     }

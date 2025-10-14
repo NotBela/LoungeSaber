@@ -116,7 +116,7 @@ namespace LoungeSaber.UI.FlowCoordinators
                 await _waitingForMatchToStartViewController.PopulateData(packet.MapSelected, packet.TransitionToGameTime);
                 
                 await Task.Delay(packet.TransitionToGameTime - DateTime.UtcNow);
-                _matchManager.StartMatch(packet.MapSelected, packet.StartingTime, _gameplaySetupViewManager.ProMode,
+                _matchManager.StartMatch(packet.MapSelected, packet.StartingTime, _gameplaySetupViewManager.ProMode, packet.Opponent,  
                     (levelCompletionResults, standardLevelScenesTransitionSetupData) =>
                     {
                         if (_disconnectHandler.WillShowDisconnectScreen) 
