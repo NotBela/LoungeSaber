@@ -61,6 +61,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         public void StartMatch(MatchCreatedPacket packet, Action matchFinishedCallback)
         {
             _onMatchFinishedCallback = matchFinishedCallback;
+            _opponentViewController.PopulateData(packet.Opponent);
             
             _votingScreenViewController.SetActivationCallback(() =>
             {
@@ -99,7 +100,6 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private void OnMatchResultsReceived(MatchResultsPacket results)
         {
-            _siraLog.Info("this method executed!");
             this.ReplaceViewControllerSynchronously(_matchResultsViewController);
             _matchResultsViewController.PopulateData(results, () =>
             {

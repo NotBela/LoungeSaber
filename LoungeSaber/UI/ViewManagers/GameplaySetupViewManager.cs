@@ -14,7 +14,7 @@ public class GameplaySetupViewManager : ViewManager
 
     public bool ProMode => _gameplaySetupViewController.gameplayModifiers.proMode;
 
-    protected override void SetupManagedController(FlowCoordinator parentFlowCoordinator)
+    protected override void SetupManagedController()
     {
         _gameplaySetupViewController.Setup(true, true,true, false, PlayerSettingsPanelController.PlayerSettingsPanelLayout.Singleplayer);
         

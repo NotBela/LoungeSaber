@@ -34,7 +34,7 @@ public class StandardLevelDetailViewManager : ViewManager
             );
     }
 
-    protected override void SetupManagedController(FlowCoordinator parentFlowCoordinator)
+    protected override void SetupManagedController()
     {
         _standardLevelDetailViewController._standardLevelDetailView.actionButton.onClick.AddListener(OnActionButtonPressed);
     }

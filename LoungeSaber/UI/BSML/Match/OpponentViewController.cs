@@ -8,25 +8,13 @@ using Zenject;
 namespace LoungeSaber.UI.BSML.Match;
 
 [ViewDefinition("LoungeSaber.UI.BSML.Match.OpponentView.bsml")]
-public class OpponentViewController : BSMLAutomaticViewController, IInitializable, IDisposable
+public class OpponentViewController : BSMLAutomaticViewController
 {
-    [Inject] private readonly IServerListener _serverListener = null;
-    
     [UIValue("opponentText")] private string OpponentText { get; set; }
     
-    public void PopulateData(MatchCreatedPacket packet)
+    public void PopulateData(Models.UserInfo.UserInfo opponent)
     {
-        OpponentText = $"{packet.Opponent.GetFormattedUserName()} - {packet.Opponent.Mmr} MMR";
+        OpponentText = $"{opponent.GetFormattedUserName()} - {opponent.Mmr} MMR";
         NotifyPropertyChanged(nameof(OpponentText));
-    }
-
-    public void Initialize()
-    {
-        _serverListener.OnMatchCreated += PopulateData;
-    }
-
-    public void Dispose()
-    {
-        _serverListener.OnMatchCreated -= PopulateData;
     }
 }

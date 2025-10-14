@@ -10,6 +10,7 @@ namespace LoungeSaber.UI.FlowCoordinators.Events;
 public class WaitingForEventMatchFlowCoordinator : FlowCoordinator
 {
     [Inject] private readonly EventWaitingOnNextMatchViewController _waitingOnNextMatchViewController = null;
+    [Inject] private readonly GameplaySetupViewManager _gameplaySetupViewManager = null;
     
     [Inject] private readonly IServerListener _serverListener = null;
     
@@ -19,7 +20,7 @@ public class WaitingForEventMatchFlowCoordinator : FlowCoordinator
     {
         SetTitle("Event room");
         showBackButton = true;
-        ProvideInitialViewControllers(_waitingOnNextMatchViewController);
+        ProvideInitialViewControllers(_waitingOnNextMatchViewController, _gameplaySetupViewManager.ManagedController);
     }
 
     protected override void BackButtonWasPressed(ViewController _)

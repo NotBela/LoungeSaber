@@ -11,9 +11,8 @@ public abstract class ViewManager : MonoBehaviour, IInitializable, IDisposable
 {
     public abstract ViewController ManagedController { get; }
     
-    [Inject] private readonly MatchFlowCoordinator _matchFlowCoordinator = null;
     [Inject] private readonly MatchmakingMenuFlowCoordinator _matchmakingMenuFlowCoordinator = null;
-    [Inject] private readonly EventMatchFlowCoordinator _eventMatchFlowCoordinator = null;
+    [Inject] private readonly MainFlowCoordinator _mainFlowCoordinator = null;
 
     public void Initialize()
     {
@@ -29,16 +28,14 @@ public abstract class ViewManager : MonoBehaviour, IInitializable, IDisposable
 
     private void OnManagedControllerActivated(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
-        if (!_matchFlowCoordinator.isActivated && !_eventMatchFlowCoordinator.isActivated)
+        if (!_mainFlowCoordinator.IsFlowCoordinatorInHierarchy(_matchmakingMenuFlowCoordinator))
             return;
         
-        FlowCoordinator activeFlowCoordinator = _matchFlowCoordinator.isActivated ? _matchFlowCoordinator : _eventMatchFlowCoordinator;
-        
-        SetupManagedController(activeFlowCoordinator);
+        SetupManagedController();
     }
 
     private void OnManagedControllerDeactivated(bool removedFromHierarchy, bool screenSystemDisabling) => ResetManagedController();
     
-    protected virtual void SetupManagedController(FlowCoordinator parentFlowCoordinator){}
+    protected virtual void SetupManagedController(){}
     protected virtual void ResetManagedController(){}
 }

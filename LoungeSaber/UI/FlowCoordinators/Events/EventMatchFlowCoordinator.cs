@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using HMUI;
 using JetBrains.Annotations;
+using LoungeSaber.Models.Packets.ServerPackets.Event;
 using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.ViewManagers;
 using Zenject;
@@ -13,7 +14,7 @@ public class EventMatchFlowCoordinator : FlowCoordinator
     [Inject] private readonly GameplaySetupViewManager _gameplaySetupViewManager = null;
     [Inject] private readonly OpponentViewController _opponentViewController = null;
     
-    [CanBeNull] public event Action OnMatchEnded;
+    [CanBeNull] private Action _matchEndedCallback;
      
     protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
@@ -23,8 +24,15 @@ public class EventMatchFlowCoordinator : FlowCoordinator
         ProvideInitialViewControllers(_waitingForMatchToStartViewController, _gameplaySetupViewManager.ManagedController, bottomScreenViewController: _opponentViewController);
     }
 
-    public void Setup()
+    public void Setup(EventMatchCreatedPacket eventMatchCreatedPacket, Action matchEndedCallback)
     {
+        _matchEndedCallback = matchEndedCallback;
         
+        _opponentViewController.PopulateData(eventMatchCreatedPacket.Opponent);
+        
+        Task.Run(async () =>
+        {
+            await _waitingForMatchToStartViewController.PopulateData(eventMatchCreatedPacket.MatchData.MapSelected, eventMatchCreatedPacket.MatchData.StartingTime);
+        });
     }
 }
