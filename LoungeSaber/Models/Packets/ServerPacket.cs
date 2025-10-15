@@ -50,7 +50,7 @@ namespace LoungeSaber.Models.Packets
             MatchResults,
             PrematureMatchEnd,
             EventStarted,
-            EventMatchCreated
+            EventEnded
         }
     }
 }
