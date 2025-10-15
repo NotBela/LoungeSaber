@@ -4,7 +4,7 @@ using LoungeSaber.Models.Server;
 
 namespace LoungeSaber.Interfaces;
 
-public interface ILoungeSaberApi
+public interface IApi
 {
     [ItemCanBeNull] 
     public Task<Models.UserInfo.UserInfo> GetUserInfo(string id);

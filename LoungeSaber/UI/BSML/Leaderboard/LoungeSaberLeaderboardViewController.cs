@@ -19,7 +19,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
     public class LoungeSaberLeaderboardViewController : BSMLAutomaticViewController
     {
         [Inject] private readonly PlatformLeaderboardViewController _platformLeaderboardViewController = null;
-        [Inject] private readonly ILoungeSaberApi _loungeSaberApi = null;
+        [Inject] private readonly IApi _api = null;
         [Inject] private readonly SiraLog _siraLog = null;
 
         [Inject] private readonly IPlatformUserModel _platformUserModel = null;
@@ -88,7 +88,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
                 if (!firstActivation) 
                     return;
 
-                var topOfLeaderboard = await _loungeSaberApi.GetLeaderboardRange(0, 10);
+                var topOfLeaderboard = await _api.GetLeaderboardRange(0, 10);
                 SetLeaderboardData(topOfLeaderboard);
             }
             catch (Exception e)
@@ -178,13 +178,13 @@ namespace LoungeSaber.UI.BSML.Leaderboard
                     case LeaderboardStates.Global:
                         UpEnabled = false;
                         DownEnabled = true;
-                        var topOfLeaderboard = await _loungeSaberApi.GetLeaderboardRange(1, 10);
+                        var topOfLeaderboard = await _api.GetLeaderboardRange(1, 10);
                         SetLeaderboardData(topOfLeaderboard);
                         break;
                     case LeaderboardStates.Self:
                         UpEnabled = false;
                         DownEnabled = false;
-                        var aroundUser = await _loungeSaberApi.GetAroundUser(_platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId);
+                        var aroundUser = await _api.GetAroundUser(_platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId);
                         SetLeaderboardData(aroundUser);
                         break;
                 }
@@ -203,7 +203,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
                 IsLoaded = false;
                 _pageNumber--;
             
-                var leaderboardData = await _loungeSaberApi.GetLeaderboardRange(_pageNumber * 10, 10);
+                var leaderboardData = await _api.GetLeaderboardRange(_pageNumber * 10, 10);
                 SetLeaderboardData(leaderboardData);
                 if (_pageNumber == 0) 
                     UpEnabled = false;
@@ -222,7 +222,7 @@ namespace LoungeSaber.UI.BSML.Leaderboard
                 IsLoaded = false;
                 _pageNumber++;
             
-                var leaderboardData = await _loungeSaberApi.GetLeaderboardRange(_pageNumber * 10, 10);
+                var leaderboardData = await _api.GetLeaderboardRange(_pageNumber * 10, 10);
                 SetLeaderboardData(leaderboardData);
                 if (leaderboardData.Length < 10)
                     DownEnabled = false;

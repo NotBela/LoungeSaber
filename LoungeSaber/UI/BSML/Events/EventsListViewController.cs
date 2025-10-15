@@ -15,7 +15,7 @@ namespace LoungeSaber.UI.BSML.Events;
 [ViewDefinition("LoungeSaber.UI.BSML.Events.EventsListView.bsml")]
 public class EventsListViewController : BSMLAutomaticViewController
 {
-    [Inject] private readonly ILoungeSaberApi _loungeSaberApi = null;
+    [Inject] private readonly IApi _api = null;
     
     [UIParams] private readonly BSMLParserParams _parserParams = null;
     
@@ -32,7 +32,7 @@ public class EventsListViewController : BSMLAutomaticViewController
     {
         _parserParams.EmitEvent("loadingModalShow");
         
-        var events = await _loungeSaberApi.GetEvents();
+        var events = await _api.GetEvents();
 
         _eventsList.Data = events.Select(i =>
         {

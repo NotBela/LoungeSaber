@@ -10,7 +10,7 @@ using Zenject;
 
 namespace LoungeSaber.Server
 {
-    public class LoungeSaberApi : ILoungeSaberApi, IInitializable
+    public class Api : IApi, IInitializable
     {
         [Inject] private readonly PluginConfig _config = null!;
         

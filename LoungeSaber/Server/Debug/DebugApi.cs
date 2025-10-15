@@ -8,7 +8,7 @@ using Zenject;
 
 namespace LoungeSaber.Server.Debug;
 
-public class DebugApi : ILoungeSaberApi
+public class DebugApi : IApi
 {
     public static readonly VotingMap[] Maps =
     [

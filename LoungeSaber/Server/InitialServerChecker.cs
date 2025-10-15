@@ -12,7 +12,7 @@ namespace LoungeSaber.Server;
 
 public class InitialServerChecker
 {
-    [Inject] private readonly ILoungeSaberApi _loungeSaberApi = null!;
+    [Inject] private readonly IApi _api = null!;
     [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
     
     public event Action<string>? ServerCheckFailed;
@@ -45,7 +45,7 @@ public class InitialServerChecker
         while (Loader.AreSongsLoading)
             await Task.Delay(25);
 
-        var maps = await _loungeSaberApi.GetMapHashes();
+        var maps = await _api.GetMapHashes();
         var missingMapHashes = maps.Where(i => Loader.GetLevelByHash(i) == null).ToArray();
         
         if (missingMapHashes.Length == 0)
@@ -61,7 +61,7 @@ public class InitialServerChecker
     {
         ServerCheckingStateUpdated?.Invoke(ServerCheckingStates.UserData);
 
-        var userData = await _loungeSaberApi.GetUserInfo((await _platformUserModel.GetUserInfo(CancellationToken.None)).platformUserId);
+        var userData = await _api.GetUserInfo((await _platformUserModel.GetUserInfo(CancellationToken.None)).platformUserId);
         
         if (userData != null && userData?.Banned == true)
         {
@@ -75,7 +75,7 @@ public class InitialServerChecker
     
     private async Task<bool> CheckServerState()
     {
-        var serverResponse = await _loungeSaberApi.GetServerStatus();
+        var serverResponse = await _api.GetServerStatus();
 
         if (serverResponse == null)
         {
