@@ -3,6 +3,7 @@ using System.Globalization;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using HMUI;
+using LoungeSaber.Configuration;
 using LoungeSaber.Models.Map;
 using LoungeSaber.UI.BSML.Components.CustomLevelBar;
 using UnityEngine;
@@ -14,7 +15,16 @@ namespace LoungeSaber.UI.BSML.Match
     [ViewDefinition("LoungeSaber.UI.BSML.Match.WaitingForMatchToStartView.bsml")]
     public class WaitingForMatchToStartViewController : BSMLAutomaticViewController, ITickable
     {
+        [Inject] private readonly PluginConfig _config = null;
+        
         [UIValue("matchStartTimer")] private string MatchStartTimer { get; set; } = "";
+
+        [UIValue("scoreSubmission")]
+        private bool ScoreSubmission
+        {
+            get => _config.ScoreSubmission;
+            set => _config.ScoreSubmission = value;
+        }
         
         
         [UIComponent("difficultySegmentData")] private readonly TextSegmentedControl _difficultySegmentData = null;
@@ -36,6 +46,7 @@ namespace LoungeSaber.UI.BSML.Match
         
         public async Task PopulateData(VotingMap votingMap, DateTime startTime)
         {
+            // awful
             while (_customLevelBar is null)
                 await Task.Delay(25);
             

@@ -1,8 +1,10 @@
 ﻿using IPA.Loader;
 using JetBrains.Annotations;
+using LoungeSaber.Configuration;
 using LoungeSaber.Models.Map;
 using LoungeSaber.UI.BSML.PauseMenu;
 using SiraUtil.Logging;
+using SiraUtil.Submissions;
 using Zenject;
 
 namespace LoungeSaber.Game
@@ -12,7 +14,8 @@ namespace LoungeSaber.Game
         [Inject] private readonly MenuTransitionsHelper _menuTransitionsHelper = null;
         [Inject] private readonly PlayerDataModel _playerDataModel = null;
         [Inject] private readonly SiraLog _siraLog = null;
-        
+        [Inject] private readonly PluginConfig _config = null;
+         
         public bool InMatch { get; private set; } = false;
 
         private Action<LevelCompletionResults, StandardLevelScenesTransitionSetupDataSO> _onLevelCompletedCallback;
@@ -80,6 +83,9 @@ namespace LoungeSaber.Game
         {
             try
             {
+                if (!_config.ScoreSubmission)
+                    diContainer.Resolve<Submission>().DisableScoreSubmission("LoungeSaber");
+                
                 diContainer.Resolve<PauseMenuViewController>().PopulateData(unpauseTime, opponent);
                 
                 var startingMenuController = diContainer.TryResolve<MatchStartUnpauseController>() ?? throw new Exception("Could not resolve StartingPauseMenuController");

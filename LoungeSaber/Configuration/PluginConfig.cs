@@ -13,6 +13,8 @@ namespace LoungeSaber.Configuration
         
         public virtual bool DownloadMapsAutomatically { get; set; } = false;
 
+        public virtual bool ScoreSubmission { get; set; } = true;
+
         public virtual bool ConnectToDebugQueue { get; set; } = false;
         public virtual bool SkipServer { get; set; } = false;
     }
