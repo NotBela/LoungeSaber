@@ -71,6 +71,13 @@ public class LoungeSaberSettingsViewController : BSMLAutomaticViewController, II
         set => _config.DownloadMapsAutomatically = value;
     }
 
+    [UIValue("scoreSubmission")]
+    private bool ScoreSubmission
+    {
+        get => _config.ScoreSubmission;
+        set => _config.ScoreSubmission = value;
+    }
+
     [UIAction("invalidValueModalOkButtonOnClick")]
     private void OkButtonOnClick() => _parserParams.EmitEvent("invalidValueModalHide");
 
