@@ -18,6 +18,8 @@ public class DebugServerListener : IServerListener
     public event Action<OpponentVoted> OnOpponentVoted;
     public event Action<MatchStarted> OnMatchStarting;
     public event Action<MatchResultsPacket> OnMatchResults;
+    
+    public event Action<OutOfEventPacket> OnOutOfEvent;
     public event Action OnDisconnected;
     public event Action OnConnected;
     public event Action<PrematureMatchEnd> OnPrematureMatchEnd;
@@ -56,8 +58,8 @@ public class DebugServerListener : IServerListener
                     OnEventStarted?.Invoke(new EventStartedPacket());
 
                     await Task.Delay(5000);
-                    OnMatchStarting?.Invoke(new MatchStarted(DebugApi.Maps[0], DateTime.UtcNow.AddSeconds(15),
-                        DateTime.UtcNow.AddSeconds(25), DebugApi.DebugOpponent));
+                    OnMatchStarting?.Invoke(new MatchStarted(DebugApi.Maps[0], 15,
+                        10, DebugApi.DebugOpponent));
                     return;
                 }
 
@@ -68,8 +70,8 @@ public class DebugServerListener : IServerListener
             case UserPacket.UserPacketTypes.Vote:
                 OnOpponentVoted?.Invoke(new OpponentVoted(0));
                 await Task.Delay(1000);
-                OnMatchStarting?.Invoke(new MatchStarted(DebugApi.Maps[0], DateTime.UtcNow.AddSeconds(15),
-                    DateTime.UtcNow.AddSeconds(25), DebugApi.DebugOpponent));
+                OnMatchStarting?.Invoke(new MatchStarted(DebugApi.Maps[0], 15,
+                    10, DebugApi.DebugOpponent));
                 _siraLog.Info("voted");
                 break;
             case UserPacket.UserPacketTypes.ScoreSubmission:

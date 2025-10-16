@@ -113,10 +113,10 @@ namespace LoungeSaber.UI.FlowCoordinators
             try
             {
                 this.ReplaceViewControllerSynchronously(_waitingForMatchToStartViewController);
-                await _waitingForMatchToStartViewController.PopulateData(packet.MapSelected, packet.TransitionToGameTime);
+                await _waitingForMatchToStartViewController.PopulateData(packet.MapSelected, DateTime.UtcNow.AddSeconds(packet.TransitionToGameWait));
                 
-                await Task.Delay(packet.TransitionToGameTime - DateTime.UtcNow);
-                _matchManager.StartMatch(packet.MapSelected, packet.StartingTime, _gameplaySetupViewManager.ProMode, packet.Opponent,  
+                await Task.Delay(packet.TransitionToGameWait * 1000);
+                _matchManager.StartMatch(packet.MapSelected, DateTime.UtcNow.AddSeconds(packet.StartingWait), _gameplaySetupViewManager.ProMode, packet.Opponent,  
                     (levelCompletionResults, standardLevelScenesTransitionSetupData) =>
                     {
                         if (_disconnectHandler.WillShowDisconnectScreen) 

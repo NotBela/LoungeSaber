@@ -13,6 +13,8 @@ public interface IServerListener
     public event Action<MatchStarted> OnMatchStarting;
     public event Action<MatchResultsPacket> OnMatchResults;
     
+    public event Action<OutOfEventPacket> OnOutOfEvent;
+    
     public event Action OnDisconnected;
     public event Action OnConnected;
     public event Action<PrematureMatchEnd> OnPrematureMatchEnd;

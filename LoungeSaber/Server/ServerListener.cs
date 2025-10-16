@@ -31,7 +31,8 @@ namespace LoungeSaber.Server
         public event Action<OpponentVoted> OnOpponentVoted;
         public event Action<MatchStarted> OnMatchStarting;
         public event Action<MatchResultsPacket> OnMatchResults;
-        
+        public event Action<OutOfEventPacket> OnOutOfEvent;
+
         public event Action OnDisconnected;
         public event Action OnConnected;
         public event Action<PrematureMatchEnd> OnPrematureMatchEnd;
@@ -154,6 +155,9 @@ namespace LoungeSaber.Server
                             break;
                         case ServerPacket.ServerPacketTypes.EventStarted:
                             OnEventStarted?.Invoke(packet as EventStartedPacket);
+                            break;
+                        case ServerPacket.ServerPacketTypes.OutOfEvent:
+                            OnOutOfEvent?.Invoke(packet as OutOfEventPacket);
                             break;
                         default:
                             throw new Exception("Could not get packet type!");

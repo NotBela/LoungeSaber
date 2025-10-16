@@ -18,7 +18,7 @@ public class WaitingForEventMatchFlowCoordinator : FlowCoordinator
     
     [Inject] private readonly IServerListener _serverListener = null;
     
-    public event Action OnBackButtonPressed; 
+    public event Action OnBackButtonPressed;
     
     protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {

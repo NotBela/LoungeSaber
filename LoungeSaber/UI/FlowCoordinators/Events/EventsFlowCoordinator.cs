@@ -3,6 +3,7 @@ using HMUI;
 using LoungeSaber.Extensions;
 using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Events;
+using LoungeSaber.Models.Packets.ServerPackets.Event;
 using LoungeSaber.UI.BSML.Disconnect;
 using LoungeSaber.UI.BSML.Events;
 using SiraUtil.Logging;
@@ -76,6 +77,12 @@ public class EventsFlowCoordinator : FlowCoordinator, IInitializable, IDisposabl
     {
         _eventsListViewController.OnEventJoinRequested += OnEventJoinRequested;
         _waitingForEventMatchFlowCoordinator.OnBackButtonPressed += WaitingForEventFlowCoordinatorOnBackButtonPressed;
+        _serverListener.OnOutOfEvent += OnOutOfEvent;
+    }
+
+    private void OnOutOfEvent(OutOfEventPacket outOfEvent)
+    {
+        
     }
 
     public void Dispose()

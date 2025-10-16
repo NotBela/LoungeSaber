@@ -7,8 +7,8 @@ namespace LoungeSaber.Models.Packets.ServerPackets
     [method: JsonConstructor]
     public class MatchStarted(
         VotingMap mapSelected,
-        DateTime transitionToGameTime,
-        DateTime startingTime,
+        int transitionToGameWait,
+        int startingWait,
         UserInfo.UserInfo opponent) : ServerPacket
     {
         public override ServerPacketTypes PacketType => ServerPacketTypes.MatchStarted;
@@ -17,11 +17,12 @@ namespace LoungeSaber.Models.Packets.ServerPackets
         public readonly VotingMap MapSelected = mapSelected;
 
         [JsonProperty("transitionToGameTime")]
-        public readonly DateTime TransitionToGameTime = transitionToGameTime;
+        public readonly int TransitionToGameWait = transitionToGameWait;
     
         [JsonProperty("startingTime")]
-        public readonly DateTime StartingTime = startingTime;
+        public readonly int StartingWait = startingWait;
 
-        [JsonProperty("opponent")] public readonly UserInfo.UserInfo Opponent = opponent;
+        [JsonProperty("opponent")] 
+        public readonly UserInfo.UserInfo Opponent = opponent;
     }
 }

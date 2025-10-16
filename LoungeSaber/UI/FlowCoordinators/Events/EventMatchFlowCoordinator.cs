@@ -55,7 +55,7 @@ public class EventMatchFlowCoordinator : FlowCoordinator
     {
         this.ReplaceViewControllerSynchronously(_resultsViewController);
         _resultsViewController.PopulateData(results, _matchEndedCallback);
-
+        
         _matchEndedCallback = null;
     }
 
@@ -93,10 +93,9 @@ public class EventMatchFlowCoordinator : FlowCoordinator
 
             StartCoroutine(PopulateWaitingScreen());
 
-            while (eventMatchCreatedPacket.TransitionToGameTime > DateTime.UtcNow)
-                await Task.Delay(25);
+            await Task.Delay(eventMatchCreatedPacket.TransitionToGameWait);
             
-            _matchManager.StartMatch(eventMatchCreatedPacket.MapSelected, eventMatchCreatedPacket.StartingTime, _gameplaySetupViewManager.ProMode, eventMatchCreatedPacket.Opponent, 
+            _matchManager.StartMatch(eventMatchCreatedPacket.MapSelected, DateTime.UtcNow.AddSeconds(eventMatchCreatedPacket.StartingWait), _gameplaySetupViewManager.ProMode, eventMatchCreatedPacket.Opponent, 
                 OnLevelCompletedCallback);
 
             return;
@@ -105,7 +104,7 @@ public class EventMatchFlowCoordinator : FlowCoordinator
             {
                 yield return new WaitForEndOfFrame();
             
-                _ = _waitingForMatchToStartViewController.PopulateData(eventMatchCreatedPacket.MapSelected, eventMatchCreatedPacket.TransitionToGameTime);
+                _ = _waitingForMatchToStartViewController.PopulateData(eventMatchCreatedPacket.MapSelected, DateTime.UtcNow.AddSeconds(eventMatchCreatedPacket.TransitionToGameWait));
             }
         }
         catch (Exception e)
