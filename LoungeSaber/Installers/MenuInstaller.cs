@@ -16,6 +16,7 @@ using LoungeSaber.UI.BSML.Menu;
 using LoungeSaber.UI.BSML.Settings;
 using LoungeSaber.UI.FlowCoordinators;
 using LoungeSaber.UI.FlowCoordinators.Events;
+using LoungeSaber.UI.Sound;
 using LoungeSaber.UI.ViewManagers;
 using Zenject;
 
@@ -50,6 +51,8 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<ServerCheckingFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
             Container.BindInterfacesAndSelfTo<InfoFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
 
+            Container.BindInterfacesAndSelfTo<SoundEffectManager>().AsSingle();
+            
             Container.BindInterfacesAndSelfTo<DisconnectFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
             
             Container.BindInterfacesAndSelfTo<EventsFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();

@@ -1,4 +1,5 @@
-﻿using BeatSaberMarkupLanguage;
+﻿using System.Runtime.InteropServices;
+using BeatSaberMarkupLanguage;
 using HMUI;
 using LoungeSaber.Extensions;
 using LoungeSaber.Game;
@@ -10,6 +11,7 @@ using LoungeSaber.Models.Packets.UserPackets;
 using LoungeSaber.Server;
 using LoungeSaber.UI.BSML.Disconnect;
 using LoungeSaber.UI.BSML.Match;
+using LoungeSaber.UI.Sound;
 using LoungeSaber.UI.ViewManagers;
 using SiraUtil.Logging;
 using Zenject;
@@ -37,6 +39,9 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         [Inject] private readonly DisconnectFlowCoordinator _disconnectFlowCoordinator = null;
         [Inject] private readonly DisconnectedViewController _disconnectedViewController = null;
+        
+        [Inject] private readonly IPlatformUserModel _platformUserModel = null;
+        [Inject] private readonly SoundEffectManager _soundEffectManager = null;
 
         private NavigationController _votingScreenNavigationController;
 
@@ -96,6 +101,7 @@ namespace LoungeSaber.UI.FlowCoordinators
                 _votingScreenNavigationController.PushViewController(_standardLevelDetailViewManager.ManagedController, () => {});
             
             _standardLevelDetailViewManager.SetData(votingMap, votingMaps);
+            _soundEffectManager.PlayBeatmapLevelPreview(votingMap.GetBeatmapLevel());
         }
 
         private void OnMatchResultsReceived(MatchResultsPacket results)
@@ -106,6 +112,11 @@ namespace LoungeSaber.UI.FlowCoordinators
                 _onMatchFinishedCallback?.Invoke();
                 _onMatchFinishedCallback = null;
             });
+
+            if (results.WinnerScore.User.UserId != _platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId)
+                return;
+            
+            _soundEffectManager.PlayWinningMusic();
         }
 
         private async void OnMatchStarting(MatchStarted packet)
