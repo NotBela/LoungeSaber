@@ -11,6 +11,7 @@ using LoungeSaber.Models.Packets.ServerPackets.Event;
 using LoungeSaber.Models.Packets.ServerPackets.Match;
 using LoungeSaber.Models.Packets.UserPackets;
 using LoungeSaber.UI.BSML.Match;
+using LoungeSaber.UI.Sound;
 using LoungeSaber.UI.ViewManagers;
 using SiraUtil.Logging;
 using UnityEngine;
@@ -36,6 +37,10 @@ public class EventMatchFlowCoordinator : FlowCoordinator
     
     [Inject] private readonly MatchManager _matchManager = null;
     
+    [Inject] private readonly SoundEffectManager _soundEffectManager = null;
+    
+    [Inject] private readonly IPlatformUserModel _platformUserModel = null;
+    
     [CanBeNull] private Action _matchEndedCallback;
     
     [Inject] private readonly SiraLog _siraLog = null;
@@ -47,6 +52,8 @@ public class EventMatchFlowCoordinator : FlowCoordinator
         
         ProvideInitialViewControllers(_waitingForMatchToStartViewController, _gameplaySetupViewManager.ManagedController, bottomScreenViewController: _opponentViewController);
         
+        _soundEffectManager.PlayGongSoundEffect();
+        
         _disconnectHandler.ShouldShowDisconnectScreen += ShouldShowDisconnectScreen;
         _serverListener.OnMatchResults += OnMatchResults;
     }
@@ -57,6 +64,12 @@ public class EventMatchFlowCoordinator : FlowCoordinator
         _resultsViewController.PopulateData(results, _matchEndedCallback);
         
         _matchEndedCallback = null;
+
+        if (results.WinnerScore.User.UserId !=
+            _platformUserModel.GetUserInfo(CancellationToken.None).Result.platformUserId)
+            return;
+        
+        _soundEffectManager.PlayWinningMusic();
     }
 
     protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)

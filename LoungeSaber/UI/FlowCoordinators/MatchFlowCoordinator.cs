@@ -126,6 +126,8 @@ namespace LoungeSaber.UI.FlowCoordinators
                 this.ReplaceViewControllerSynchronously(_waitingForMatchToStartViewController);
                 await _waitingForMatchToStartViewController.PopulateData(packet.MapSelected, DateTime.UtcNow.AddSeconds(packet.TransitionToGameWait));
                 
+                _soundEffectManager.PlayGongSoundEffect();
+                
                 await Task.Delay(packet.TransitionToGameWait * 1000);
                 _matchManager.StartMatch(packet.MapSelected, DateTime.UtcNow.AddSeconds(packet.StartingWait), _gameplaySetupViewManager.ProMode, packet.Opponent,  
                     (levelCompletionResults, standardLevelScenesTransitionSetupData) =>
