@@ -32,8 +32,8 @@ namespace LoungeSaber.Game
             InMatch = true;
             
             var beatmapLevel = level.GetBeatmapLevel() ?? throw new Exception("Could not get beatmap level!");
-
-            _menuTransitionsHelper.StartStandardLevel(
+            // 1.39.1
+            /*_menuTransitionsHelper.StartStandardLevel(
                 "Solo",
                 level.GetBeatmapKey(),
                 beatmapLevel,
@@ -52,7 +52,30 @@ namespace LoungeSaber.Game
                 diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime, opponent),
                 AfterSceneSwitchToMenuCallback,
                 null
-                );
+                );*/
+            
+            // 1.40.8
+            _menuTransitionsHelper.StartStandardLevel(
+                "Solo", 
+                level.GetBeatmapKey(),
+                beatmapLevel,
+                _playerDataModel.playerData.overrideEnvironmentSettings,
+                _playerDataModel.playerData.colorSchemesSettings.overrideDefaultColors ? _playerDataModel.playerData.colorSchemesSettings.GetSelectedColorScheme() : null,
+                true,
+                beatmapLevel.GetColorScheme(beatmapLevel.GetCharacteristics().First(i => i.serializedName == "Standard"), level.GetBaseGameDifficultyType()),
+                new GameplayModifiers(GameplayModifiers.EnergyType.Bar, true, false, false, GameplayModifiers.EnabledObstacleType.All, false, false, false, false, GameplayModifiers.SongSpeed.Normal, false, false, proMode, false, false),
+                _playerDataModel.playerData.playerSpecificSettings,
+                null,
+                EnvironmentsListModel.CreateFromAddressables(),
+                "Menu",
+                false,
+                true,
+                null,
+                // TODO: fix restart button being visible
+                diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime, opponent),
+                AfterSceneSwitchToMenuCallback,
+                null
+            );
         }
 
         public void StopMatch(Action menuSwitchCallback = null)

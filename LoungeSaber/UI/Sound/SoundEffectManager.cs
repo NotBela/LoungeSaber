@@ -4,13 +4,11 @@ using Zenject;
 namespace LoungeSaber.UI.Sound;
 
 public class SoundEffectManager(
-    SongPreviewPlayer songPreviewPlayer,
     ResultsViewController resultsViewController,
-    CountdownController countdownController,
-    LevelCollectionViewController levelCollectionViewController)
+    SongPreviewPlayer songPreviewPlayer)
 {
     private readonly AudioClip _levelClearedAudioClip = resultsViewController._levelClearedAudioClip;
-    private readonly AudioSource _gongAudioSource = countdownController._audioSource;
+    // private readonly AudioSource _gongAudioSource = countdownController._audioSource;
 
     public void PlayWinningMusic()
     {
@@ -24,12 +22,11 @@ public class SoundEffectManager(
 
     public void PlayGongSoundEffect()
     {
-        //todo: fix
         // _gongAudioSource.Play();
     }
 
     public void PlayBeatmapLevelPreview(BeatmapLevel level)
     {
-        levelCollectionViewController.SongPlayerCrossfadeToLevel(level);
+        songPreviewPlayer.CrossfadeTo(level.previewMediaData.GetPreviewAudioClip().Result, 0f, 0f, _levelClearedAudioClip.length, null);
     }
 }
