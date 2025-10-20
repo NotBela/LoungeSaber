@@ -58,7 +58,9 @@ namespace LoungeSaber.UI.FlowCoordinators
             _serverListener.OnMatchCreated -= OnMatchCreated;
             _matchmakingMenuViewController.AboutButtonClicked -= OnAboutButtonClicked;
             _infoFlowCoordinator.OnBackButtonPressed -= OnInfoFlowCoordinatorBackButtonPressed;
-            _matchmakingMenuViewController.EventsButtonClicked += OnEventsButtonClicked;
+            _matchmakingMenuViewController.EventsButtonClicked -= OnEventsButtonClicked;
+            _eventsFlowCoordinator.OnBackButtonPressed -= EventsFlowCoordinatorOnBackButtonPressed;
+            _matchmakingMenuViewController.OnJoinFailed -= OnJoinFailed;
         }
         
         public void Initialize()
