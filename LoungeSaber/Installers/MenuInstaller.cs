@@ -52,6 +52,7 @@ namespace LoungeSaber.Installers
             Container.BindInterfacesAndSelfTo<InfoFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
 
             Container.BindInterfacesAndSelfTo<SoundEffectManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CountdownController>().FromNewComponentOnNewGameObject().AsSingle();
             
             Container.BindInterfacesAndSelfTo<DisconnectFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
             

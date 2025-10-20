@@ -23,7 +23,7 @@ public class VotingScreenViewController : BSMLAutomaticViewController
     public event Action<VotingMap, List<VotingMap>> MapSelected;
         
     [UIComponent("mapList")] private readonly CustomListTableData _mapListTableData = null;
-    private VotingListDataSource _votingListDataSource = null!;
+    private VotingListDataSource _votingListDataSource = null;
     
     [CanBeNull] private Action _activationCallback = null;
 

@@ -129,6 +129,7 @@ namespace LoungeSaber.UI.FlowCoordinators
                 _soundEffectManager.PlayGongSoundEffect();
                 
                 await Task.Delay(packet.TransitionToGameWait * 1000);
+                
                 _matchManager.StartMatch(packet.MapSelected, DateTime.UtcNow.AddSeconds(packet.StartingWait), _gameplaySetupViewManager.ProMode, packet.Opponent,  
                     (levelCompletionResults, standardLevelScenesTransitionSetupData) =>
                     {
@@ -157,6 +158,8 @@ namespace LoungeSaber.UI.FlowCoordinators
                 
                 ReplaceTopViewController(_awaitingMapDecisionViewController);
                 _awaitingMapDecisionViewController.PopulateData(votingMap, votingMaps);
+                
+                _soundEffectManager.CrossfadeToDefault();
 
                 await _serverListener.SendPacket(new VotePacket(votingMaps.IndexOf(votingMap)));
             }

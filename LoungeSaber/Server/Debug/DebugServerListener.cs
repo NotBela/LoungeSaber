@@ -77,7 +77,7 @@ public class DebugServerListener : IServerListener
             case UserPacket.UserPacketTypes.ScoreSubmission:
                 _siraLog.Info("score submitted");
                 await Task.Delay(1000);
-                OnMatchResults?.Invoke(new MatchResultsPacket(new MatchScore(DebugApi.Self, Score.Empty),
+                OnMatchResults?.Invoke(new MatchResultsPacket(new MatchScore(DebugApi.Self, new Score(100000, 1f, true, 0, true)),
                     new MatchScore(DebugApi.DebugOpponent, Score.Empty), 100));
 
                 _siraLog.Info("match results invoked");

@@ -23,7 +23,7 @@ public class DebugApi : IApi
 
     public static readonly Models.UserInfo.UserInfo Self = new(
         "self",
-        "0",
+        "",
         1000,
         new DivisionInfo("Iron", 1, "#000000"),
         null,
