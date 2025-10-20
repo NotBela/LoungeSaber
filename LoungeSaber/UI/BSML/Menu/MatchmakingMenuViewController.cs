@@ -30,6 +30,8 @@ namespace LoungeSaber.UI.BSML.Menu
         public event Action AboutButtonClicked;
 
         public event Action EventsButtonClicked;
+
+        public event Action<JoinResponse> OnJoinFailed; 
         
         protected override void DidDeactivate(bool firstActivation, bool addedToHierarchy)
         {
@@ -112,6 +114,8 @@ namespace LoungeSaber.UI.BSML.Menu
                 _matchmakingTimeStopwatch.Restart();
                 return;
             }
+            
+            OnJoinFailed?.Invoke(joinResponse);
             
             _siraLog.Warn($"Failed to connect to matchmaking pool: {joinResponse.Message}");
         }

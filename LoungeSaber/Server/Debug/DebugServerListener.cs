@@ -33,6 +33,9 @@ public class DebugServerListener : IServerListener
         await Task.Delay(1000);
 
         _isConnected = true;
+        onConnectedCallback?.Invoke(new JoinResponse(false, "test"));
+        
+        return; 
         onConnectedCallback?.Invoke(new JoinResponse(true, ""));
         OnConnected?.Invoke();
         _siraLog.Info("connected");
