@@ -5,6 +5,7 @@ using LoungeSaber.Game;
 using LoungeSaber.Interfaces;
 using LoungeSaber.Models.Server;
 using LoungeSaber.UI.BSML.Menu;
+using SiraUtil.Tools.FPFC;
 using SongCore;
 using Zenject;
 
@@ -14,6 +15,9 @@ public class InitialServerChecker
 {
     [Inject] private readonly IApi _api = null!;
     [Inject] private readonly IPlatformUserModel _platformUserModel = null!;
+
+    [Inject] private readonly PluginConfig _config = null!;
+    [Inject] private readonly IFPFCSettings _fpfcSettings = null!;
     
     public event Action<string>? ServerCheckFailed;
 
@@ -28,6 +32,9 @@ public class InitialServerChecker
     
     public async Task CheckServer()
     {
+        if (!CheckFpfc())
+            return;
+        
         if (!await CheckServerState())
             return;
         if (!await CheckUserData())
@@ -36,6 +43,19 @@ public class InitialServerChecker
             return;
         
         ServerCheckFinished?.Invoke();
+    }
+
+    private bool CheckFpfc()
+    {
+        if (_config.ConnectToDebugQueue)
+            return true;
+
+        if (!_fpfcSettings.Enabled) 
+            return true;
+        
+        ServerCheckFailed?.Invoke("FPFC is enabled. Please restart your game.");
+        return false;
+
     }
 
     private async Task<bool> CheckMaps()
