@@ -32,8 +32,9 @@ namespace LoungeSaber.Game
             InMatch = true;
             
             var beatmapLevel = level.GetBeatmapLevel() ?? throw new Exception("Could not get beatmap level!");
+            
             // 1.39.1
-            /*_menuTransitionsHelper.StartStandardLevel(
+            _menuTransitionsHelper.StartStandardLevel(
                 "Solo",
                 level.GetBeatmapKey(),
                 beatmapLevel,
@@ -52,10 +53,10 @@ namespace LoungeSaber.Game
                 diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime, opponent),
                 AfterSceneSwitchToMenuCallback,
                 null
-                );*/
+                );
             
             // 1.40.8
-            _menuTransitionsHelper.StartStandardLevel(
+            /*_menuTransitionsHelper.StartStandardLevel(
                 "Solo", 
                 level.GetBeatmapKey(),
                 beatmapLevel,
@@ -75,7 +76,7 @@ namespace LoungeSaber.Game
                 diContainer => AfterSceneSwitchToGameplayCallback(diContainer, unpauseTime, opponent),
                 AfterSceneSwitchToMenuCallback,
                 null
-            );
+            );*/
         }
 
         public void StopMatch(Action menuSwitchCallback = null)
