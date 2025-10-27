@@ -1,6 +1,6 @@
 <bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
     xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
-    <vertical>
+    <vertical preferred-width="30" bg="round-rect-panel">
         <text text="Please vote on a map to play!" align="Center" italics="true"/>
         <list id="mapList" visible-cells="3" list-style="Simple"/>
     </vertical>
