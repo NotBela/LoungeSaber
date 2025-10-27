@@ -32,6 +32,7 @@ namespace LoungeSaber.Game
             InMatch = true;
             
             var beatmapLevel = level.GetBeatmapLevel() ?? throw new Exception("Could not get beatmap level!");
+            
             // 1.39.1
             _menuTransitionsHelper.StartStandardLevel(
                 "Solo",

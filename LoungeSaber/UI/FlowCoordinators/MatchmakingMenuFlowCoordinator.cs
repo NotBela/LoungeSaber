@@ -32,6 +32,7 @@ namespace LoungeSaber.UI.FlowCoordinators
         
         [Inject] private readonly LoungeSaberLeaderboardViewController _leaderboardViewController = null;
         
+        [Inject] private readonly DisconnectFlowCoordinator _disconnectFlowCoordinator = null;
         
         [Inject] private readonly EventsFlowCoordinator _eventsFlowCoordinator = null;
         
@@ -57,7 +58,9 @@ namespace LoungeSaber.UI.FlowCoordinators
             _serverListener.OnMatchCreated -= OnMatchCreated;
             _matchmakingMenuViewController.AboutButtonClicked -= OnAboutButtonClicked;
             _infoFlowCoordinator.OnBackButtonPressed -= OnInfoFlowCoordinatorBackButtonPressed;
-            _matchmakingMenuViewController.EventsButtonClicked += OnEventsButtonClicked;
+            _matchmakingMenuViewController.EventsButtonClicked -= OnEventsButtonClicked;
+            _eventsFlowCoordinator.OnBackButtonPressed -= EventsFlowCoordinatorOnBackButtonPressed;
+            _matchmakingMenuViewController.OnJoinFailed -= OnJoinFailed;
         }
         
         public void Initialize()
@@ -67,6 +70,17 @@ namespace LoungeSaber.UI.FlowCoordinators
             _infoFlowCoordinator.OnBackButtonPressed += OnInfoFlowCoordinatorBackButtonPressed;
             _matchmakingMenuViewController.EventsButtonClicked += OnEventsButtonClicked;
             _eventsFlowCoordinator.OnBackButtonPressed += EventsFlowCoordinatorOnBackButtonPressed;
+            _matchmakingMenuViewController.OnJoinFailed += OnJoinFailed;
+        }
+
+        private void OnJoinFailed(JoinResponse response)
+        {
+            this.PresentFlowCoordinatorSynchronously(_disconnectFlowCoordinator);
+            
+            _disconnectFlowCoordinator.Setup(response.Message, () =>
+            {
+                DismissFlowCoordinator(_disconnectFlowCoordinator);
+            });
         }
 
         private void EventsFlowCoordinatorOnBackButtonPressed() => DismissFlowCoordinator(_eventsFlowCoordinator);

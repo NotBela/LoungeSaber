@@ -67,7 +67,8 @@ namespace LoungeSaber.Server
 
                 var userPlatformData = await _platformUserModel.GetUserInfo(CancellationToken.None);
                 
-                await SendPacket(new JoinRequestPacket(userPlatformData.userName, userPlatformData.platformUserId, ""));
+                //todo: change this to not be standard by default
+                await SendPacket(new JoinRequestPacket(userPlatformData.userName, userPlatformData.platformUserId, "standard"));
 
                 while (!_client.GetStream().DataAvailable)
                     await Task.Delay(25);
@@ -89,6 +90,7 @@ namespace LoungeSaber.Server
                     _shouldListenToServer = true;
                     _listenerThread.Start();
                     OnConnected?.Invoke();
+                    return;
                 }
             }
             catch (Exception e)

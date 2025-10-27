@@ -5,10 +5,12 @@ namespace LoungeSaber.UI.Sound;
 
 public class SoundEffectManager(
     ResultsViewController resultsViewController,
-    SongPreviewPlayer songPreviewPlayer)
+    SongPreviewPlayer songPreviewPlayer,
+    CountdownController countdownController,
+    LevelCollectionViewController levelCollectionViewController)
 {
     private readonly AudioClip _levelClearedAudioClip = resultsViewController._levelClearedAudioClip;
-    // private readonly AudioSource _gongAudioSource = countdownController._audioSource;
+    private readonly AudioSource _gongAudioSource = countdownController._audioSource;
 
     public void PlayWinningMusic()
     {
@@ -27,6 +29,6 @@ public class SoundEffectManager(
 
     public void PlayBeatmapLevelPreview(BeatmapLevel level)
     {
-        songPreviewPlayer.CrossfadeTo(level.previewMediaData.GetPreviewAudioClip().Result, 0f, 0f, _levelClearedAudioClip.length, null);
+        levelCollectionViewController.SongPlayerCrossfadeToLevel(level);
     }
 }
