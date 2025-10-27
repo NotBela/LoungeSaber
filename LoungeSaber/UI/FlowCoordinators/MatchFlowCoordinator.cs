@@ -14,6 +14,7 @@ using LoungeSaber.UI.BSML.Match;
 using LoungeSaber.UI.Sound;
 using LoungeSaber.UI.ViewManagers;
 using SiraUtil.Logging;
+using UnityEngine;
 using Zenject;
 
 namespace LoungeSaber.UI.FlowCoordinators
@@ -97,9 +98,14 @@ namespace LoungeSaber.UI.FlowCoordinators
 
         private void OnVotingMapSelected(VotingMap votingMap, List<VotingMap> votingMaps)
         {
-            // todo: fix voting screen view controller being wide
             if (!_standardLevelDetailViewManager.ManagedController.isActivated)
-                _votingScreenNavigationController.PushViewController(_standardLevelDetailViewManager.ManagedController, () => {});
+                _votingScreenNavigationController.PushViewController(_standardLevelDetailViewManager.ManagedController,
+                    () =>
+                    {
+                        _standardLevelDetailViewManager.ManagedController.transform.position = new Vector3(1.4f,
+                            _standardLevelDetailViewManager.ManagedController.transform.position.y, 
+                            _standardLevelDetailViewManager.ManagedController.transform.position.z);
+                    });
             
             _standardLevelDetailViewManager.SetData(votingMap, votingMaps);
             // _soundEffectManager.PlayBeatmapLevelPreview(votingMap.GetBeatmapLevel());

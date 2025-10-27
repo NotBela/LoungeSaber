@@ -1,7 +1,5 @@
 ﻿using HMUI;
 using LoungeSaber.Models.Map;
-using LoungeSaber.UI.FlowCoordinators;
-using LoungeSaber.UI.FlowCoordinators.Events;
 using Zenject;
 
 namespace LoungeSaber.UI.ViewManagers;
