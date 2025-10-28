@@ -108,7 +108,8 @@ namespace LoungeSaber.UI.FlowCoordinators
                     });
             
             _standardLevelDetailViewManager.SetData(votingMap, votingMaps);
-            // _soundEffectManager.PlayBeatmapLevelPreview(votingMap.GetBeatmapLevel());
+            
+            _soundEffectManager.PlayBeatmapLevelPreview(votingMap.GetBeatmapLevel());
         }
 
         private void OnMatchResultsReceived(MatchResultsPacket results)
