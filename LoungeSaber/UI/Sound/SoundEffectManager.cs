@@ -3,30 +3,30 @@ using Zenject;
 
 namespace LoungeSaber.UI.Sound;
 
-public class SoundEffectManager(
-    ResultsViewController resultsViewController,
-    SongPreviewPlayer songPreviewPlayer,
-    CountdownController countdownController)
+public class SoundEffectManager : MonoBehaviour, IInitializable
 {
-    private readonly AudioClip _levelClearedAudioClip = resultsViewController._levelClearedAudioClip;
-    private readonly AudioSource _gongAudioSource = countdownController._audioSource;
+    private readonly AudioClip _levelClearedAudioClip;
+    private readonly AudioClip _gongAudioClip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(x => x.name == "MultiplayerLobbyGong");
+    
+    private AudioSource _audioSource;
     
     [Inject] private readonly AudioClipAsyncLoader _audioClipAsyncLoader = null;
     [Inject] private readonly PerceivedLoudnessPerLevelModel _perceivedLoudnessPerLevelModel = null;
+    [Inject] private readonly SongPreviewPlayer _songPreviewPlayer = null;
 
     public void PlayWinningMusic()
     {
-        songPreviewPlayer.CrossfadeTo(_levelClearedAudioClip, -4f, 0f, _levelClearedAudioClip.length, null);
+        // _songPreviewPlayer.CrossfadeTo(_levelClearedAudioClip, -4f, 0f, _levelClearedAudioClip.length, null);
     }
 
     public void CrossfadeToDefault()
     {
-        songPreviewPlayer.CrossfadeToDefault();
+        _songPreviewPlayer.CrossfadeToDefault();
     }
 
     public void PlayGongSoundEffect()
     {
-        // _gongAudioSource.Play();
+        _audioSource.PlayOneShot(_gongAudioClip);
     }
 
     public void PlayBeatmapLevelPreview(BeatmapLevel level) => PlayBeatmapLevelPreviewAsync(level);
@@ -37,9 +37,14 @@ public class SoundEffectManager(
 
         var perceivedLoudness = _perceivedLoudnessPerLevelModel.GetLoudnessCorrectionByLevelId(level.levelID);
         
-        songPreviewPlayer.CrossfadeTo(clip, perceivedLoudness, level.previewStartTime, level.previewDuration, () =>
+        _songPreviewPlayer.CrossfadeTo(clip, perceivedLoudness, level.previewStartTime, level.previewDuration, () =>
         {
             _audioClipAsyncLoader.Unload(clip);
         });
+    }
+
+    public void Initialize()
+    {
+        _audioSource = gameObject.AddComponent<AudioSource>();
     }
 }
