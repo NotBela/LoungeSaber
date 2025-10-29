@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using HarmonyLib;
+using SiraUtil.Logging;
+using UnityEngine;
 using Zenject;
 
 namespace LoungeSaber.UI.Sound;
 
 public class SoundEffectManager : MonoBehaviour, IInitializable
 {
-    private readonly AudioClip _levelClearedAudioClip;
+    private readonly AudioClip _levelClearedAudioClip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(x => x.name == "LevelCleared");
     private readonly AudioClip _gongAudioClip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(x => x.name == "MultiplayerLobbyGong");
     
     private AudioSource _audioSource;
@@ -13,10 +15,10 @@ public class SoundEffectManager : MonoBehaviour, IInitializable
     [Inject] private readonly AudioClipAsyncLoader _audioClipAsyncLoader = null;
     [Inject] private readonly PerceivedLoudnessPerLevelModel _perceivedLoudnessPerLevelModel = null;
     [Inject] private readonly SongPreviewPlayer _songPreviewPlayer = null;
-
+    
     public void PlayWinningMusic()
     {
-        // _songPreviewPlayer.CrossfadeTo(_levelClearedAudioClip, -4f, 0f, _levelClearedAudioClip.length, null);
+        _songPreviewPlayer.CrossfadeTo(_levelClearedAudioClip, -4f, 0f, _levelClearedAudioClip.length, null);
     }
 
     public void CrossfadeToDefault()
